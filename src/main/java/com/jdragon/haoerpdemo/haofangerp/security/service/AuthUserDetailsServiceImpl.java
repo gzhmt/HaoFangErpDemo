@@ -1,11 +1,9 @@
 package com.jdragon.haoerpdemo.haofangerp.security.service;
 
-import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Member;
-import com.jdragon.haoerpdemo.haofangerp.production.service.MemberService;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Employee;
+import com.jdragon.haoerpdemo.haofangerp.production.service.EmployeeService;
 import com.jdragon.haoerpdemo.haofangerp.production.service.RoleService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,8 +23,9 @@ import java.util.List;
 @Slf4j
 @Service
 public class AuthUserDetailsServiceImpl implements UserDetailsService {
+
     @Autowired
-    private MemberService memberService;
+    private EmployeeService employeeService;
 
     @Autowired
     private RoleService roleService;
@@ -38,7 +37,7 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String employeeNo) throws UsernameNotFoundException {
-        Member user = memberService.getMemberByEmployeeNo(employeeNo);
+        Employee user = employeeService.getEmployeeByEmployeeNo(employeeNo);
         if (user == null) {
             throw new UsernameNotFoundException(String.format("%s.这个用户不存在", employeeNo));
         }else {

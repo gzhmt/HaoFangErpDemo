@@ -15,9 +15,10 @@ import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 
 
 public interface PlanService extends IService<Plan> {
-    IPage<Plan> list(Page<Plan> page);
-    Plan save(PlanVo planVo);
-    boolean delete(Long id);
-    boolean update(PlanVo planVo);
-    Plan getById(int id);
+    IPage<Plan> list(Page<Plan> page) throws Exception;
+    Plan save(PlanVo planVo) throws Exception;
+    boolean delete(String productionNo) throws Exception;
+    boolean update(PlanVo planVo) throws Exception;
+    Plan getById(Long id);
+    Plan getByProductionNo(String productionNo);
 }

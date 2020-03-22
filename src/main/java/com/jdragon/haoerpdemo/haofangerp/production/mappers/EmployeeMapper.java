@@ -1,7 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.production.mappers;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Member;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Employee;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +13,5 @@ import org.springframework.stereotype.Repository;
  */
 @Mapper
 @Repository
-public interface MemberMapper extends BaseMapper<Member> {
+public interface EmployeeMapper extends BaseMapper<Employee> {
 }

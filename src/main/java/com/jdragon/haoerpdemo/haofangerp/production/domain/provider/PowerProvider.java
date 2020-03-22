@@ -21,8 +21,8 @@ public class PowerProvider {
         return new SQL(){
             {
                 SELECT_DISTINCT("p.*");
-                FROM("system_member m");
-                JOIN("system_member_role mb on m.id=mb.member_id",
+                FROM("system_employee m");
+                JOIN("system_employee_role mb on m.id=mb.employee_id",
                         "system_role r on r.id=mb.role_id",
                         "system_role_power rp on r.id=rp.role_id",
                         "system_power p on p.id=rp.power_id");

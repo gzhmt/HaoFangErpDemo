@@ -1,7 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jdragon.haoerpdemo.haofangerp.production.service.MemberService;
+import com.jdragon.haoerpdemo.haofangerp.production.service.EmployeeService;
 import com.jdragon.haoerpdemo.haofangerp.security.exception.MyAuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class MyUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Autowired
-    MemberService userService;
+    EmployeeService userService;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,

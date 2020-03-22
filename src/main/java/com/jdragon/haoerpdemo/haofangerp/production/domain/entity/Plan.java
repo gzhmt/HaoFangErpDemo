@@ -9,8 +9,10 @@ import com.jdragon.haoerpdemo.haofangerp.commons.constant.EmergencyLevelEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStatusEnum;
 import jdk.nashorn.internal.ir.annotations.Ignore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
@@ -26,6 +28,8 @@ import java.util.Date;
 
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("production_plan")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Plan extends Model<Plan>{
@@ -41,7 +45,7 @@ public class Plan extends Model<Plan>{
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
 
-    private int principalMember;
+    private String principalEmployeeNo;
 
     private EmergencyLevelEnum emergencyLevel;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

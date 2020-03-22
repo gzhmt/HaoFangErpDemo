@@ -104,13 +104,13 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 //.antMatchers("/**").hasAuthority("ROLE_ADMIN")
                 /*
                  由于使用动态资源配置，以上代码在数据库中配置如下：
-                 在sys_backend_api_table中添加一条记录
-                 backend_api_id=1，
-                 backend_api_name = 所有API，
-                 backend_api_url=/**,
-                 backend_api_method=GET,POST,PUT,DELETE
+                 在system_power中添加一条记录
+                 api_id=1，
+                 api_name = 所有API，
+                 api_url=/**,
+                 api_method=GET,POST,PUT,DELETE
                  */
-                //动态加载资源
+                //动态加载资源,基于表达式
                 .anyRequest().access("@dynamicPermission.checkPermisstion(request,authentication)");
 
         //第4步：拦截账号、密码。覆盖 UsernamePasswordAuthenticationFilter过滤器

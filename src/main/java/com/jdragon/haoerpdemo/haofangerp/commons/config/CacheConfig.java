@@ -22,7 +22,7 @@ import java.time.Duration;
  * @Author: Jdragon
  * @email: 1061917196@qq.com
  * @Date: 2020.03.21 23:26
- * @Description:
+ * @Description: 重写redisCacheManager，使其存储到redis上为json格式
  */
 @Configuration
 public class CacheConfig {
@@ -59,21 +59,4 @@ public class CacheConfig {
                 .cacheDefaults(config)
                 .build();
     }
-
-//    @Primary
-//    @Bean
-//    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-//        RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-//                .entryTtl(Duration.ofSeconds(10)) //设置过期时间
-//                .disableCachingNullValues() //禁止缓存null对象
-//                .computePrefixWith(cacheName -> "yourAppName".concat(":")
-//                        .concat(cacheName)
-//                        .concat(":"))//此处定义了cache key的前缀，避免公司不同项目之间的key名称冲突
-//                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())) //定义了key和value的序列化协议，同时hash key和hash value也被定义
-//                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer(Object.class)));
-//
-//        return RedisCacheManager.builder(redisConnectionFactory)
-//                .cacheDefaults(cacheConfiguration)
-//                .build();
-//    }
 }

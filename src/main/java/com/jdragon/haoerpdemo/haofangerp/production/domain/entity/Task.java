@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.TaskStateEnum;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
@@ -22,6 +24,8 @@ import java.util.Date;
  */
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("production_task")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Task extends Model<Task>{
@@ -35,7 +39,7 @@ public class Task extends Model<Task>{
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date productionDate;
 
-    private int operatorMember;
+    private String operatorEmployeeIdNo;
 
     private TaskStateEnum state;
 

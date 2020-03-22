@@ -25,7 +25,7 @@ public class TaskVo {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date productionDate;
 
-    private int operatorMember;
+    private String operatorEmployeeNo;
 
     private TaskStateEnum state;
 

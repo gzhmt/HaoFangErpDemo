@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
@@ -19,8 +20,9 @@ import java.io.Serializable;
  */
 @Data
 @ToString
-@TableName("system_power")
+@NoArgsConstructor
 @AllArgsConstructor
+@TableName("system_power")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Power extends Model<Power> {
     @TableId(type = IdType.AUTO)

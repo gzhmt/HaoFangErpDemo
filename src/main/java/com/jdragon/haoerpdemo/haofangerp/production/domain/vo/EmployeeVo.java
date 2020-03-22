@@ -16,7 +16,7 @@ import java.sql.Date;
 @Data
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MemberVo {
+public class EmployeeVo {
     private int id;
 
     private String employeeNo;

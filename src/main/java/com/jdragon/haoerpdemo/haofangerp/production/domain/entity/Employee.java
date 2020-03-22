@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
@@ -19,9 +21,11 @@ import java.sql.Date;
  */
 @Data
 @ToString
-@TableName("system_member")
+@NoArgsConstructor
+@AllArgsConstructor
+@TableName("system_employee")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Member extends Model<Member> {
+public class Employee extends Model<Employee> {
 
     @TableId(type = IdType.AUTO)
     private int id;

@@ -1,8 +1,8 @@
 package com.jdragon.haoerpdemo.haofangerp.production.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.MemberVo;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Member;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.EmployeeVo;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Employee;
 
 /**
  * @Author: Jdragon
@@ -10,7 +10,7 @@ import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Member;
  * @Date: 2020.03.20 11:26
  * @Description: 用户服务接口类
  */
-public interface MemberService extends IService<Member> {
+public interface EmployeeService extends IService<Employee> {
 
 
     /**
@@ -18,7 +18,7 @@ public interface MemberService extends IService<Member> {
      * @param employeeNo
      * @return
      */
-    Member getMemberByEmployeeNo(String employeeNo);
+    Employee getEmployeeByEmployeeNo(String employeeNo);
 
     /**
      * 个性化验证登录
@@ -30,9 +30,9 @@ public interface MemberService extends IService<Member> {
 
     /**
      * 注册
-     * @param memberVo
+     * @param employeeVo
      * @return member
      * @throws Exception
      */
-    Member register(MemberVo memberVo) throws Exception;
+    Employee register(EmployeeVo employeeVo) throws Exception;
 }

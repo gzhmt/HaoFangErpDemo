@@ -21,8 +21,8 @@ public class RoleProvider {
         return new SQL(){
             {
                 SELECT_DISTINCT("r.role_name");
-                FROM("system_member m ");
-                JOIN("system_member_role mr on m.id=mr.member_id","system_role r on r.id=mr.role_id");
+                FROM("system_employee m ");
+                JOIN("system_employee_role mr on m.id=mr.employee_id","system_role r on r.id=mr.role_id");
                 WHERE("m.employee_no = #{employeeNo}");
             }
         }.toString();

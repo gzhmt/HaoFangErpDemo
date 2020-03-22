@@ -6,6 +6,7 @@ import com.jdragon.haoerpdemo.haofangerp.commons.constant.EmergencyLevelEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStatusEnum;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.Date;
 /**
@@ -15,6 +16,7 @@ import java.util.Date;
  * @Description: 生产计划vo类
  */
 @Data
+@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlanVo {
 
@@ -28,7 +30,7 @@ public class PlanVo {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
 
-    private int principalMember;
+    private String principalEmployeeNo;
 
     private EmergencyLevelEnum emergencyLevel;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
