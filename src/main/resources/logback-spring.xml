@@ -76,8 +76,9 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
     <!-- hibernate logger -->
     <logger name="com.jdragon.haoerpdemo.haofangerp" level="debug" />
     <!-- Spring framework logger -->
-    <logger name="org.springframework" level="debug" additivity="false"></logger>
-    <!--来自金柏宇的冲突-->
+    <logger name="org.springframework" level="debug" additivity="true"></logger>
+    <!--金哥改了logback-->
+    <!--金柏宇修改-->
 
 
 
