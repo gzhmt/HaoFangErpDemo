@@ -1,10 +1,12 @@
 package com.jdragon.haoerpdemo.haofangerp.security.handler;
 
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
+import com.jdragon.haoerpdemo.haofangerp.production.service.PowerService;
 import com.jdragon.haoerpdemo.haofangerp.security.commons.JSONAuthentication;
 import com.jdragon.haoerpdemo.haofangerp.security.commons.TokenCache;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,7 +32,8 @@ import org.slf4j.Logger;
 @Slf4j
 @Component
 public class MyAuthenticationSuccessHandler extends JSONAuthentication implements AuthenticationSuccessHandler {
-
+    @Autowired
+    PowerService powerService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -51,6 +54,7 @@ public class MyAuthenticationSuccessHandler extends JSONAuthentication implement
             log.debug(userDetails.getUsername()+"初次登录，token还没有，生成新token。。。。。。");
             //如果token为空，则去创建一个新的token
             token = jwtService.generateToken(userDetails);
+
             //把新的token存储到缓存中
             TokenCache.setToken(userDetails.getUsername(),token);
         }
@@ -59,6 +63,7 @@ public class MyAuthenticationSuccessHandler extends JSONAuthentication implement
         map.put("username",userDetails.getUsername());
         map.put("auth",userDetails.getAuthorities());
         map.put("token",token);
+        map.put("power",powerService.getPowerByEmployeeNo(userDetails.getUsername()));
 
         Result result = Result.success("登录成功").setResult(map);
         this.writeJSON(request,response,result);

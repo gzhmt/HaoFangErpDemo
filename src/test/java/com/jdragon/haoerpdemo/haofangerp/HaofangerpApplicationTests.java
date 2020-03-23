@@ -2,6 +2,7 @@ package com.jdragon.haoerpdemo.haofangerp;
 
 import com.baomidou.mybatisplus.extension.api.R;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+
 @Slf4j
 @SpringBootTest
 class HaofangerpApplicationTests {
@@ -35,5 +38,6 @@ class HaofangerpApplicationTests {
 
     @Test
     void contextLoads()  {
+
     }
 }

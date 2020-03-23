@@ -1,6 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.production.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -13,6 +14,7 @@ import com.jdragon.haoerpdemo.haofangerp.production.service.PlanService;
 import com.jdragon.haoerpdemo.haofangerp.security.commons.SecurityContextHolderHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.DateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -27,6 +29,7 @@ import java.util.Optional;
  * @Date: 2020.03.18 17:15
  * @Description: 生产计划服务接口实现类
  */
+
 @Slf4j
 @CacheConfig(cacheNames = "plan")
 @Service
@@ -104,6 +107,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
      * @return
      * @throws Exception
      */
+
     private boolean isFounder(String productionNo) throws Exception {
         Optional<Plan> plan = Optional.ofNullable(this.getByProductionNo(productionNo));
         return SecurityContextHolderHelper.isAuthorities(

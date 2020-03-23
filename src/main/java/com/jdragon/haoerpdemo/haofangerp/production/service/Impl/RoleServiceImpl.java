@@ -26,7 +26,4 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         return baseMapper.getRolesByEmployeeNo(employeeNo);
     }
 
-    public boolean isAdmin(String employeeNo){
-        return false;
-    }
 }

@@ -6,16 +6,12 @@ import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.PlanVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 import com.jdragon.haoerpdemo.haofangerp.production.service.PlanService;
-import com.jdragon.haoerpdemo.haofangerp.security.commons.SecurityContextHolderHelper;
 import io.swagger.annotations.*;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.UUID;
 
 
 /**
@@ -30,18 +26,20 @@ import java.util.Optional;
 @Api(tags = "生产计划相关")
 public class PlanController {
 
+
+
     @Autowired
     PlanService planService;
 
     @GetMapping("/id/{id}")
     @ApiOperation("根据计划号获取计划")
-    public Result byId(@PathVariable Long id){
+    public Result byId(@ApiParam(name = "id",value = "计划ID")@PathVariable Long id){
         return Result.success().setResult(planService.getById(id));
     }
 
     @GetMapping("/list/{page}")
     @ApiOperation("获取生产计划列表")
-    public Result list(@PathVariable int page){
+    public Result list(@ApiParam(name = "page",value = "页数")@PathVariable int page){
         try{
             IPage<Plan> planList = planService.list(new Page<>(page,20));
             return Result.success().setResult(planList);
@@ -52,7 +50,7 @@ public class PlanController {
 
     @PostMapping("/create")
     @ApiOperation(value = "创建生产计划")
-    public Result create(@RequestBody PlanVo planVo) {
+    public Result create(@ApiParam(name = "planVo",value = "计划具体参数")@RequestBody PlanVo planVo) {
         try{
             Plan plan = planService.save(planVo);
             return Result.success().setResult(plan);
@@ -63,7 +61,7 @@ public class PlanController {
 
     @PostMapping("/update")
     @ApiOperation("更改生产计划")
-    public Result update(@RequestBody PlanVo planVo){
+    public Result update(@ApiParam(name = "planVo",value = "计划具体参数")@RequestBody PlanVo planVo){
         try {
             return Result.success().setResult(planService.update(planVo));
         }catch (Exception e){
@@ -73,7 +71,7 @@ public class PlanController {
 
     @PostMapping("/delete")
     @ApiOperation("删除生产计划")
-    public Result delete(@RequestBody String productionNo){
+    public Result delete(@ApiParam(name = "productionNo",value = "计划生产单号")@RequestBody String productionNo){
         try {
             return Result.success().setResult(planService.delete(productionNo));
         } catch (Exception e) {

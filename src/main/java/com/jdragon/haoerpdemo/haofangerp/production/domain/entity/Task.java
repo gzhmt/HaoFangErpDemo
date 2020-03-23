@@ -39,7 +39,7 @@ public class Task extends Model<Task>{
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date productionDate;
 
-    private String operatorEmployeeIdNo;
+    private String operatorEmployeeNo;
 
     private TaskStateEnum state;
 
@@ -57,7 +57,7 @@ public class Task extends Model<Task>{
 
     private int productionPlanId;
 
-    private int sequenceId;
+    private String sequenceId;
     @Override
     protected Serializable pkVal(){
         return this.id;
