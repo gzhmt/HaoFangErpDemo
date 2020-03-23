@@ -5,7 +5,7 @@ target/
 !**/src/test/**
 *.yml
 .gitignore
-
+application.yml
 ### STS ###
 .apt_generated
 .classpath
@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+log/
+
