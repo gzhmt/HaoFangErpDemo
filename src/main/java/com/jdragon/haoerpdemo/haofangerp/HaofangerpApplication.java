@@ -16,5 +16,8 @@ public class HaofangerpApplication {
         SpringApplication.run(HaofangerpApplication.class, args);
     }
     //测试.gitignores liu
+    //测试.gitignores liu233
     //测试.gitignores zhjl
+    //测试 jby
+    //自我冲突
 }
