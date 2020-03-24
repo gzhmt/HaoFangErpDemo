@@ -15,7 +15,7 @@ import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task;
 
 public interface TaskService extends IService<Task> {
     IPage<Task> list(Page<Task> page);
-    Task save(TaskVo taskVo);
+    Task save(TaskVo taskVo) throws Exception;
     boolean delete(Long id);
     boolean update(TaskVo taskVo);
 }

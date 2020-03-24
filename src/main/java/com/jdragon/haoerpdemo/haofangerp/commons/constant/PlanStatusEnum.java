@@ -1,6 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.commons.constant;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import lombok.Getter;
 
 /**
  * @Author: Jdragon

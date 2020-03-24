@@ -3,6 +3,7 @@ package com.jdragon.haoerpdemo.haofangerp.production.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task;
 import com.jdragon.haoerpdemo.haofangerp.production.service.TaskService;
@@ -31,14 +32,23 @@ public class TaskController {
     @GetMapping("list/{page}")
     @ApiOperation("获取生产任务列表")
     public Result getList(@PathVariable int page){
-        IPage<Task> taskIPage = taskService.list(new Page<>(page,20));
-        return Result.success(Result.SUCCESS_MESSAGE).setResult(taskIPage);
+        try{
+            IPage<Task> taskIPage = taskService.list(new Page<>(page,20));
+            return Result.success().setResult(taskIPage);
+        }catch (Exception e){
+            return Result.error().setResult(e.getMessage());
+        }
     }
 
     @PostMapping("/create")
     @ApiOperation("创建生产任务")
     public Result create(@RequestBody TaskVo taskVo){
-        return Result.success(Optional.ofNullable(taskService.save(taskVo)).isPresent()?"创建成功":"创建失败");
+        try{
+            Task task = taskService.save(taskVo);
+            return Result.success().setResult(task);
+        }catch (Exception e){
+            return Result.error().setResult(e.getMessage());
+        }
     }
 
     @PostMapping("/update")
