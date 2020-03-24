@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
 
 
 /**
@@ -26,15 +25,13 @@ import java.util.UUID;
 @Api(tags = "生产计划相关")
 public class PlanController {
 
-
-
     @Autowired
     PlanService planService;
 
-    @GetMapping("/id/{id}")
-    @ApiOperation("根据计划号获取计划")
-    public Result byId(@ApiParam(name = "id",value = "计划ID")@PathVariable Long id){
-        return Result.success().setResult(planService.getById(id));
+    @GetMapping("/productionNo/{productionNo}")
+    @ApiOperation("根据计划id获取计划")
+    public Result byId(@ApiParam(name = "productionNo",value = "计划单号")@PathVariable String productionNo){
+        return Result.success().setResult(planService.getByProductionNo(productionNo));
     }
 
     @GetMapping("/list/{page}")

@@ -14,7 +14,6 @@ import com.jdragon.haoerpdemo.haofangerp.production.service.PlanService;
 import com.jdragon.haoerpdemo.haofangerp.security.commons.SecurityContextHolderHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.DateUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -42,9 +41,12 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         return baseMapper.selectPage(page,lambdaQueryWrapper);
     }
 
-    @CachePut(key = "#result.id")
+    @Cacheable(key = "#planVo.productionNo")
     @Override
     public Plan save(PlanVo planVo) throws Exception {
+        if(getByProductionNo(planVo.getProductionNo())!=null){
+            throw new Exception("已存在该计划单号");
+        }
         planVo.setPrincipalEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
         planVo.setCreateDate(DateUtil.now());
         Plan plan = (Plan)Bean2Utils.copyProperties(planVo,Plan.class);
@@ -67,7 +69,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         }
     }
 
-    @CachePut(key = "#id")
+    @CachePut(key = "#planVo.productionNo")
     @Override
     public boolean update(PlanVo planVo) throws Exception {
         if(isFounder(planVo.getProductionNo())) {
@@ -88,11 +90,6 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
     }
 
     @Cacheable
-    @Override
-    public Plan getById(Long id) {
-        return baseMapper.selectById(id);
-    }
-
     @Override
     public Plan getByProductionNo(String productionNo) {
         LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
