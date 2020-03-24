@@ -49,6 +49,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         }
         planVo.setPrincipalEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
         planVo.setCreateDate(DateUtil.now());
+        planVo.setState(PlanStateEnum.新计划);
         Plan plan = (Plan)Bean2Utils.copyProperties(planVo,Plan.class);
         if(Optional.ofNullable(plan).isPresent()&&plan.insert()){
             return plan;

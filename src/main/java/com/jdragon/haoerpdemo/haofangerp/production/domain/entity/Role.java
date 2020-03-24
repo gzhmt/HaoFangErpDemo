@@ -32,6 +32,8 @@ public class Role extends Model<Role> {
 
     private String describe;
 
+    private String RoleSort;
+
     @Override
     protected Serializable pkVal(){
         return this.id;
