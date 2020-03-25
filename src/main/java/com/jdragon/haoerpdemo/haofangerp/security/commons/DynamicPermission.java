@@ -36,7 +36,7 @@ public class DynamicPermission {
      * @param request
      * @param authentication
      * @return
-//     * @throws MyaccessDeniedException
+     * @throws MyAccessDeniedException
      */
     public boolean checkPermisstion(HttpServletRequest request,
                                     Authentication authentication)

@@ -11,10 +11,10 @@ import lombok.Setter;
  */
 public enum ResultCode {
 
-    NORMAL(20000l, "正常响应"),
-    AUTH_FAIL(20001l, "认证失败"),
-    SYSTEM_ERROR(20002l, "系统异常"),
-    PARAMS_ERROR(20003l,"参数非法");
+    NORMAL(20000L, "正常响应"),
+    AUTH_FAIL(20001L, "认证失败"),
+    SYSTEM_ERROR(20002L, "预期异常"),
+    PARAMS_ERROR(20003L,"参数非法");
 
     @Setter
     @Getter

@@ -42,7 +42,7 @@ public class SecurityContextHolderHelper {
     /**
      *
      */
-    public static boolean isAuthorities(String employeeNo) throws Exception {
+    public static boolean isAuthorities(String employeeNo){
         String authority = SecurityContextHolderHelper.getEmployeeNo();
         return employeeNo.equals(authority);
     }

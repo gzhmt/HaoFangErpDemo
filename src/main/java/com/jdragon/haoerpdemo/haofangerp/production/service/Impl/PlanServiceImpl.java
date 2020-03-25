@@ -1,12 +1,12 @@
 package com.jdragon.haoerpdemo.haofangerp.production.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.Bean2Utils;
+import com.jdragon.haoerpdemo.haofangerp.commons.tools.Date2Util;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.PlanVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 import com.jdragon.haoerpdemo.haofangerp.production.mappers.PlanMapper;
@@ -20,6 +20,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.Optional;
 
 /**
@@ -34,6 +35,10 @@ import java.util.Optional;
 @Service
 public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements PlanService {
 
+    private String dateFormat = "yyyyMMdd";
+
+    private String productionFormat = "SC-{0}-{1}";
+
     @Override
     public IPage<Plan> list(Page<Plan> page){
         LambdaQueryWrapper<Plan> lambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -41,14 +46,45 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         return baseMapper.selectPage(page,lambdaQueryWrapper);
     }
 
-    @Cacheable(key = "#planVo.productionNo")
+    /**
+     * @Author: Jdragon
+     * @Date: 2020.03.25 下午 2:08
+     * @params: [planVo]
+     * @return: com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan
+     * @Description: 保存plan，传入的vo，会强制修改productionNo,createDate,state
+     **/
+    @CachePut(key = "#result.productionNo")
     @Override
     public Plan save(PlanVo planVo) throws Exception {
-        if(getByProductionNo(planVo.getProductionNo())!=null){
-            throw new Exception("已存在该计划单号");
+        LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        planLambdaQueryWrapper.orderByDesc(Plan::getId).last("limit 1");
+        Plan lastPlan = baseMapper.selectOne(planLambdaQueryWrapper);
+        /*
+          |-检测历史计划最后创建的计划，没有则直接使用 SC-{今日日期}-{0001}，如果有则进入条件
+               |-将单号按 - 号分隔，分隔之后传日期部分进行对比，返回结果
+                   |-如果今日创建过计划单号，则根据上次生成的第三部分+1来生成
+                   |-如果今日没有创建过计划单号，则使用0001
+         */
+        String newPlanProductionThreePartStr;/*SC-20200325-0001这个变量为最后部分的0001的生成*/
+        if(Optional.ofNullable(lastPlan).isPresent()){
+            String[] productionNoSplit = lastPlan.getProductionNo().split("-");
+            boolean lastPlanCreateIsToday = Date2Util.contrastNowDateStr(productionNoSplit[1],dateFormat);
+            if(lastPlanCreateIsToday){
+                int newPlanProductionThreePart = Integer.parseInt(productionNoSplit[2])+1;
+                newPlanProductionThreePartStr = String.format("%04d",newPlanProductionThreePart);
+            }else{
+                newPlanProductionThreePartStr = String.format("%04d",1);
+            }
+        }else{
+            newPlanProductionThreePartStr = String.format("%04d",1);
         }
-        planVo.setPrincipalEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
+        //使用SC-{}-{}格式占位符来生成生产单号
+        planVo.setProductionNo(MessageFormat.format(productionFormat,
+                Date2Util.now(dateFormat), newPlanProductionThreePartStr));
+
+        planVo.setCreateEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
         planVo.setCreateDate(DateUtil.now());
+        planVo.setState(PlanStateEnum.新计划);
         Plan plan = (Plan)Bean2Utils.copyProperties(planVo,Plan.class);
         if(Optional.ofNullable(plan).isPresent()&&plan.insert()){
             return plan;
@@ -63,9 +99,13 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         if (isFounder(productionNo)){
             LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
             planLambdaQueryWrapper.eq(Plan::getProductionNo,productionNo);
-            return this.remove(planLambdaQueryWrapper);
+            if(this.remove(planLambdaQueryWrapper)){
+                return true;
+            }else{
+                throw new Exception("删除失败");
+            }
         }else{
-            throw new Exception("不是你创建的生产计划不能删除");
+            throw new Exception("不是你管理的生产计划不能删除");
         }
     }
 
@@ -73,8 +113,8 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
     @Override
     public boolean update(PlanVo planVo) throws Exception {
         if(isFounder(planVo.getProductionNo())) {
-            /**
-             * 防止传入参数来修改审核状态
+            /*
+              防止传入参数来修改审核状态
              */
             PlanStateEnum state = getById(planVo.getId()).getState();
             Plan plan = (Plan) Bean2Utils.copyProperties(planVo, Plan.class);
@@ -85,29 +125,36 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
                 throw new Exception("更新失败");
             }
         }else{
-            throw new Exception("不是你创建的生产计划不能更改");
+            throw new Exception("不是你管理的生产计划不能更改");
         }
     }
 
     @Cacheable
     @Override
-    public Plan getByProductionNo(String productionNo) {
+    public Plan getByProductionNo(String productionNo) throws Exception {
         LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
         planLambdaQueryWrapper.eq(Plan::getProductionNo,productionNo);
         Plan plan = this.getOne(planLambdaQueryWrapper);
-        return plan;
+        if(Optional.ofNullable(plan).isPresent()){
+            return plan;
+        }else{
+            throw new Exception("没有这个生产单号的计划");
+        }
+
     }
-
     /**
-     * 根据计划id判断这个计划
-     * @param productionNo
-     * @return
-     * @throws Exception
-     */
-
+     * @Author: Jdragon
+     * @Date: 2020.03.25 下午 3:44
+     * @params: [productionNo]
+     * @return: boolean
+     * @Description:根据计划单号判断这个计划是否是你创建，或是你负责的
+     **/
     private boolean isFounder(String productionNo) throws Exception {
         Optional<Plan> plan = Optional.ofNullable(this.getByProductionNo(productionNo));
-        return SecurityContextHolderHelper.isAuthorities(
+        boolean isPrincipal = SecurityContextHolderHelper.isAuthorities(
                 plan.orElse(new Plan()).getPrincipalEmployeeNo());
+        boolean isCreate = SecurityContextHolderHelper.isAuthorities(
+                plan.orElse(new Plan()).getCreateEmployeeNo());
+        return isPrincipal||isCreate;
     }
 }

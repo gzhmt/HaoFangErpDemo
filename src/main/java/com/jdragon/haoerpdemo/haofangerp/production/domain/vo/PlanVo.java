@@ -5,17 +5,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.EmergencyLevelEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStatusEnum;
-import com.jdragon.haoerpdemo.haofangerp.production.controller.PlanController;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
-import org.apache.ibatis.annotations.One;
-import org.apache.ibatis.annotations.Select;
-
 import java.util.Date;
-import java.util.UUID;
-
-import static com.jdragon.haoerpdemo.haofangerp.production.controller.PlanController.*;
 
 /**
  * @Author: Jdragon
@@ -28,20 +21,26 @@ import static com.jdragon.haoerpdemo.haofangerp.production.controller.PlanContro
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlanVo {
 
+    @ApiModelProperty(hidden = true)
     private Long id;
 
-    @ApiModelProperty(example = "SC-20200323-0001")
+    @ApiModelProperty(example = "创建人工号",hidden = true)
+    private String createEmployeeNo;
+
+    @ApiModelProperty(example = "admin")
+    private String principalEmployeeNo;
+
+    @ApiModelProperty(example = "SC-20200323-0001",hidden = true)
     private String productionNo;
 
+    @ApiModelProperty(example = "新计划",hidden = true)
     private PlanStateEnum state;
 
     private PlanStatusEnum status;
 
-    @ApiModelProperty(example = "2020-03-23 18:59:59")
+    @ApiModelProperty(example = "2020-03-23 18:59:59",hidden = true)
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
-
-    private String principalEmployeeNo;
 
     private EmergencyLevelEnum emergencyLevel;
 

@@ -30,7 +30,9 @@ public class Role extends Model<Role> {
 
     private String roleName;
 
-    private String describe;
+    private Integer describe;
+
+    private int roleSort;
 
     @Override
     protected Serializable pkVal(){
