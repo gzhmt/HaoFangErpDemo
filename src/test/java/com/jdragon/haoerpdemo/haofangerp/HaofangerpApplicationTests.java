@@ -2,6 +2,7 @@ package com.jdragon.haoerpdemo.haofangerp;
 
 import com.baomidou.mybatisplus.extension.api.R;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
+import com.jdragon.haoerpdemo.haofangerp.commons.tools.AutoGenerateUtil;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.Date2Util;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 import lombok.extern.slf4j.Slf4j;
@@ -40,23 +41,14 @@ class HaofangerpApplicationTests {
 
     @Test
     void contextLoads()  {
-        Calendar calendar = Calendar.getInstance();
-        System.out.println(calendar.get(Calendar.YEAR));
-        System.out.println(calendar.get(Calendar.MONTH));
-        System.out.println(calendar.get(Calendar.DAY_OF_MONTH));
-        SimpleDateFormat dft = new SimpleDateFormat("yyyyMMdd");
-        Date date = DateUtil.now();
-        System.out.println(dft.format(date));
-
+        String lastPlan = "SC-20200325-0001";
         String[] productionNoSplit = "SC-20200325-0001".split("-");
         boolean lastPlanCreateToday = Date2Util.contrastNowDateStr(productionNoSplit[1],"yyMMdd");
         System.out.println(lastPlanCreateToday);
 
-        System.out.println(MessageFormat.format("SC-{0}-{1}",Date2Util.now("yyyyMMdd"),
-                String.format("%04d",1)));
+        System.out.println(AutoGenerateUtil.createIncreaseOdd(lastPlan));
 
-        System.out.println(MessageFormat.format("SC-{0}-{1}",Date2Util.now("yyyyMMdd"),
-                String.format("%04d",Integer.parseInt(productionNoSplit[productionNoSplit.length-1])+1)));
+        System.out.println(AutoGenerateUtil.createTodayFirstOdd("SC"));
     }
 
 }
