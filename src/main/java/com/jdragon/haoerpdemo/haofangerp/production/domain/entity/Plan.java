@@ -37,7 +37,10 @@ public class Plan extends Model<Plan>{
     @TableId(type = IdType.AUTO)
     private Long id;
 
-    @Ignore
+    private String createEmployeeNo;
+
+    private String principalEmployeeNo;
+
     private String productionNo;
 
     private PlanStateEnum state;
@@ -46,7 +49,7 @@ public class Plan extends Model<Plan>{
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
 
-    private String principalEmployeeNo;
+
 
     private EmergencyLevelEnum emergencyLevel;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

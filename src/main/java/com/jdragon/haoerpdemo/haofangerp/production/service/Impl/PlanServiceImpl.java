@@ -59,11 +59,11 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
         planLambdaQueryWrapper.orderByDesc(Plan::getId).last("limit 1");
         Plan lastPlan = baseMapper.selectOne(planLambdaQueryWrapper);
-        /**
-         * |-检测历史计划最后创建的计划，没有则直接使用 SC-{今日日期}-{0001}，如果有则进入条件
-         *      |-将单号按 - 号分隔，分隔之后传日期部分进行对比，返回结果
-         *          |-如果今日创建过计划单号，则根据上次生成的第三部分+1来生成
-         *          |-如果今日没有创建过计划单号，则使用0001
+        /*
+          |-检测历史计划最后创建的计划，没有则直接使用 SC-{今日日期}-{0001}，如果有则进入条件
+               |-将单号按 - 号分隔，分隔之后传日期部分进行对比，返回结果
+                   |-如果今日创建过计划单号，则根据上次生成的第三部分+1来生成
+                   |-如果今日没有创建过计划单号，则使用0001
          */
         String newPlanProductionThreePartStr;/*SC-20200325-0001这个变量为最后部分的0001的生成*/
         if(Optional.ofNullable(lastPlan).isPresent()){
@@ -82,7 +82,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         planVo.setProductionNo(MessageFormat.format(productionFormat,
                 Date2Util.now(dateFormat), newPlanProductionThreePartStr));
 
-        planVo.setPrincipalEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
+        planVo.setCreateEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
         planVo.setCreateDate(DateUtil.now());
         planVo.setState(PlanStateEnum.新计划);
         Plan plan = (Plan)Bean2Utils.copyProperties(planVo,Plan.class);
@@ -99,9 +99,13 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         if (isFounder(productionNo)){
             LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
             planLambdaQueryWrapper.eq(Plan::getProductionNo,productionNo);
-            return this.remove(planLambdaQueryWrapper);
+            if(this.remove(planLambdaQueryWrapper)){
+                return true;
+            }else{
+                throw new Exception("删除失败");
+            }
         }else{
-            throw new Exception("不是你创建的生产计划不能删除");
+            throw new Exception("不是你管理的生产计划不能删除");
         }
     }
 
@@ -109,8 +113,8 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
     @Override
     public boolean update(PlanVo planVo) throws Exception {
         if(isFounder(planVo.getProductionNo())) {
-            /**
-             * 防止传入参数来修改审核状态
+            /*
+              防止传入参数来修改审核状态
              */
             PlanStateEnum state = getById(planVo.getId()).getState();
             Plan plan = (Plan) Bean2Utils.copyProperties(planVo, Plan.class);
@@ -121,7 +125,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
                 throw new Exception("更新失败");
             }
         }else{
-            throw new Exception("不是你创建的生产计划不能更改");
+            throw new Exception("不是你管理的生产计划不能更改");
         }
     }
 
@@ -138,16 +142,19 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         }
 
     }
-
     /**
-     * 根据计划单号判断这个计划是否是你创建的
-     * @param productionNo
-     * @return
-     * @throws Exception
-     */
+     * @Author: Jdragon
+     * @Date: 2020.03.25 下午 3:44
+     * @params: [productionNo]
+     * @return: boolean
+     * @Description:根据计划单号判断这个计划是否是你创建，或是你负责的
+     **/
     private boolean isFounder(String productionNo) throws Exception {
         Optional<Plan> plan = Optional.ofNullable(this.getByProductionNo(productionNo));
-        return SecurityContextHolderHelper.isAuthorities(
+        boolean isPrincipal = SecurityContextHolderHelper.isAuthorities(
                 plan.orElse(new Plan()).getPrincipalEmployeeNo());
+        boolean isCreate = SecurityContextHolderHelper.isAuthorities(
+                plan.orElse(new Plan()).getCreateEmployeeNo());
+        return isPrincipal||isCreate;
     }
 }

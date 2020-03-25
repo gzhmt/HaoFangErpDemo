@@ -21,20 +21,26 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlanVo {
 
+    @ApiModelProperty(hidden = true)
     private Long id;
 
-    @ApiModelProperty(example = "SC-20200323-0001")
+    @ApiModelProperty(example = "创建人工号",hidden = true)
+    private String createEmployeeNo;
+
+    @ApiModelProperty(example = "admin")
+    private String principalEmployeeNo;
+
+    @ApiModelProperty(example = "SC-20200323-0001",hidden = true)
     private String productionNo;
 
+    @ApiModelProperty(example = "新计划",hidden = true)
     private PlanStateEnum state;
 
     private PlanStatusEnum status;
 
-    @ApiModelProperty(example = "2020-03-23 18:59:59")
+    @ApiModelProperty(example = "2020-03-23 18:59:59",hidden = true)
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
-
-    private String principalEmployeeNo;
 
     private EmergencyLevelEnum emergencyLevel;
 
