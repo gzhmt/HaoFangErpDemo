@@ -3,6 +3,7 @@ package com.jdragon.haoerpdemo.haofangerp.production.mappers;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +17,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlanMapper extends BaseMapper<Plan> {
 
+    @Select("select * from production_plan where production_no=#{productionNo} and activity=true")
+    Plan selectByProductionNo(String productionNo);
+
+    @Select("select * from production_plan order by id Desc limit 1")
+    Plan selectByIdDescLimitOne();
 }

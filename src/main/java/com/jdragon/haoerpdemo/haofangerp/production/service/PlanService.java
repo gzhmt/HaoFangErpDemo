@@ -18,6 +18,6 @@ public interface PlanService extends IService<Plan> {
     IPage<Plan> list(Page<Plan> page) throws Exception;
     Plan save(PlanVo planVo) throws Exception;
     boolean delete(String productionNo) throws Exception;
-    boolean update(PlanVo planVo) throws Exception;
     Plan getByProductionNo(String productionNo) throws Exception;
+    Plan copy(String productionNo) throws Exception;
 }

@@ -58,11 +58,11 @@ public class PlanController {
         }
     }
 
-    @PutMapping("/update")
-    @ApiOperation("更改生产计划")
-    public Result update(@ApiParam(name = "planVo",value = "计划具体参数")@RequestBody PlanVo planVo){
-        try {
-            return Result.success().setResult(planService.update(planVo));
+    @PostMapping("/copy/{productionNo}")
+    @ApiOperation("复制生产计划")
+    public Result update(@ApiParam(name = "productionNo",value = "计划单号")@PathVariable String productionNo){
+        try{
+            return Result.success().setResult(planService.copy(productionNo));
         }catch (Exception e){
             return Result.error().setResult(e.getMessage());
         }
