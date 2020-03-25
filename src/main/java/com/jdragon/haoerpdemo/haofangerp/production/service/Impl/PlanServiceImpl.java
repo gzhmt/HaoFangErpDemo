@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
+import com.jdragon.haoerpdemo.haofangerp.commons.tools.AutoGenerateUtil;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.Bean2Utils;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.Date2Util;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.PlanVo;
@@ -56,40 +57,25 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
     @CachePut(key = "#result.productionNo")
     @Override
     public Plan save(PlanVo planVo) throws Exception {
-        LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        planLambdaQueryWrapper.orderByDesc(Plan::getId).last("limit 1");
-        Plan lastPlan = baseMapper.selectOne(planLambdaQueryWrapper);
-        /*
-          |-检测历史计划最后创建的计划，没有则直接使用 SC-{今日日期}-{0001}，如果有则进入条件
-               |-将单号按 - 号分隔，分隔之后传日期部分进行对比，返回结果
-                   |-如果今日创建过计划单号，则根据上次生成的第三部分+1来生成
-                   |-如果今日没有创建过计划单号，则使用0001
-         */
-        String newPlanProductionThreePartStr;/*SC-20200325-0001这个变量为最后部分的0001的生成*/
-        if(Optional.ofNullable(lastPlan).isPresent()){
-            String[] productionNoSplit = lastPlan.getProductionNo().split("-");
-            boolean lastPlanCreateIsToday = Date2Util.contrastNowDateStr(productionNoSplit[1],dateFormat);
-            if(lastPlanCreateIsToday){
-                int newPlanProductionThreePart = Integer.parseInt(productionNoSplit[2])+1;
-                newPlanProductionThreePartStr = String.format("%04d",newPlanProductionThreePart);
-            }else{
-                newPlanProductionThreePartStr = String.format("%04d",1);
-            }
-        }else{
-            newPlanProductionThreePartStr = String.format("%04d",1);
-        }
-        //使用SC-{}-{}格式占位符来生成生产单号
-        planVo.setProductionNo(MessageFormat.format(productionFormat,
-                Date2Util.now(dateFormat), newPlanProductionThreePartStr));
+        synchronized (this) {
+            LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            planLambdaQueryWrapper.orderByDesc(Plan::getId).last("limit 1");
+            Plan lastPlan = baseMapper.selectOne(planLambdaQueryWrapper);
 
-        planVo.setCreateEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
-        planVo.setCreateDate(DateUtil.now());
-        planVo.setState(PlanStateEnum.新计划);
-        Plan plan = (Plan)Bean2Utils.copyProperties(planVo,Plan.class);
-        if(Optional.ofNullable(plan).isPresent()&&plan.insert()){
-            return plan;
-        }else{
-            throw new Exception("创建失败");
+            if (Optional.ofNullable(lastPlan).isPresent()) {
+                planVo.setProductionNo(AutoGenerateUtil.createIncreaseOdd(lastPlan.getProductionNo()));
+            } else {
+                planVo.setProductionNo(AutoGenerateUtil.createTodayFirstOdd("SC"));
+            }
+            planVo.setCreateEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
+            planVo.setCreateDate(DateUtil.now());
+            planVo.setState(PlanStateEnum.新计划);
+            Plan plan = (Plan) Bean2Utils.copyProperties(planVo, Plan.class);
+            if (Optional.ofNullable(plan).isPresent() && plan.insert()) {
+                return plan;
+            } else {
+                throw new Exception("创建失败");
+            }
         }
     }
 
