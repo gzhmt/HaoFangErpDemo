@@ -30,14 +30,14 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Task extends Model<Task>{
     @TableId(type = IdType.AUTO)
-    private int id;
+    private Long id;
 
     private String taskNo;
 
     private String taskName;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date productionDate;
+    private Date createDate;
 
     private String operatorEmployeeNo;
 
@@ -45,19 +45,20 @@ public class Task extends Model<Task>{
 
     private String remarks;
 
-    private String productName;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date stateChangeDate;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date forecastStartTime;
+    private Date forecastStartDate;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date forecastEndTime;
+    private Date forecastEndDate;
 
-    private int productNumber;
-
-    private int productionPlanId;
+    private Long productionPlanId;
 
     private String sequenceId;
+
+
     @Override
     protected Serializable pkVal(){
         return this.id;

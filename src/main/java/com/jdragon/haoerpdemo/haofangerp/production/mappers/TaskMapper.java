@@ -21,6 +21,5 @@ import java.util.List;
 @Repository
 public interface TaskMapper extends BaseMapper<Task> {
 
-    @Select("select state from production_plan where id = #{plandId}")
-    PlanStateEnum selectPlanByPlanId(Integer plandId);
+
 }

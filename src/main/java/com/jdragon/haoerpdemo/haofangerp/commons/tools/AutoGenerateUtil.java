@@ -6,14 +6,23 @@ import java.text.MessageFormat;
  * @Author: Jdragon
  * @email: 1061917196@qq.com
  * @Date: 2020.03.25 22:04
- * @Description:
+ * @Description: 自动生成单号
  */
 public class AutoGenerateUtil {
-
+    /**
+     * 日期格式
+     */
     private static String dateFormat = "yyyyMMdd";
-
+    /**
+     * 单号格式
+     */
     private static String increaseFormat = "{0}-{1}-{2}";
 
+    /**
+     * 通过最后单号创建自增单号
+     * @param str 最后单号
+     * @return 单号
+     */
     public static String createIncreaseOdd(String str){
         /*
           |-检测历史计划最后创建的计划，没有则直接使用 {xx}-{今日日期}-{0001}，如果有则进入条件
@@ -33,6 +42,12 @@ public class AutoGenerateUtil {
         //使用{}-{}-{}格式占位符来生成生产单号
         return MessageFormat.format(increaseFormat,split[0] ,Date2Util.now(dateFormat), newPlanProductionThreePartStr);
     }
+
+    /**
+     * 创建首次单号
+     * @param type 单号前缀
+     * @return 单号
+     */
     public static String createTodayFirstOdd(String type){
         return MessageFormat.format(increaseFormat,type,Date2Util.now(dateFormat), String.format("%04d", 1));
     }

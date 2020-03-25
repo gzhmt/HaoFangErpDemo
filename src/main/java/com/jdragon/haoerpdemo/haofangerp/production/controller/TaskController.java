@@ -9,6 +9,7 @@ import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task;
 import com.jdragon.haoerpdemo.haofangerp.production.service.TaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,13 +30,23 @@ public class TaskController {
     @Autowired
     TaskService taskService;
 
+    @GetMapping("taskNo/{taskNo}")
+    @ApiOperation("根据单号获取生产任务详情")
+    public Result byId(@ApiParam("计划单号")@PathVariable String taskNo){
+        try {
+            return Result.success().setResult(taskService.queryTaskDetail(taskNo));
+        } catch (Exception e) {
+            return Result.error().setResult(e.getMessage());
+        }
+    }
+
     @GetMapping("list/{page}")
     @ApiOperation("获取生产任务列表")
-    public Result getList(@PathVariable int page){
-        try{
+    public Result getList(@ApiParam("计划单号")@PathVariable int page){
+        try {
             IPage<Task> taskIPage = taskService.list(new Page<>(page,20));
             return Result.success().setResult(taskIPage);
-        }catch (Exception e){
+        } catch (Exception e){
             return Result.error().setResult(e.getMessage());
         }
     }
@@ -51,15 +62,32 @@ public class TaskController {
         }
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     @ApiOperation("更改生产任务")
     public Result update(@RequestBody TaskVo taskVo){
-        return Result.success(taskService.update(taskVo)?"更改成功":"更改失败");
+        try {
+            return Result.success().setResult(taskService.update(taskVo));
+        } catch (Exception e) {
+            return Result.error().setResult(e.getMessage());
+        }
     }
 
-    @PostMapping("/delete")
-    @ApiOperation("删除生产任务")
-    public Result update(@RequestBody Long taskId){
-        return Result.success(taskService.delete(taskId)?"删除成功":"删除失败");
+    @DeleteMapping("/delete/{taskNo}")
+    @ApiOperation("根据生产单号删除生产任务")
+    public Result update(@ApiParam("生产单号")@PathVariable @RequestBody Long taskId){
+        try {
+            return Result.success().setResult(taskService.delete(taskId));
+        } catch (Exception e) {
+            return Result.error().setResult(e.getMessage());
+        }
+    }
+    @PutMapping("/state")
+    @ApiOperation("修改任务状态")
+    public Result state(){
+        try {
+            return
+        } catch (Exception e) {
+            return Result.error().setResult(e.getMessage());
+        }
     }
 }

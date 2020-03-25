@@ -18,28 +18,27 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TaskVo {
 
-    private int id;
+    private Long id;
 
-    @ApiModelProperty(example = "RW-20200323-0001")
     private String taskNo;
 
     @ApiModelProperty(example = "生产任务测试")
     private String taskName;
 
-    @ApiModelProperty(example = "2020-03-23 18:59:59")
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date productionDate;
 
-    @ApiModelProperty(example = "admin")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createDate;
+
+    //@ApiModelProperty(example = "admin")
     private String operatorEmployeeNo;
 
     private TaskStateEnum state;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date stateChangeDate;
+
     @ApiModelProperty(example = "生产单号为SC-20200323-0001的生产计划下的生产任务")
     private String remarks;
-
-    @ApiModelProperty(example = "昊方产品")
-    private String productName;
 
     @ApiModelProperty(example = "2020-03-23 18:59:59")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
@@ -49,12 +48,13 @@ public class TaskVo {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date forecastEndTime;
 
-    @ApiModelProperty(example = "5")
-    private int productNumber;
 
-    @ApiModelProperty(example = "1")
-    private int productionPlanId;
+    @ApiModelProperty(example = "SC-20200323-0001")
+    private String productionPlanNo;
 
-    @ApiModelProperty(example = "LS-20200323-0001")
+    private Long productionPlanId;
+
+
+    //@ApiModelProperty(example = "LS-20200323-0001")
     private String sequenceId;
 }
