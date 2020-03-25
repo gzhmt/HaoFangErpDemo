@@ -27,9 +27,13 @@ public class PlanController {
     PlanService planService;
 
     @GetMapping("/productionNo/{productionNo}")
-    @ApiOperation("根据计划id获取计划")
+    @ApiOperation("根据计划单号获取计划")
     public Result byId(@ApiParam(name = "productionNo",value = "计划单号")@PathVariable String productionNo){
-        return Result.success().setResult(planService.getByProductionNo(productionNo));
+        try {
+            return Result.success().setResult(planService.getByProductionNo(productionNo));
+        }catch (Exception e){
+            return Result.error().setResult(e.getMessage());
+        }
     }
 
     @GetMapping("/list/{page}")
@@ -54,7 +58,7 @@ public class PlanController {
         }
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     @ApiOperation("更改生产计划")
     public Result update(@ApiParam(name = "planVo",value = "计划具体参数")@RequestBody PlanVo planVo){
         try {
@@ -64,9 +68,10 @@ public class PlanController {
         }
     }
 
-    @PostMapping("/delete")
+
+    @DeleteMapping("/delete/{productionNo}")
     @ApiOperation("删除生产计划")
-    public Result delete(@ApiParam(name = "productionNo",value = "计划生产单号")@RequestBody String productionNo){
+    public Result delete(@ApiParam(name = "productionNo",value = "计划生产单号") @PathVariable String productionNo){
         try {
             return Result.success().setResult(planService.delete(productionNo));
         } catch (Exception e) {

@@ -19,5 +19,5 @@ public interface PlanService extends IService<Plan> {
     Plan save(PlanVo planVo) throws Exception;
     boolean delete(String productionNo) throws Exception;
     boolean update(PlanVo planVo) throws Exception;
-    Plan getByProductionNo(String productionNo);
+    Plan getByProductionNo(String productionNo) throws Exception;
 }
