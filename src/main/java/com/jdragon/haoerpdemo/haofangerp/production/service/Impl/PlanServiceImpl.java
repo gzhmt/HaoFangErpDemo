@@ -35,6 +35,10 @@ import java.util.Optional;
 @Service
 public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements PlanService {
 
+    private String dateFormat = "yyyyMMdd";
+
+    private String productionFormat = "SC-{0}-{1}";
+
     @Override
     public IPage<Plan> list(Page<Plan> page){
         LambdaQueryWrapper<Plan> lambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -55,22 +59,29 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
         planLambdaQueryWrapper.orderByDesc(Plan::getId).last("limit 1");
         Plan lastPlan = baseMapper.selectOne(planLambdaQueryWrapper);
-        //检测今日有没有计划单号被创建
+        /**
+         * |-检测历史计划最后创建的计划，没有则直接使用 SC-{今日日期}-{0001}，如果有则进入条件
+         *      |-将单号按 - 号分隔，分隔之后传日期部分进行对比，返回结果
+         *          |-如果今日创建过计划单号，则根据上次生成的第三部分+1来生成
+         *          |-如果今日没有创建过计划单号，则使用0001
+         */
+        String newPlanProductionThreePartStr;/*SC-20200325-0001这个变量为最后部分的0001的生成*/
         if(Optional.ofNullable(lastPlan).isPresent()){
             String[] productionNoSplit = lastPlan.getProductionNo().split("-");
-            //将单号按 - 号分隔，分隔之后传日期部分进行对比，返回结果
-            boolean lastPlanCreateToday = Date2Util.contrastNowDateStr(productionNoSplit[1],"yyyyMMdd");
-            //根据返回结果，拼接字符组成新的计划单号
-            if(lastPlanCreateToday){
-                planVo.setProductionNo(MessageFormat.format("SC-{0}-{1}",
-                        Date2Util.now("yyyyMMdd"),
-                        String.format("%04d",Integer.parseInt(productionNoSplit[productionNoSplit.length-1])+1)));
+            boolean lastPlanCreateIsToday = Date2Util.contrastNowDateStr(productionNoSplit[1],dateFormat);
+            if(lastPlanCreateIsToday){
+                int newPlanProductionThreePart = Integer.parseInt(productionNoSplit[2])+1;
+                newPlanProductionThreePartStr = String.format("%04d",newPlanProductionThreePart);
             }else{
-                planVo.setProductionNo(MessageFormat.format("SC-{0}-{1}",
-                        Date2Util.now("yyyyMMdd"),
-                        String.format("%04d",1)));
+                newPlanProductionThreePartStr = String.format("%04d",1);
             }
+        }else{
+            newPlanProductionThreePartStr = String.format("%04d",1);
         }
+        //使用SC-{}-{}格式占位符来生成生产单号
+        planVo.setProductionNo(MessageFormat.format(productionFormat,
+                Date2Util.now(dateFormat), newPlanProductionThreePartStr));
+
         planVo.setPrincipalEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
         planVo.setCreateDate(DateUtil.now());
         planVo.setState(PlanStateEnum.新计划);

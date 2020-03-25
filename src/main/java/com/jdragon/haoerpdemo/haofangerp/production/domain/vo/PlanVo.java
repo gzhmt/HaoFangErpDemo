@@ -5,17 +5,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.EmergencyLevelEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStatusEnum;
-import com.jdragon.haoerpdemo.haofangerp.production.controller.PlanController;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
-import org.apache.ibatis.annotations.One;
-import org.apache.ibatis.annotations.Select;
-
 import java.util.Date;
-import java.util.UUID;
-
-import static com.jdragon.haoerpdemo.haofangerp.production.controller.PlanController.*;
 
 /**
  * @Author: Jdragon
