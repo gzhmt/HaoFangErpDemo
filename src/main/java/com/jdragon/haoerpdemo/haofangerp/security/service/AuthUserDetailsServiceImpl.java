@@ -1,6 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.security.service;
 
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Employee;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.EmployeeRoleVo;
 import com.jdragon.haoerpdemo.haofangerp.production.service.EmployeeService;
 import com.jdragon.haoerpdemo.haofangerp.production.service.RoleService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,10 +43,10 @@ public class AuthUserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException(String.format("%s.这个用户不存在", employeeNo));
         }else {
             //查找角色
-            List<String> roles =  roleService.getRolesByEmployeeNo(employeeNo);
+            List<EmployeeRoleVo> employeeRoleVos =  roleService.getRolesByEmployeeNo(employeeNo);
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            for (String role : roles) {
-                authorities.add(new SimpleGrantedAuthority(role));
+            for (EmployeeRoleVo employeeRoleVo : employeeRoleVos) {
+                authorities.add(new SimpleGrantedAuthority(employeeRoleVo.getRoleName()));
             }
             log.debug("loadUserByEmployeeN0.....user ===> " + user);
             return new AuthUserEntity(user.getEmployeeNo(), user.getPassword(), authorities);
