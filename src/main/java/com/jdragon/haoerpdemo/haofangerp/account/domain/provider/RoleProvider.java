@@ -1,11 +1,12 @@
-package com.jdragon.haoerpdemo.haofangerp.role.domain.provider;
+package com.jdragon.haoerpdemo.haofangerp.account.domain.provider;
 
 import org.apache.ibatis.jdbc.SQL;
 
 /**
  * @author zhu
  * @version 1.0
- * @date 2020/3/26 下午3:32
+ * @date 2020/3/26 下午3:59
+ * @Description: 角色sql构造类
  */
 public class RoleProvider {
     /**

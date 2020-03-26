@@ -1,21 +1,19 @@
-package com.jdragon.haoerpdemo.haofangerp.role.service;
+package com.jdragon.haoerpdemo.haofangerp.account.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.jdragon.haoerpdemo.haofangerp.role.domain.entity.Role;
-import com.jdragon.haoerpdemo.haofangerp.role.domain.vo.EmployeeRoleVo;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.EmployeeRoleVo;
 
 import java.util.List;
 
 /**
  * @author zhu
  * @version 1.0
- * @date 2020/3/26 下午3:36
+ * @date 2020/3/26 下午3:55
+ * @Description: 用户角色服务接口类
  */
-
-public interface RoleService extends IService<Role> {
-
+public interface RoleService {
     /**
      * 分页获取角色列表
      * @param page 页面

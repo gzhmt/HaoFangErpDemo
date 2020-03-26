@@ -1,16 +1,15 @@
-package com.jdragon.haoerpdemo.haofangerp.production.domain.vo;
+package com.jdragon.haoerpdemo.haofangerp.account.domain.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.ToString;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
- * @Author: Jdragon
- * @email: 1061917196@qq.com
- * @Date: 2020.03.20 11:55
+ * @author zhu
+ * @version 1.0
+ * @date 2020/3/26 下午4:33
  * @Description: 用户vo类
  */
 @Data

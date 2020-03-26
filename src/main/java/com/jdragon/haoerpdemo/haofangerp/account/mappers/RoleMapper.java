@@ -1,9 +1,9 @@
-package com.jdragon.haoerpdemo.haofangerp.role.mappers;
+package com.jdragon.haoerpdemo.haofangerp.account.mappers;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.jdragon.haoerpdemo.haofangerp.role.domain.entity.Role;
-import com.jdragon.haoerpdemo.haofangerp.role.domain.provider.RoleProvider;
-import com.jdragon.haoerpdemo.haofangerp.role.domain.vo.EmployeeRoleVo;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.provider.RoleProvider;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.EmployeeRoleVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.UpdateProvider;
@@ -14,7 +14,8 @@ import java.util.List;
 /**
  * @author zhu
  * @version 1.0
- * @date 2020/3/26 下午3:35
+ * @date 2020/3/26 下午3:54
+ * @Description: 用户角色仓储层
  */
 @Mapper
 @Repository

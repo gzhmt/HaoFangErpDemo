@@ -1,12 +1,12 @@
-package com.jdragon.haoerpdemo.haofangerp.production.service.Impl;
+package com.jdragon.haoerpdemo.haofangerp.account.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Employee;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.EmployeeVo;
+import com.jdragon.haoerpdemo.haofangerp.account.mappers.EmployeeMapper;
+import com.jdragon.haoerpdemo.haofangerp.account.service.EmployeeService;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.Bean2Utils;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.EmployeeVo;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Employee;
-import com.jdragon.haoerpdemo.haofangerp.production.mappers.EmployeeMapper;
-import com.jdragon.haoerpdemo.haofangerp.production.service.EmployeeService;
 import com.jdragon.haoerpdemo.haofangerp.security.commons.BCryptPasswordEncoderUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -14,9 +14,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
- * @Author: Jdragon
- * @email: 1061917196@qq.com
- * @Date: 2020.03.20 11:26
+ * @author zhu
+ * @version 1.0
+ * @date 2020/3/26 下午4:30
  * @Description: 用户服务接口实现类
  */
 @Service
@@ -60,7 +60,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
             if(employee != null) {
                 throw new Exception("这个用户已经存在，不能重复。");
             }
-            employee = (Employee)Bean2Utils.copyProperties(employeeVo, Employee.class);
+            employee = (Employee) Bean2Utils.copyProperties(employeeVo, Employee.class);
             employee.setPassword(bCryptPasswordEncoderUtil.encode(employeeVo.getPassword()));
             if(employee.insert()){
                 return employee;

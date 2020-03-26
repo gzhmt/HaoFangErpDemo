@@ -1,13 +1,11 @@
-package com.jdragon.haoerpdemo.haofangerp.production.domain.provider;
+package com.jdragon.haoerpdemo.haofangerp.account.domain.provider;
 
 import org.apache.ibatis.jdbc.SQL;
 
-import java.util.Map;
-
 /**
- * @Author: Jdragon
- * @email: 1061917196@qq.com
- * @Date: 2020.03.20 19:05
+ * @author zhu
+ * @version 1.0
+ * @date 2020/3/26 下午4:12
  * @Description: 权限sql构造类
  */
 public class PowerProvider {

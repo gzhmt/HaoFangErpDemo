@@ -1,11 +1,11 @@
-package com.jdragon.haoerpdemo.haofangerp.role.controller;
+package com.jdragon.haoerpdemo.haofangerp.account.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.EmployeeRoleVo;
+import com.jdragon.haoerpdemo.haofangerp.account.service.RoleService;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
-import com.jdragon.haoerpdemo.haofangerp.role.domain.entity.Role;
-import com.jdragon.haoerpdemo.haofangerp.role.domain.vo.EmployeeRoleVo;
-import com.jdragon.haoerpdemo.haofangerp.role.service.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -19,13 +19,15 @@ import java.util.List;
 /**
  * @author zhu
  * @version 1.0
- * @date 2020/3/26 下午3:28
+ * @date 2020/3/26 下午3:54
+ * @Description: 角色管理控制器
  */
 @RestController
 @Validated
 @RequestMapping("/role")
 @Api(tags = "权限控制")
 public class RoleController {
+
     @Autowired
     RoleService roleService;
 

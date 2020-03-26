@@ -1,13 +1,13 @@
-package com.jdragon.haoerpdemo.haofangerp.production.service;
+package com.jdragon.haoerpdemo.haofangerp.account.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.EmployeeVo;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Employee;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Employee;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.EmployeeVo;
 
 /**
- * @Author: Jdragon
- * @email: 1061917196@qq.com
- * @Date: 2020.03.20 11:26
+ * @author zhu
+ * @version 1.0
+ * @date 2020/3/26 下午4:30
  * @Description: 用户服务接口类
  */
 public interface EmployeeService extends IService<Employee> {
@@ -26,7 +26,7 @@ public interface EmployeeService extends IService<Employee> {
      * @param rawPassword 原始密码
      * @return
      */
-    boolean checkLogin(String name,String rawPassword) throws Exception;
+    boolean checkLogin(String name, String rawPassword) throws Exception;
 
     /**
      * 注册
@@ -36,3 +36,4 @@ public interface EmployeeService extends IService<Employee> {
      */
     Employee register(EmployeeVo employeeVo) throws Exception;
 }
+

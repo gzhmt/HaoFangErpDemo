@@ -1,11 +1,10 @@
-package com.jdragon.haoerpdemo.haofangerp.production.controller;
+package com.jdragon.haoerpdemo.haofangerp.account.controller;
 
+import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.EmployeeVo;
+import com.jdragon.haoerpdemo.haofangerp.account.service.EmployeeService;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.EmployeeVo;
-import com.jdragon.haoerpdemo.haofangerp.production.service.EmployeeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @Author: Jdragon
- * @email: 1061917196@qq.com
- * @Date: 2020.03.20 16:48
+ * @author zhu
+ * @version 1.0
+ * @date 2020/3/26 下午4:34
  * @Description: 用户接口
  */
 @RestController

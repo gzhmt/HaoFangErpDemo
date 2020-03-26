@@ -1,13 +1,13 @@
-package com.jdragon.haoerpdemo.haofangerp.role.service.impl;
+package com.jdragon.haoerpdemo.haofangerp.account.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
-import com.jdragon.haoerpdemo.haofangerp.role.domain.entity.Role;
-import com.jdragon.haoerpdemo.haofangerp.role.domain.vo.EmployeeRoleVo;
-import com.jdragon.haoerpdemo.haofangerp.role.mappers.RoleMapper;
-import com.jdragon.haoerpdemo.haofangerp.role.service.RoleService;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.EmployeeRoleVo;
+import com.jdragon.haoerpdemo.haofangerp.account.mappers.RoleMapper;
+import com.jdragon.haoerpdemo.haofangerp.account.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,8 @@ import java.util.List;
 /**
  * @author zhu
  * @version 1.0
- * @date 2020/3/26 下午3:37
+ * @date 2020/3/26 下午3:55
+ * @Description: 用户角色服务接口实现类
  */
 @CacheConfig(cacheNames = "role")
 @Service

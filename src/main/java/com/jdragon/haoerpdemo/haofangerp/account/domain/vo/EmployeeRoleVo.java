@@ -1,4 +1,4 @@
-package com.jdragon.haoerpdemo.haofangerp.role.domain.vo;
+package com.jdragon.haoerpdemo.haofangerp.account.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.ToString;
 /**
  * @author zhu
  * @version 1.0
- * @date 2020/3/26 下午3:34
+ * @date 2020/3/26 下午4:00
  */
 @Data
 @ToString

@@ -1,4 +1,4 @@
-package com.jdragon.haoerpdemo.haofangerp.production.domain.entity;
+package com.jdragon.haoerpdemo.haofangerp.account.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -13,32 +13,27 @@ import lombok.ToString;
 import java.io.Serializable;
 
 /**
- * @Author: Jdragon
- * @email: 1061917196@qq.com
- * @Date: 2020.03.18 23:02
- * @Description: 权限实体类
+ * @author zhu
+ * @version 1.0
+ * @date 2020/3/26 下午3:59
+ * @Description: 角色实体类
  */
 @Data
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("system_power")
+@TableName("system_role")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Power extends Model<Power> {
+public class Role extends Model<Role> {
+
     @TableId(type = IdType.AUTO)
     private int id;
 
-    private String apiName;
+    private String roleName;
 
-    private String apiUrl;
+    private int roleSort;
 
-    private String apiMethod;
-
-    private int apiSort;
-
-    private int pid;
-
-    private String describe;
+    private String roleDescribe;
 
     @Override
     protected Serializable pkVal(){
