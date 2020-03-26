@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.AutoGenerateUtil;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.Bean2Utils;
-import com.jdragon.haoerpdemo.haofangerp.commons.tools.Date2Util;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.PlanVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 import com.jdragon.haoerpdemo.haofangerp.production.mappers.PlanMapper;
@@ -20,8 +19,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
-import java.text.MessageFormat;
 import java.util.Optional;
 
 /**
@@ -35,15 +32,10 @@ import java.util.Optional;
 @CacheConfig(cacheNames = "plan")
 @Service
 public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements PlanService {
-
-    private String dateFormat = "yyyyMMdd";
-
-    private String productionFormat = "SC-{0}-{1}";
-
     @Override
     public IPage<Plan> list(Page<Plan> page){
         LambdaQueryWrapper<Plan> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Plan::getPrincipalEmployeeNo,SecurityContextHolderHelper.getEmployeeNo());
+        lambdaQueryWrapper.eq(Plan::getPrincipalEmployeeNo,SecurityContextHolderHelper.getEmployeeNo()).eq(Plan::isActivity,true);
         return baseMapper.selectPage(page,lambdaQueryWrapper);
     }
 
@@ -58,10 +50,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
     @Override
     public Plan save(PlanVo planVo) throws Exception {
         synchronized (this) {
-            LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            planLambdaQueryWrapper.orderByDesc(Plan::getId).last("limit 1");
-            Plan lastPlan = baseMapper.selectOne(planLambdaQueryWrapper);
-
+            Plan lastPlan = baseMapper.selectByIdDescLimitOne();
             if (Optional.ofNullable(lastPlan).isPresent()) {
                 planVo.setProductionNo(AutoGenerateUtil.createIncreaseOdd(lastPlan.getProductionNo()));
             } else {
@@ -70,6 +59,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
             planVo.setCreateEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
             planVo.setCreateDate(DateUtil.now());
             planVo.setState(PlanStateEnum.新计划);
+            planVo.setActivity(true);
             Plan plan = (Plan) Bean2Utils.copyProperties(planVo, Plan.class);
             if (Optional.ofNullable(plan).isPresent() && plan.insert()) {
                 return plan;
@@ -79,39 +69,44 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         }
     }
 
+    @CachePut(key = "#result.productionNo")
+    @Override
+    public Plan copy(String productionNo) throws Exception {
+        Plan plan = baseMapper.selectByProductionNo(productionNo);
+        if(!Optional.ofNullable(plan).isPresent()){
+            throw new Exception("无该计划，无法复制");
+        }
+        Plan lastPlan = baseMapper.selectByIdDescLimitOne();
+        if (Optional.ofNullable(lastPlan).isPresent()) {
+            plan.setProductionNo(AutoGenerateUtil.createIncreaseOdd(lastPlan.getProductionNo()));
+        } else {
+            plan.setProductionNo(AutoGenerateUtil.createTodayFirstOdd("SC"));
+        }
+        plan.setCreateDate(DateUtil.now());
+        plan.setState(PlanStateEnum.新计划);
+        if(plan.insert()){
+            return plan;
+        }else{
+            throw new Exception("复制失败");
+        }
+    }
     @CacheEvict
     @Override
     public boolean delete(String productionNo) throws Exception {
         if (isFounder(productionNo)){
-            LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
-            planLambdaQueryWrapper.eq(Plan::getProductionNo,productionNo);
-            if(this.remove(planLambdaQueryWrapper)){
-                return true;
+            Plan plan = baseMapper.selectByProductionNo(productionNo);
+            if(Optional.ofNullable(plan).isPresent()){
+                plan.setActivity(false);
+                if(plan.updateById()){
+                    return true;
+                }else{
+                    throw new Exception("删除失败");
+                }
             }else{
-                throw new Exception("删除失败");
+                throw new Exception("无该计划，无法删除");
             }
         }else{
             throw new Exception("不是你管理的生产计划不能删除");
-        }
-    }
-
-    @CachePut(key = "#planVo.productionNo")
-    @Override
-    public boolean update(PlanVo planVo) throws Exception {
-        if(isFounder(planVo.getProductionNo())) {
-            /*
-              防止传入参数来修改审核状态
-             */
-            PlanStateEnum state = getById(planVo.getId()).getState();
-            Plan plan = (Plan) Bean2Utils.copyProperties(planVo, Plan.class);
-            plan.setState(state);
-            if(plan.updateById()){
-                return true;
-            }else{
-                throw new Exception("更新失败");
-            }
-        }else{
-            throw new Exception("不是你管理的生产计划不能更改");
         }
     }
 
@@ -119,15 +114,18 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
     @Override
     public Plan getByProductionNo(String productionNo) throws Exception {
         LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        planLambdaQueryWrapper.eq(Plan::getProductionNo,productionNo);
+        planLambdaQueryWrapper.eq(Plan::getProductionNo,productionNo).eq(Plan::isActivity,true);
         Plan plan = this.getOne(planLambdaQueryWrapper);
         if(Optional.ofNullable(plan).isPresent()){
             return plan;
         }else{
             throw new Exception("没有这个生产单号的计划");
         }
-
     }
+
+
+
+
     /**
      * @Author: Jdragon
      * @Date: 2020.03.25 下午 3:44

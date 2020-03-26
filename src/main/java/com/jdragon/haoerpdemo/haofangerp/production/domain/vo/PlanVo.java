@@ -48,12 +48,14 @@ public class PlanVo {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date closingDate;
 
-    @ApiModelProperty(example = "1")
-    private int source;
+    @ApiModelProperty(example = "这是来源")
+    private String source;
 
     @ApiModelProperty(example = "XS-20200323-0001")
     private String linkedOrder;
 
-    @ApiModelProperty(example = "生产单号为SC-20200323-0001的生产计划")
+    @ApiModelProperty(example = "这是备注")
     private String remarks;
+
+    private boolean activity;
 }

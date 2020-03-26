@@ -49,18 +49,17 @@ public class Plan extends Model<Plan>{
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
 
-
-
     private EmergencyLevelEnum emergencyLevel;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date closingDate;
 
-    private int source;
+    private String source;
 
     private String linkedOrder;
 
     private String remarks;
 
+    private boolean activity;
     @Override
     protected Serializable pkVal(){
         return this.id;
