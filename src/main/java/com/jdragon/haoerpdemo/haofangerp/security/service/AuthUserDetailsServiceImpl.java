@@ -1,9 +1,9 @@
 package com.jdragon.haoerpdemo.haofangerp.security.service;
 
-import com.jdragon.haoerpdemo.haofangerp.account.employee.domain.entity.Employee;
-import com.jdragon.haoerpdemo.haofangerp.account.employee.service.EmployeeService;
-import com.jdragon.haoerpdemo.haofangerp.account.role.domain.vo.EmployeeRoleVo;
-import com.jdragon.haoerpdemo.haofangerp.account.role.service.RoleService;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Employee;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.EmployeeRoleVo;
+import com.jdragon.haoerpdemo.haofangerp.account.service.EmployeeService;
+import com.jdragon.haoerpdemo.haofangerp.account.service.RoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

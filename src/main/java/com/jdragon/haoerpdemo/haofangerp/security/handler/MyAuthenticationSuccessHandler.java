@@ -1,6 +1,6 @@
 package com.jdragon.haoerpdemo.haofangerp.security.handler;
 
-import com.jdragon.haoerpdemo.haofangerp.account.power.service.PowerService;
+import com.jdragon.haoerpdemo.haofangerp.account.service.PowerService;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.security.commons.JSONAuthentication;
 import com.jdragon.haoerpdemo.haofangerp.security.commons.TokenCache;

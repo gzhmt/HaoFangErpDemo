@@ -1,7 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.security.commons;
 
-import com.jdragon.haoerpdemo.haofangerp.account.power.domain.entity.Power;
-import com.jdragon.haoerpdemo.haofangerp.account.power.service.PowerService;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Power;
+import com.jdragon.haoerpdemo.haofangerp.account.service.PowerService;
 import com.jdragon.haoerpdemo.haofangerp.security.exception.MyAccessDeniedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
