@@ -1,27 +1,24 @@
-package com.jdragon.haoerpdemo.haofangerp.production.mappers;
+package com.jdragon.haoerpdemo.haofangerp.role.mappers;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Role;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.provider.RoleProvider;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.EmployeeRoleVo;
+import com.jdragon.haoerpdemo.haofangerp.role.domain.entity.Role;
+import com.jdragon.haoerpdemo.haofangerp.role.domain.provider.RoleProvider;
+import com.jdragon.haoerpdemo.haofangerp.role.domain.vo.EmployeeRoleVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
 /**
- * @Author: Jdragon
- * @email: 1061917196@qq.com
- * @Date: 2020.03.20 11:22
- * @Description: 用户角色仓储层
+ * @author zhu
+ * @version 1.0
+ * @date 2020/3/26 下午3:35
  */
 @Mapper
 @Repository
 public interface RoleMapper extends BaseMapper<Role> {
-
     /**
      * 分页获取员工角色关系列表
      * @return

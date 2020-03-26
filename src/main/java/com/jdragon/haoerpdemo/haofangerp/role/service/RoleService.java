@@ -1,24 +1,19 @@
-package com.jdragon.haoerpdemo.haofangerp.production.service;
+package com.jdragon.haoerpdemo.haofangerp.role.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Role;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.EmployeeRoleVo;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.PathVariable;
+import com.jdragon.haoerpdemo.haofangerp.role.domain.entity.Role;
+import com.jdragon.haoerpdemo.haofangerp.role.domain.vo.EmployeeRoleVo;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 /**
- * @Author: Jdragon
- * @email: 1061917196@qq.com
- * @Date: 2020.03.20 13:20
- * @Description: 用户角色服务接口类
+ * @author zhu
+ * @version 1.0
+ * @date 2020/3/26 下午3:36
  */
+
 public interface RoleService extends IService<Role> {
 
     /**
@@ -67,5 +62,4 @@ public interface RoleService extends IService<Role> {
 //     * 根据roleId找API
 //     */
 //    List<SysRoleAndPermissionVo> getRoleAndApiList(String roleId);
-
 }
