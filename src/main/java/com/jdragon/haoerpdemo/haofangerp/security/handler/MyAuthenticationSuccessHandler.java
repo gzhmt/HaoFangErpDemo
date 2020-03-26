@@ -1,17 +1,14 @@
 package com.jdragon.haoerpdemo.haofangerp.security.handler;
 
+import com.jdragon.haoerpdemo.haofangerp.account.power.service.PowerService;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
-import com.jdragon.haoerpdemo.haofangerp.production.service.PowerService;
 import com.jdragon.haoerpdemo.haofangerp.security.commons.JSONAuthentication;
 import com.jdragon.haoerpdemo.haofangerp.security.commons.TokenCache;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +19,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
 /**
  * @Author: Jdragon
  * @email: 1061917196@qq.com
