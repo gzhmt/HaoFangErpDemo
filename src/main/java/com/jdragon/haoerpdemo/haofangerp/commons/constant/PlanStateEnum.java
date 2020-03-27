@@ -24,4 +24,26 @@ public enum PlanStateEnum {
         this.code = code;
         this.state = state;
     }
+
+    /**
+     * @author 金柏宇
+     */
+    public int getCode() {
+        return code;
+    }
+
+    /**
+     * 根据状态码获得对应枚举
+     * @author 金柏宇
+     * @param code 计划状态码
+     * @return 状态码对应的枚举
+     */
+    public static PlanStateEnum getPlanStateEnumByCode(int code){
+        for(PlanStateEnum planStateEnum:PlanStateEnum.values()){
+            if(planStateEnum.getCode()==code){
+                return planStateEnum;
+            }
+        }
+        return null;
+    }
 }

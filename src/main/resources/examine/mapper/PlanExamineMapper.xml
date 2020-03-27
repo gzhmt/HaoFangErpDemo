@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jdragon.haoerpdemo.haofangerp.examine.dao.PlanExamineDao">
+    <sql id="plan_field">
+        create_employee_no,principal_employee_no,production_no,state,
+        status,create_date,emergency_level,closing_date,source,linked_order,remarks,customerName,activity
+    </sql>
+    <!--根据指定生产单号改变其状态-->
+    <update id="updateState">
+        UPDATE production_plan SET state=#{examineCode} WHERE activity=TRUE AND production_no=#{productionNo}
+    </update>
+
+    <!--分页返回未删除的计划列表-->
+    <select id="getPlanByPagging"  resultType="plan">
+        SELECT <include refid="plan_field"/> FROM production_plan WHERE activity=TRUE LIMIT #{offset},#{count}
+    </select>
+
+    <!--获取总记录数（排除无效记录）-->
+    <select id="totalCount" resultType="_long">
+      SELECT COUNT(*) FROM production_plan WHERE activity=TRUE
+    </select>
+</mapper>
