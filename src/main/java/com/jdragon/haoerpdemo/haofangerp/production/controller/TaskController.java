@@ -10,9 +10,12 @@ import com.jdragon.haoerpdemo.haofangerp.production.service.TaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.Optional;
 
 
@@ -25,13 +28,14 @@ import java.util.Optional;
 @RestController
 @RequestMapping("task")
 @Api(tags = "生产任务相关")
+@Slf4j
 public class TaskController {
 
     @Autowired
     TaskService taskService;
 
-    @GetMapping("taskNo/{taskNo}")
-    @ApiOperation("根据单号获取生产任务详情")
+    @GetMapping("task/{taskNo}")
+    @ApiOperation("根据任务单号获取生产任务详情")
     public Result byId(@ApiParam("计划单号")@PathVariable String taskNo){
         try {
             return Result.success().setResult(taskService.queryTaskDetail(taskNo));
@@ -40,54 +44,50 @@ public class TaskController {
         }
     }
 
-    @GetMapping("list/{page}")
+    @GetMapping("tasks/{page}")
     @ApiOperation("获取生产任务列表")
-    public Result getList(@ApiParam("计划单号")@PathVariable int page){
+    public Result getList(@ApiParam(value = "页码", defaultValue="1")@PathVariable  int page,
+                          @ApiParam(value = "页面大小", defaultValue="20")@PathVariable  int size){
         try {
-            IPage<Task> taskIPage = taskService.list(new Page<>(page,20));
-            return Result.success().setResult(taskIPage);
+            return Result.success().setResult(taskService.list(new Page<>(page,size)));
         } catch (Exception e){
             return Result.error().setResult(e.getMessage());
         }
     }
 
-    @PostMapping("/create")
+    @PostMapping("/task")
     @ApiOperation("创建生产任务")
-    public Result create(@RequestBody TaskVo taskVo){
+    public Result create( @Valid @RequestBody TaskVo taskVo){
+        log.info(taskVo.toString());
         try{
-            Task task = taskService.save(taskVo);
-            return Result.success().setResult(task);
+            return Result.success().setResult(taskService.save(taskVo));
         }catch (Exception e){
             return Result.error().setResult(e.getMessage());
         }
     }
 
-    @PutMapping("/update")
-    @ApiOperation("更改生产任务")
-    public Result update(@RequestBody TaskVo taskVo){
+    @PutMapping("/task/{taskNo}")
+    @ApiOperation("修改生产任务")
+    public Result update(@ApiParam("任务单号")@PathVariable @RequestBody String taskNo,
+                             @ApiParam("生产任务") @RequestBody TaskVo taskVo){
         try {
-            return Result.success().setResult(taskService.update(taskVo));
+            return Result.success().setResult(taskService.update(taskNo,taskVo));
         } catch (Exception e) {
             return Result.error().setResult(e.getMessage());
         }
     }
 
-    @DeleteMapping("/delete/{taskNo}")
-    @ApiOperation("根据生产单号删除生产任务")
-    public Result update(@ApiParam("生产单号")@PathVariable @RequestBody Long taskId){
+    @DeleteMapping("/tasks")
+    @ApiOperation("根据任意个生产单号删除生产任务")
+    public Result delete(@ApiParam(value = "生产单号")@RequestBody String[] taskNo){
         try {
-            return Result.success().setResult(taskService.delete(taskId));
+            return Result.success().setResult(taskService.delete(taskNo));
         } catch (Exception e) {
             return Result.error().setResult(e.getMessage());
         }
     }
-    @PutMapping("/state")
-    @ApiOperation("修改任务状态")
-    public Result state(){
-        try {
-            return
-        } catch (Exception e) {
-            return Result.error().setResult(e.getMessage());
-        }
-    }
+
+    //启动多个任务
+    //撤销多个任务
+
 }

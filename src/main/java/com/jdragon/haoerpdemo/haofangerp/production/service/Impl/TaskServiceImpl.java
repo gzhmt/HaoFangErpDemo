@@ -2,6 +2,7 @@ package com.jdragon.haoerpdemo.haofangerp.production.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,23 +10,27 @@ import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.TaskStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.AutoGenerateUtil;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.Bean2Utils;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.*;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.PlanVo;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskMaterialVo;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskProductVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskVo;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task;
-import com.jdragon.haoerpdemo.haofangerp.production.mappers.PlanMapper;
-import com.jdragon.haoerpdemo.haofangerp.production.mappers.TaskMapper;
+import com.jdragon.haoerpdemo.haofangerp.production.mappers.*;
 import com.jdragon.haoerpdemo.haofangerp.production.service.PlanService;
 import com.jdragon.haoerpdemo.haofangerp.production.service.TaskService;
 import com.jdragon.haoerpdemo.haofangerp.security.commons.SecurityContextHolderHelper;
+import io.swagger.models.auth.In;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.DateUtil;
 import org.omg.PortableServer.POAPackage.ObjectNotActiveHelper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,65 +43,112 @@ import java.util.Optional;
  * @Description: 生产任务服务接口实现类
  */
 @CacheConfig(cacheNames = "task")
+@Slf4j
 @Service
+@Transactional
 public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements TaskService {
 
     @Autowired
-    private PlanServiceImpl planServiceImpl;
+    private PlanService planService;
+
+    @Autowired
+    private GoodsMapper goodsMapper;
 
     @Override
     public Task queryTaskDetail(String taskNo) throws Exception{
-        LambdaQueryWrapper<Task> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        planLambdaQueryWrapper.eq(Task::getTaskNo,taskNo);
-        Task task = this.getOne(planLambdaQueryWrapper);
-        if(Optional.ofNullable(task).isPresent()){
-            return task;
-        }else{
-            throw new Exception("没有这个生产单号的任务");
+        if (Optional.ofNullable(taskNo).isPresent()) {
+            LambdaQueryWrapper<Task> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            planLambdaQueryWrapper.eq(Task::getTaskNo, taskNo);
+            Task task = this.getOne(planLambdaQueryWrapper);
+            if (Optional.ofNullable(task).isPresent()) {
+                return task;
+            } else {
+                throw new Exception("没有这个生产单号的任务");
+            }
+        } else {
+            throw new Exception("任务编号不能为空");
         }
     }
 
     @Override
-    public IPage<Task> list(Page<Task> page) {
+    public IPage<Task> list(Page<Task> page) throws Exception {
         return baseMapper.selectPage(page,null);
     }
 
-    @CachePut(key = "#result.id")
+    @CachePut(key = "#result.taskNo")
     @Override
     public Task save(TaskVo taskVo) throws Exception{
         synchronized (this) {
             String productionPlanNo = taskVo.getProductionPlanNo();
             // 如果生产计划单号不存在，则抛出异常
-            Plan plan = planServiceImpl.getByProductionNo(productionPlanNo);
+            Plan plan = planService.getByProductionNo(productionPlanNo);
             // 判断生产计划是否通过审核
             PlanStateEnum state = plan.getState();
-            if (state == PlanStateEnum.新计划 || state == PlanStateEnum.被驳回) {
+            if ( state == PlanStateEnum.新计划  || state == PlanStateEnum.被驳回 ) {
                 throw new Exception("该生产单号计划未通过审核");
             }
-            // 获取并设置任务单号
+            // 验证货品是否存在
+            // 标识哪些货品不存在
+            int flag = 0;
+            StringBuffer stringBuffer = new StringBuffer();
+            for (int i = 0; i < taskVo.getTaskMaterialVos().size(); i++) {
+                TaskMaterialVo taskMaterialVo = taskVo.getTaskMaterialVos().get(i);
+                LambdaQueryWrapper<Goods> queryWrapper = new LambdaQueryWrapper<>();
+                queryWrapper.eq(Goods::getGoodsNo, taskMaterialVo.getMaterialNo());
+                if ( !Optional.ofNullable(goodsMapper.selectOne(queryWrapper)).isPresent() ) {
+                    stringBuffer.append(taskMaterialVo.getMaterialNo() + "材料不存在");
+                    flag++;
+                }
+            }
+            for (int i = 0; i < taskVo.getTaskProductVos().size(); i++) {
+                TaskProductVo taskProductVo = taskVo.getTaskProductVos().get(i);
+                LambdaQueryWrapper<Goods> queryWrapper = new LambdaQueryWrapper<>();
+                queryWrapper.eq(Goods::getGoodsNo,taskProductVo.getProductNo());
+                if ( !Optional.ofNullable(goodsMapper.selectOne(queryWrapper)).isPresent() ){
+                    stringBuffer.append(taskProductVo.getProductNo()+"原料不存在");
+                    flag++;
+                }
+            }
+            // 货品不存在则抛出异常
+            if ( flag > 0 ) {
+                log.info(stringBuffer.toString());
+                throw new Exception(stringBuffer.toString());
+            }
+
+            // 生成任务单号
             LambdaQueryWrapper<Task> taskLambdaQueryWrapper = new LambdaQueryWrapper<>();
             taskLambdaQueryWrapper.orderByDesc(Task::getId).last("limit 1");
             Task lastTask = baseMapper.selectOne(taskLambdaQueryWrapper);
             String taskNo = null;
-            if (lastTask == null) {
-                taskNo = AutoGenerateUtil.createTodayFirstOdd(lastTask.getTaskNo());
-
+            if (Optional.ofNullable(lastTask).isPresent()) {
+                taskNo = AutoGenerateUtil.createIncreaseOdd(lastTask.getTaskNo());
             } else {
                 taskNo = AutoGenerateUtil.createTodayFirstOdd("SC");
             }
-            taskVo.setTaskNo(taskNo);
+            // 获取任务实体类
+
             taskVo.setSequenceId(taskNo);
-            taskVo.setOperatorEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
-            taskVo.setProductionPlanId(plan.getId());
             taskVo.setState(TaskStateEnum.正常);
             taskVo.setStateChangeDate(DateUtil.now());
             taskVo.setCreateDate(DateUtil.now());
-
-            // 获得实体类
             Task task = (Task) Bean2Utils.copyProperties(taskVo, Task.class);
-
+            task.setTaskNo(taskNo);
             // 创建任务
             if (task !=null && task.insert()) {
+                for (int i = 0; i < taskVo.getTaskProductVos().size(); i++) {
+                    TaskProduct taskProduct = (TaskProduct) Bean2Utils.copyProperties(taskVo.getTaskProductVos().get(i), TaskProduct.class);
+                    taskProduct.setTaskNo(taskNo);
+                    if (taskProduct == null || !taskProduct.insert()) {
+                        throw new Exception(taskVo.getTaskProductVos().get(i).getProductNo()+"关系创建失败");
+                    }
+                }
+                for (int i = 0; i < taskVo.getTaskMaterialVos().size(); i++) {
+                    TaskMaterial taskMaterial = (TaskMaterial) Bean2Utils.copyProperties(taskVo.getTaskMaterialVos().get(i), TaskMaterial.class);
+                    taskMaterial.setTaskNo(taskNo);
+                    if (taskMaterial == null || !taskMaterial.insert()) {
+                        throw new Exception(taskVo.getTaskProductVos().get(i).getProductNo()+"关系创建失败");
+                    }
+                }
                 return task;
             } else {
                 throw new Exception("创建任务失败");
@@ -106,23 +158,39 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
 
     @CacheEvict
     @Override
-    public boolean delete(Long id) throws Exception{
-        if (baseMapper.deleteById(id) > 0) {
-            return true;
+    public boolean delete(String[] taskNo) throws Exception{
+        if (Optional.ofNullable(taskNo).isPresent()) {
+            LambdaQueryWrapper<Task> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            for (int i = 0; i < taskNo.length; i++) {
+                planLambdaQueryWrapper.eq(Task::getTaskNo,taskNo[i]);
+                if (i != taskNo.length - 1){
+                    planLambdaQueryWrapper.or();
+                }
+            }
+            if (baseMapper.delete(planLambdaQueryWrapper) > 0) {
+                return true;
+            } else {
+                throw new Exception("删除任务失败");
+            }
         } else {
-            throw new Exception("删除任务失败");
+            throw new Exception("任务工号不为空");
         }
     }
 
-    @CachePut(key = "#id")
+    @CachePut(key = "#taskVo")
     @Override
-    public boolean update(TaskVo taskVo) throws Exception {
+    public boolean update(String taskNo, TaskVo taskVo) throws Exception {
+        if ( "".equals(taskNo) || taskNo ==null) {
+            throw new Exception("任务编号不能为空");
+        }
         Task task = (Task)Bean2Utils.copyProperties(taskVo, Task.class);
-        task.setState(baseMapper.selectById(taskVo.getId()).getState());
-        if (baseMapper.updateById(task) > 0) {
+        LambdaQueryWrapper<Task> taskLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        taskLambdaQueryWrapper.eq(Task::getTaskNo,taskNo);
+        task.setProductionPlanNo(this.queryTaskDetail(taskNo).getProductionPlanNo());
+        if (baseMapper.update(task, taskLambdaQueryWrapper) > 0) {
             return true;
         } else {
-            throw new Exception("删除任务失败");
+            throw new Exception("修改任务失败");
         }
     }
 
