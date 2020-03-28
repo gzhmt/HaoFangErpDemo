@@ -31,7 +31,8 @@ import java.util.List;
 public class PlanExamineController {
     @Autowired
     private PlanExamineService planExamineService;
-    @PatchMapping("/{productionNo}/{examineCode}")
+    //将PATCH改为POST才能正常运行此URL
+    @PostMapping("/{productionNo}/{examineCode}")
     @ApiOperation("计划审核结果提交")
     @ApiImplicitParams({
             @ApiImplicitParam(name="productionNo",value = "生产单号",required = true,dataType="String"),

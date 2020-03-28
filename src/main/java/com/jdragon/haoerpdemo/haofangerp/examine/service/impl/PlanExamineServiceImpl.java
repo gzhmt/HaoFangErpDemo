@@ -110,7 +110,7 @@ public class PlanExamineServiceImpl implements PlanExamineService {
                 //------------------------------------------------------------
                 return Result.success("审批成功");
             }else{
-                return Result.error("审批失败,没有此生产单号");
+                return Result.error("审批失败,没有此生产单号或该生产单号已作废");
             }
         }
         return Result.error("审批码不正确");
