@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -46,7 +47,7 @@ public class PlanExamineController {
     @GetMapping("/plans")
     @ApiOperation("分页形式获取所有未删除的计划列表")
     @ApiImplicitParam(name="params",value = "分页所需参数",required = true,dataType="PaggingParams")
-    public Result getAllPlansToExamine(@RequestBody PaggingParams params){
+    public Result getAllPlansToExamine(@RequestBody @NotNull PaggingParams params){
         try {
             long total=planExamineService.totalCount();//获取总记录数
             List<Plan> plans=planExamineService.getPlanByPagging(params,total);

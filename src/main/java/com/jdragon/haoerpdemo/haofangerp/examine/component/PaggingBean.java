@@ -26,8 +26,10 @@ public class PaggingBean {
      * @throws TotalException 总记录数错误则抛出异常
      */
     public PaggingBean(final PaggingParams paggingParams,long total) throws PageSizeException, TotalException {
-        this.pageNum=paggingParams.getPageNum();
-        this.pageSize=paggingParams.getPageSize();
+        if(paggingParams!=null) {
+            this.pageNum = paggingParams.getPageNum();
+            this.pageSize = paggingParams.getPageSize();
+        }
         this.total=total;
         dected();
     }
@@ -82,18 +84,19 @@ public class PaggingBean {
      * 检测与纠正错误参数
      */
     private void dected() throws PageSizeException,TotalException{
-        initTotalPage();
-        if(pageNum<=0){
-            pageNum=1;
-        }else if(pageNum>totalPage){
-            pageNum=totalPage;
-        }
         if(pageSize<=0){
             throw new PageSizeException("页记录数必须大于0");
         }
         if(total<0){
             throw new TotalException("总记录数不能小于0");
         }
+        initTotalPage();
+        if(pageNum<=0){
+            pageNum=1;
+        }else if(pageNum>totalPage){
+            pageNum=totalPage;
+        }
+
     }
 
 }
