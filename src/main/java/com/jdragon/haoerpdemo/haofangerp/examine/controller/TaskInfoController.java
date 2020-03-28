@@ -37,7 +37,11 @@ public class TaskInfoController {
             ResponseVo responseVo=new ResponseVo();
             responseVo.setTotal(total);
             responseVo.setData(taskVoList);
-            return Result.success("获取成功").setResult(responseVo);
+            if(taskVoList.isEmpty()) {
+                return Result.error("找不到数据");
+            }else{
+                return Result.success("获取成功").setResult(responseVo);
+            }
         }catch(PaggingParamsException e){
             return Result.error("分页参数错误");
         }catch(Exception e){

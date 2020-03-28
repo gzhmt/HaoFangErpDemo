@@ -94,7 +94,7 @@ public class PlanExamineServiceImpl implements PlanExamineService {
             if(result>0){
                 //从Plan对象中独立出状态字段用于更新
                 //更新redis缓存 以 【自定义前缀+生产单号】 为key，以 【计划状态码】为value
-                    redisTemplate.opsForValue().set(plansStatePrefix + productionNo, PlanStateEnum.getPlanStateEnumByCode(examineCode).getCode());
+                 redisTemplate.opsForValue().set(plansStatePrefix + productionNo, PlanStateEnum.getPlanStateEnumByCode(examineCode).getCode());
                 return Result.success("审批成功");
             }else{
                 return Result.error("审批失败,没有此生产单号");
