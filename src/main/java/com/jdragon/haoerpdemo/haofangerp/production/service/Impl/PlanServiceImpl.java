@@ -14,6 +14,7 @@ import com.jdragon.haoerpdemo.haofangerp.production.service.PlanService;
 import com.jdragon.haoerpdemo.haofangerp.security.commons.SecurityContextHolderHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.DateUtil;
+import org.junit.jupiter.api.Test;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -32,10 +33,21 @@ import java.util.Optional;
 @CacheConfig(cacheNames = "plan")
 @Service
 public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements PlanService {
+
+    @Test
+    public void test(){
+        System.out.println(PlanStateEnum.valueOf("新计划").getCode());
+    }
+
     @Override
-    public IPage<Plan> list(Page<Plan> page){
+    public IPage<Plan> list(Page<Plan> page,String state){
         LambdaQueryWrapper<Plan> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Plan::getPrincipalEmployeeNo,SecurityContextHolderHelper.getEmployeeNo()).eq(Plan::isActivity,true);
+        lambdaQueryWrapper.eq(Plan::getPrincipalEmployeeNo,
+                SecurityContextHolderHelper.getEmployeeNo())
+                .eq(Plan::isActivity,true);
+        if(Optional.ofNullable(state).isPresent()){
+            lambdaQueryWrapper.eq(Plan::getState,PlanStateEnum.valueOf(state).getCode());
+        }
         return baseMapper.selectPage(page,lambdaQueryWrapper);
     }
 

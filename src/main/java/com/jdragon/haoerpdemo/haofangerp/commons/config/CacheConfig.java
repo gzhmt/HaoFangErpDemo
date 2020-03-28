@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -17,6 +18,10 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @Author: Jdragon
@@ -55,8 +60,16 @@ public class CacheConfig {
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer))
                 .disableCachingNullValues();//禁止null对象
 
+        Set<String> cacheNames =  new HashSet<>();
+        cacheNames.add("token");
+
+        Map<String, RedisCacheConfiguration> configMap = new HashMap<>();
+        configMap.put("token", config.entryTtl(Duration.ofMinutes(120L)));
+
         return RedisCacheManager.builder(factory)
                 .cacheDefaults(config)
+                .initialCacheNames(cacheNames)
+                .withInitialCacheConfigurations(configMap)
                 .build();
     }
 }

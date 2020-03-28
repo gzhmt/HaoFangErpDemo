@@ -21,7 +21,6 @@ public class Date2Util {
      * @Description: 传入日期字符与日期格式，判断今天的日期是否与日期字符相符
      **/
     public static boolean contrastNowDateStr(String dateStr,String format){
-
         return dateStr.equals(now(format));
     }
 
@@ -33,7 +32,6 @@ public class Date2Util {
      * @Description: 根据格式获取今日的日期
      **/
     public static String now(String format){
-
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         Date date = DateUtil.now();
         return simpleDateFormat.format(date);
