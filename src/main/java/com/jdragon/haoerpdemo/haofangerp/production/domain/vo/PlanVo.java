@@ -8,6 +8,7 @@ import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStatusEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
+
 import java.util.Date;
 
 /**
@@ -32,6 +33,7 @@ public class PlanVo {
 
     @ApiModelProperty(example = "SC-20200323-0001",hidden = true)
     private String productionNo;
+
 
     @ApiModelProperty(example = "新计划",hidden = true)
     private PlanStateEnum state;

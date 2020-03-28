@@ -48,4 +48,9 @@ public enum PlanStateEnum {
         }
         return null;
     }
+    public static PlanStateEnum getEnumByState(String state) {
+        return Arrays.asList(PlanStateEnum.values()).stream()
+                .filter(planStateEnum -> planStateEnum.getState().equals(state))
+                .findFirst().orElse(null);
+    }
 }

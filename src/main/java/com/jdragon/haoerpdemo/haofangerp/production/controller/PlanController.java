@@ -36,11 +36,13 @@ public class PlanController {
         }
     }
 
-    @GetMapping("/list/{page}")
+    @GetMapping("/list/{page}/{pageSize}")
     @ApiOperation("获取生产计划列表")
-    public Result list(@ApiParam(name = "page",value = "页数")@PathVariable int page){
+    public Result list(@ApiParam(name = "page", value = "页数") @PathVariable int page,
+                       @ApiParam(name = "pageSize", value = "页大小")@PathVariable int pageSize,
+                       @ApiParam(name = "state", value = "状态") @RequestParam(required = false) String state){
         try{
-            IPage<Plan> planList = planService.list(new Page<>(page,20));
+            IPage<Plan> planList = planService.list(new Page<>(page,pageSize),state);
             return Result.success().setResult(planList);
         }catch (Exception e){
             return Result.error().setResult(e.getMessage());
