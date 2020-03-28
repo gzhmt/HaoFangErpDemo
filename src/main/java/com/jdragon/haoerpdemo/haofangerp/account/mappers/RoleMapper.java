@@ -59,7 +59,12 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @param EmployeeId 员工id
      * @return
      */
-    @Select("select * from system_role r where r.id not in (select r.id from system_role r join system_employee_role mr on r.id=mr.role_id join system_employee m on m.id=mr.employee_id where mr.employee_id = #{employeeId}) order by r.role_sort desc")
+    @Select("select * from system_role r where r.id not in" +
+            " (select r.id from system_role r" +
+            " join system_employee_role mr on r.id=mr.role_id" +
+            " join system_employee m on m.id=mr.employee_id" +
+            " where mr.employee_id = #{employeeId})" +
+            " order by r.role_sort desc")
     List<Role> getUnAssignedRolesByEmployeeId(int employeeId);
 
 }

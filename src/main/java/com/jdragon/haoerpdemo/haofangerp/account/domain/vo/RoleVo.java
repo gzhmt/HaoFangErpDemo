@@ -18,12 +18,21 @@ import javax.validation.constraints.NotNull;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RoleVo {
 
+    /**
+     * 角色名称
+     */
     @NotNull(message = "请求参数不能为空")
     private String roleName;
 
+    /**
+     * 角色权重
+     */
     @NotNull(message = "请求参数不能为空")
     private int roleSort;
 
+    /**
+     * 角色描述
+     */
     @NotNull(message = "请求参数不能为空")
     private String roleDescribe;
 }

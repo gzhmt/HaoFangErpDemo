@@ -126,10 +126,4 @@ public class RoleController {
         return roleService.deleteRoleOfEmployee(employeeId, roleId);
     }
 
-
-
-
-
-
-
 }

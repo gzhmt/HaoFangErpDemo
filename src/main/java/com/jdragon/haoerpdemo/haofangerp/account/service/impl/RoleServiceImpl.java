@@ -16,6 +16,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author zhu
@@ -46,7 +47,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public Result addRole(RoleVo roleVo) {
         String prefix = "ROLE_";
         String roleName = prefix + roleVo.getRoleName().toUpperCase();
-        if(roleMapper.getRoleByRoleName(roleName) != null) {
+        if(!Optional.ofNullable(roleMapper.getRoleByRoleName(roleName)).isPresent()) {
             return Result.error("该角色已存在");
         }
         Role role = new Role();
@@ -80,7 +81,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public Result addRoleOfEmployee(int employeeId, int roleId) {
-        if(employeeRoleMapper.getEmployRole(employeeId, roleId) == null){
+        if(!Optional.ofNullable(employeeRoleMapper.getEmployeeRole(employeeId, roleId)).isPresent()){
             EmployeeRole employeeRole = new EmployeeRole();
             employeeRole.setEmployeeId(employeeId);
             employeeRole.setRoleId(roleId);
@@ -92,8 +93,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public Result deleteRoleOfEmployee(int employeeId, int roleId) {
-        if(employeeRoleMapper.getEmployRole(employeeId, roleId) != null){
-            employeeRoleMapper.deleteEmployRole(employeeId, roleId);
+        if(Optional.ofNullable(employeeRoleMapper.getEmployeeRole(employeeId, roleId)).isPresent()){
+            employeeRoleMapper.deleteEmployeeRole(employeeId, roleId);
             return Result.success("删除员工角色成功");
         }
         return Result.error("该员工角色不存在,无法删除");

@@ -28,4 +28,24 @@ public class PowerProvider {
             }
         }.toString();
     }
+
+
+    /**
+     * 根据角色id获取已赋予权限列表
+     * @param roleId 角色id
+     * @return
+     */
+    public String getAssignedPowersByRoleId(int roleId){
+        return new SQL(){
+            {
+                SELECT_DISTINCT("p.*");
+                FROM("system_role r");
+                JOIN("system_role_power rp on r.id=rp.role_id",
+                        "system_power p on p.id=rp.power_id");
+                ORDER_BY("p.api_sort desc");
+                WHERE("r.id=#{roleId}");
+            }
+        }.toString();
+    }
+
 }
