@@ -1,4 +1,4 @@
-package com.jdragon.haoerpdemo.haofangerp.account.domain.entity;
+package com.jdragon.haoerpdemo.haofangerp.production.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -13,32 +13,39 @@ import lombok.ToString;
 import java.io.Serializable;
 
 /**
- * @author zhu
- * @version 1.0
- * @date 2020/3/26 下午4:12
- * @Description: 权限实体类
+ * @Auther: kimid
+ * @Date: 2020/3/27 01:26
+ * @Description:
  */
 @Data
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("system_power")
+@TableName("production_task_material")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Power extends Model<Power> {
+public class TaskMaterial extends Model<TaskMaterial> {
     @TableId(type = IdType.AUTO)
-    private int id;
-
-    private String apiName;
-
-    private String apiUrl;
-
-    private String apiMethod;
-
-    private int apiSort;
-
-    private int pid;
-
-    private String powerDescribe;
+    private Long id;
+    /**
+     * 任务编号
+     */
+    private String taskNo;
+    /**
+     * 材料编号
+     */
+    private String materialNo;
+    /**
+     * 材料数量
+     */
+    private Integer materialNumber;
+    /**
+     * 废品数量
+     */
+    private Integer scrapNumber;
+    /**
+     * 备注
+     */
+    private String remarks;
 
     @Override
     protected Serializable pkVal(){

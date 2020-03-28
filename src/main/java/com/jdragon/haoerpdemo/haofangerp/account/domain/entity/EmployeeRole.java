@@ -10,38 +10,33 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.io.Serializable;
-
 /**
  * @author zhu
  * @version 1.0
- * @date 2020/3/26 下午4:12
- * @Description: 权限实体类
+ * @date 2020/3/26 下午6:17
+ * @Description
  */
 @Data
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("system_power")
+@TableName("system_employee_role")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Power extends Model<Power> {
+public class EmployeeRole extends Model<EmployeeRole> {
+
+    /**
+     * 唯一标识
+     */
     @TableId(type = IdType.AUTO)
     private int id;
 
-    private String apiName;
+    /**
+     * 角色id
+     */
+    private int roleId;
 
-    private String apiUrl;
-
-    private String apiMethod;
-
-    private int apiSort;
-
-    private int pid;
-
-    private String powerDescribe;
-
-    @Override
-    protected Serializable pkVal(){
-        return this.id;
-    }
+    /**
+     * 工人id
+     */
+    private int employeeId;
 }

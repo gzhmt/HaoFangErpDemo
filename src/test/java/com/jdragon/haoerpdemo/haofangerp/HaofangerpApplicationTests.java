@@ -50,4 +50,5 @@ class HaofangerpApplicationTests {
 
         System.out.println(AutoGenerateUtil.createTodayFirstOdd("SC"));
     }
+
 }

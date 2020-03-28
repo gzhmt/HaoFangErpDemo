@@ -1,6 +1,10 @@
 package com.jdragon.haoerpdemo.haofangerp.commons.constant;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+
+import java.util.Arrays;
+import lombok.Data;
+import lombok.Getter;
 import lombok.Data;
 import lombok.Getter;
 
@@ -12,6 +16,7 @@ import java.util.Arrays;
  * @Date: 2020.03.18 18:44
  * @Description: 生产计划状态枚举
  */
+
 public enum PlanStateEnum {
     新计划(1,"新计划"),
     审核通过(2,"审核通过"),
