@@ -3,6 +3,7 @@ package com.jdragon.haoerpdemo.haofangerp.examine.controller;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.PaggingParams;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.PaggingParamsException;
+import com.jdragon.haoerpdemo.haofangerp.examine.domain.vo.ResponseVo;
 import com.jdragon.haoerpdemo.haofangerp.examine.service.PlanExamineService;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 import io.swagger.annotations.Api;
@@ -18,6 +19,7 @@ import java.util.List;
  * 计划审核控制器
  *      提供计划审核请求接口
  *      提供数据请求接口
+ *
  * @author 金柏宇
  * @version 1.0
  * @date 2020/3/26 21:54
@@ -50,10 +52,15 @@ public class PlanExamineController {
             if(plans.isEmpty()){
                 return Result.success("无数据");
             }else{
-                return Result.success("获取数据成功").setResult(plans);
+                ResponseVo<Plan> responseVo=new ResponseVo<>();
+                responseVo.setData(plans);
+                responseVo.setTotal(total);
+                return Result.success("获取数据成功").setResult(responseVo);
             }
         }catch(PaggingParamsException e){
             return Result.error("分页参数错误");
+        }catch(Exception e){
+            return Result.error(e.getMessage());
         }
     }
 

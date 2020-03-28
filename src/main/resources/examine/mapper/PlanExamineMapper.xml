@@ -11,9 +11,9 @@
         UPDATE production_plan SET state=#{examineCode} WHERE activity=TRUE AND production_no=#{productionNo}
     </update>
 
-    <!--分页返回未删除的计划列表-->
+    <!--分页返回未删除的计划列表 按日期排序-->
     <select id="getPlanByPagging"  resultType="plan">
-        SELECT <include refid="plan_field"/> FROM production_plan WHERE activity=TRUE LIMIT #{offset},#{count}
+        SELECT <include refid="plan_field"/> FROM production_plan WHERE activity=TRUE ORDER BY create_date LIMIT #{offset},#{count}
     </select>
 
     <!--获取总记录数（排除无效记录）-->

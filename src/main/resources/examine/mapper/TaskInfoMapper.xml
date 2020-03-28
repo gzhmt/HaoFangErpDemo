@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jdragon.haoerpdemo.haofangerp.examine.dao.TaskInfoDao">
+    <sql id="task_field">
+        task_no,task_name,production_plan_no,sequence_id,
+        operator_employee_no,state,state_change_date,
+        create_date,forecast_start_date,forecast_end_date,remarks
+    </sql>
+    <sql id="material_field">
+        material_no,material_number,scrap_number,remarks
+    </sql>
+    <sql id="product_field">
+      product_no,product_number,scrap_number,remarks
+    </sql>
+    <!--分页查询任务信息-->
+    <select id="getTaskByPagging" parameterType="string" resultType="taskVo">
+        SELECT <include refid="task_field"/> FROM task WHERE production_plan_no=#{productionNo} ORDER BY forecast_start_date LIMIT #{offset},#{count}
+    </select>
+
+    <!--查询任务总记录数-->
+    <select id="getTaskTotal" resultType="_long">
+        SELECT COUNT(*) FROM production_task;
+    </select>
+
+    <!--按任务编号查询原料信息-->
+    <select id="getTaskMaterialByTaskNo" parameterType="string" resultType="taskMaterialVo">
+      SELECT <include refid="material_field"/> FROM production_task_material WHERE task_no=#{taskNo}
+    </select>
+
+    <!--按任务编号查询成品信息-->
+    <select id="getTaskProductByTaskNo" parameterType="string" resultType="taskProductVo">
+      SELECT <include refid="product_field"/> FROM production_task_product WHERE task_no=#{taskNo}
+    </select>
+</mapper>

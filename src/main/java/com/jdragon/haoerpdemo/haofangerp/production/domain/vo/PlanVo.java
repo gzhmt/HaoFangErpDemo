@@ -57,5 +57,7 @@ public class PlanVo {
     @ApiModelProperty(example = "这是备注")
     private String remarks;
 
+
+
     private boolean activity;
 }

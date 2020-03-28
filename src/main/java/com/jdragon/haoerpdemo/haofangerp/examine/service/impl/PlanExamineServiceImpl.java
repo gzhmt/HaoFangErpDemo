@@ -1,6 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.examine.service.impl;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
+import com.jdragon.haoerpdemo.haofangerp.examine.component.DateConvertUtils;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.PaggingBean;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.PaggingParams;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.PageSizeException;
@@ -60,6 +61,7 @@ public class PlanExamineServiceImpl implements PlanExamineService {
                         return null;
                     });
                     for(int i=0;i<result.size();i+=2){
+                        //根据流水线执行结果，偶数存放的是Plan对象，奇数存放状态
                         Plan plan= (Plan) result.get(i);
                         plan.setState(PlanStateEnum.getPlanStateEnumByCode(Integer.parseInt(result.get(i+1).toString())));
                         plans.add(plan);
@@ -72,7 +74,7 @@ public class PlanExamineServiceImpl implements PlanExamineService {
                     List<Plan> finalPlans = plans;
                     redisTemplate.executePipelined((RedisOperations operations)->{
                        finalPlans.parallelStream().forEach(plan -> {
-                            operations.opsForZSet().add(plansZsetKey,plan.getProductionNo(),plan.getState().getCode());
+                            operations.opsForZSet().add(plansZsetKey,plan.getProductionNo(), DateConvertUtils.convertDateTimeToTimeStamp(plan.getCreateDate()));
                             operations.opsForHash().put(plansHashKey,plan.getProductionNo(),plan);
                        });
                        return null;
