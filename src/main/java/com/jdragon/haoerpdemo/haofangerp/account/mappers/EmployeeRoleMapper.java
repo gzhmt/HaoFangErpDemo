@@ -34,4 +34,5 @@ public interface EmployeeRoleMapper extends BaseMapper<EmployeeRole> {
      */
     @Delete("delete from system_employee_role where employee_id = #{employeeId} and role_id = #{roleId}")
     int deleteEmployeeRole(int employeeId, int roleId);
+
 }

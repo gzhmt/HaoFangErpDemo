@@ -9,6 +9,7 @@ import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.RoleVo;
 import com.jdragon.haoerpdemo.haofangerp.account.mappers.EmployeeRoleMapper;
 import com.jdragon.haoerpdemo.haofangerp.account.mappers.RoleMapper;
+import com.jdragon.haoerpdemo.haofangerp.account.mappers.RolePowerMapper;
 import com.jdragon.haoerpdemo.haofangerp.account.service.RoleService;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Autowired
     private EmployeeRoleMapper employeeRoleMapper;
+
+    @Autowired
+    private RolePowerMapper rolePowerMapper;
 
     @Override
     public List<String> getRolesByEmployeeNo(String employeeNo) {
@@ -61,6 +65,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public Result deleteRole(int roleId) {
         if(roleMapper.getRoleCountByRoleId(roleId) == 0){
+            rolePowerMapper.deleteByRoleId(roleId);
             roleMapper.deleteById(roleId);
             return Result.success("删除角色成功");
         }
