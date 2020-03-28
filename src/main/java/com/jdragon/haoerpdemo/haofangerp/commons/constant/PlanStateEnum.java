@@ -3,6 +3,9 @@ package com.jdragon.haoerpdemo.haofangerp.commons.constant;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Arrays;
 
 /**
  * @Author: Jdragon
@@ -18,8 +21,10 @@ public enum PlanStateEnum {
     已完成(4,"已完成"),
     被驳回(5,"被驳回");
     @EnumValue
+    @Getter
     private int code;
 
+    @Getter
     private String state;
 
     PlanStateEnum(int code, String state){
