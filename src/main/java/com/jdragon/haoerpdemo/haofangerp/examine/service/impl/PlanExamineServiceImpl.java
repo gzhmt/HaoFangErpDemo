@@ -1,8 +1,6 @@
 package com.jdragon.haoerpdemo.haofangerp.examine.service.impl;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanAuditStatusEnum;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.PlanAuditStatusEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
-import com.jdragon.haoerpdemo.haofangerp.examine.component.DateConvertUtils;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.PaggingBean;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.PaggingParams;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.PageSizeException;
@@ -12,16 +10,11 @@ import com.jdragon.haoerpdemo.haofangerp.examine.service.PlanExamineService;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Min;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author 金柏宇

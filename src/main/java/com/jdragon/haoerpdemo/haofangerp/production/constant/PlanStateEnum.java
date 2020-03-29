@@ -1,9 +1,7 @@
-package com.jdragon.haoerpdemo.haofangerp.commons.constant;
+package com.jdragon.haoerpdemo.haofangerp.production.constant;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
-import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Arrays;
 

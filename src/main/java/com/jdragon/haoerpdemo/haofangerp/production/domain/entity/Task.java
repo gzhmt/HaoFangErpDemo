@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.TaskStateEnum;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.TaskStateEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import com.baomidou.mybatisplus.extension.activerecord.Model;

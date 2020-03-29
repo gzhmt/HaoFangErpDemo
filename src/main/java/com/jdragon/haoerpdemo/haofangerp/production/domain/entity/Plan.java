@@ -1,16 +1,14 @@
 package com.jdragon.haoerpdemo.haofangerp.production.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.EmergencyLevelEnum;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanAuditStatusEnum;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStatusEnum;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.EmergencyLevelEnum;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.PlanAuditStatusEnum;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.PlanStateEnum;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.PlanStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import com.baomidou.mybatisplus.extension.activerecord.Model;

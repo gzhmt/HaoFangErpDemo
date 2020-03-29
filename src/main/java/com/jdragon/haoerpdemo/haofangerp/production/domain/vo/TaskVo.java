@@ -2,12 +2,10 @@ package com.jdragon.haoerpdemo.haofangerp.production.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.TaskStateEnum;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.TaskMaterial;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.TaskStateEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;

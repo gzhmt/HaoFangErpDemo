@@ -2,12 +2,9 @@ package com.jdragon.haoerpdemo.haofangerp.production.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.EmergencyLevelEnum;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanAuditStatusEnum;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStatusEnum;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.EmergencyLevelEnum;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.PlanStatusEnum;
 import io.swagger.annotations.ApiModelProperty;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.Data;
 import lombok.ToString;
 

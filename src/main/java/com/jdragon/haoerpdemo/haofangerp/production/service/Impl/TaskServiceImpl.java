@@ -1,40 +1,30 @@
 package com.jdragon.haoerpdemo.haofangerp.production.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanAuditStatusEnum;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.TaskStateEnum;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.PlanAuditStatusEnum;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.PlanStateEnum;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.TaskStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.AutoGenerateUtil;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.Bean2Utils;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.*;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.PlanVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskMaterialVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskProductVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskVo;
 import com.jdragon.haoerpdemo.haofangerp.production.mappers.*;
 import com.jdragon.haoerpdemo.haofangerp.production.service.PlanService;
 import com.jdragon.haoerpdemo.haofangerp.production.service.TaskService;
-import com.jdragon.haoerpdemo.haofangerp.security.commons.SecurityContextHolderHelper;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.DateUtil;
-import org.omg.PortableServer.POAPackage.ObjectNotActiveHelper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 
 /**

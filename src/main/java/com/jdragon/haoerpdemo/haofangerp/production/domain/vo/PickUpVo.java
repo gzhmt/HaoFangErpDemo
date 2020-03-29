@@ -1,7 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.production.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.TaskStateEnum;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.TaskStateEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
