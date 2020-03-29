@@ -96,12 +96,19 @@ public class Result implements Serializable {
     public static Result error(String message) {
         return new Result(ERROR_CODE, message, null);
     }
+
+    public static Result error(ResultCode resultCode){
+        return new Result(resultCode.getCode(),resultCode.getMessage(),null);
+    }
+
     public static Result authFail(String message){
         return new Result(AUTH_FAIL_CODE, message, null);
     }
+
     public static Result authFail(){
         return authFail( AUTH_FAIL_MESSAGE);
     }
+
 
     public static Result paramsError(String message) {
         return new Result(ILLEGAL_ARGUMENT_CODE_, message, null);

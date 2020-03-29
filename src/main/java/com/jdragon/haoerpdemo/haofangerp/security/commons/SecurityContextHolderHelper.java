@@ -40,7 +40,7 @@ public class SecurityContextHolderHelper {
     }
 
     /**
-     *
+     * 对比登录工号和传入工号是否相同
      */
     public static boolean isAuthorities(String employeeNo){
         String authority = SecurityContextHolderHelper.getEmployeeNo();

@@ -60,7 +60,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
      **/
     @CachePut(key = "#result.productionNo")
     @Override
-    public Plan save(PlanVo planVo) throws Exception {
+    public Plan save(PlanVo planVo) {
         synchronized (this) {
             Plan lastPlan = baseMapper.selectByIdDescLimitOne();
             if (Optional.ofNullable(lastPlan).isPresent()) {
@@ -76,7 +76,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
             if (Optional.ofNullable(plan).isPresent() && plan.insert()) {
                 return plan;
             } else {
-                throw new Exception("创建失败");
+                throw new UnknownError("创建失败");
             }
         }
     }
@@ -99,7 +99,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         if(plan.insert()){
             return plan;
         }else{
-            throw new Exception("复制失败");
+            throw new UnknownError("复制失败");
         }
     }
     @CacheEvict
@@ -112,7 +112,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
                 if(plan.updateById()){
                     return true;
                 }else{
-                    throw new Exception("删除失败");
+                    throw new UnknownError("删除失败");
                 }
             }else{
                 throw new Exception("无该计划，无法删除");

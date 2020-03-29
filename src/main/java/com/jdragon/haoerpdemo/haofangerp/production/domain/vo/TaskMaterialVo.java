@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import sun.plugin2.message.Message;
 
 import javax.validation.constraints.NotNull;
 

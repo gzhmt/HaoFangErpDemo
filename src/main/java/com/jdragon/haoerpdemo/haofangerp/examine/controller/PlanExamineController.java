@@ -28,7 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/examine")
 @Api(tags = "计划审核接口")
-public class PlanExamineController {
+public class    PlanExamineController {
     @Autowired
     private PlanExamineService planExamineService;
     @PatchMapping("/{productionNo}/{examineCode}")

@@ -1,5 +1,6 @@
 package com.jdragon.haoerpdemo.haofangerp.commons.handler;
 
+import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,7 @@ public class GlobalExceptionHandler  {
     public Result  getMessage(MethodArgumentNotValidException exception){
         // 获取NotNull注解中的message
         String message =  exception.getBindingResult().getFieldError().getDefaultMessage();
-        return Result.error().setResult(message);
+        return Result.error(ResultCode.PARAMS_ERROR).setResult(message);
     }
 
 }

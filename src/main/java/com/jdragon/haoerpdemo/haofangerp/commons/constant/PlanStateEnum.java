@@ -15,11 +15,13 @@ import java.util.Arrays;
  */
 
 public enum PlanStateEnum {
+
     新计划(1,"新计划"),
     审核通过(2,"审核通过"),
     生产中(3,"生产中"),
     已完成(4,"已完成"),
     被驳回(5,"被驳回");
+
     @EnumValue
     @Getter
     private int code;

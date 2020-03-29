@@ -2,6 +2,7 @@ package com.jdragon.haoerpdemo.haofangerp.production.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.PlanVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
@@ -10,6 +11,9 @@ import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * @Author: Jdragon
@@ -41,22 +45,18 @@ public class PlanController {
     public Result list(@ApiParam(name = "page", value = "页数") @PathVariable int page,
                        @ApiParam(name = "pageSize", value = "页大小")@PathVariable int pageSize,
                        @ApiParam(name = "state", value = "状态") @RequestParam(required = false) String state){
-        try{
-            IPage<Plan> planList = planService.list(new Page<>(page,pageSize),state);
-            return Result.success().setResult(planList);
-        }catch (Exception e){
-            return Result.error().setResult(e.getMessage());
-        }
+        IPage<Plan> planList = planService.list(new Page<>(page,pageSize),state);
+        return Result.success().setResult(planList);
     }
 
     @PostMapping("/create")
     @ApiOperation(value = "创建生产计划")
-    public Result create(@ApiParam(name = "planVo",value = "计划具体参数")@RequestBody PlanVo planVo) {
+    public Result create(@ApiParam(name = "planVo",value = "计划具体参数")@RequestBody @Valid PlanVo planVo) {
         try{
             Plan plan = planService.save(planVo);
             return Result.success().setResult(plan);
-        }catch (Exception e){
-            return Result.error().setResult(e.getMessage());
+        }catch (UnknownError e){
+            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
         }
     }
 
@@ -65,6 +65,8 @@ public class PlanController {
     public Result update(@ApiParam(name = "productionNo",value = "计划单号")@PathVariable String productionNo){
         try{
             return Result.success().setResult(planService.copy(productionNo));
+        }catch (UnknownError e){
+            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
         }catch (Exception e){
             return Result.error().setResult(e.getMessage());
         }
@@ -76,7 +78,9 @@ public class PlanController {
     public Result delete(@ApiParam(name = "productionNo",value = "计划生产单号") @PathVariable String productionNo){
         try {
             return Result.success().setResult(planService.delete(productionNo));
-        } catch (Exception e) {
+        }catch (UnknownError e){
+            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
+        }catch (Exception e) {
             return Result.error().setResult(e.getMessage());
         }
     }

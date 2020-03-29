@@ -15,8 +15,8 @@ import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 
 
 public interface PlanService extends IService<Plan> {
-    IPage<Plan> list(Page<Plan> page,String state) throws Exception;
-    Plan save(PlanVo planVo) throws Exception;
+    IPage<Plan> list(Page<Plan> page,String state);
+    Plan save(PlanVo planVo) ;
     boolean delete(String productionNo) throws Exception;
     Plan getByProductionNo(String productionNo) throws Exception;
     Plan copy(String productionNo) throws Exception;
