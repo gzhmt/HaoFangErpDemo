@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.EmergencyLevelEnum;
+import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanAuditStatusEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStatusEnum;
 import jdk.nashorn.internal.ir.annotations.Ignore;
@@ -48,6 +49,8 @@ public class Plan extends Model<Plan>{
     private PlanStatusEnum status;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
+
+    private PlanAuditStatusEnum auditStatus;
 
     private EmergencyLevelEnum emergencyLevel;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

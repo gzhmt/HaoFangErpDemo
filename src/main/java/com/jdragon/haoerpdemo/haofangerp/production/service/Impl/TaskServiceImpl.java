@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanAuditStatusEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.TaskStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.AutoGenerateUtil;
@@ -84,7 +85,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
             Plan plan = planService.getByProductionNo(productionPlanNo);
             // 判断生产计划是否通过审核
             PlanStateEnum state = plan.getState();
-            if ( state == PlanStateEnum.新计划  || state == PlanStateEnum.被驳回 ) {
+            PlanAuditStatusEnum auditStatus= plan.getAuditStatus();
+            if ( state == PlanStateEnum.新计划  || auditStatus == PlanAuditStatusEnum.被驳回 ) {
                 throw new Exception("该生产单号计划未通过审核");
             }
             // 验证货品是否存在

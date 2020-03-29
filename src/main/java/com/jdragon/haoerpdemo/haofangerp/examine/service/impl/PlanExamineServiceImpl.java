@@ -1,4 +1,5 @@
 package com.jdragon.haoerpdemo.haofangerp.examine.service.impl;
+import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanAuditStatusEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.DateConvertUtils;
@@ -101,7 +102,7 @@ public class PlanExamineServiceImpl implements PlanExamineService {
     public Result updateState(String productionNo, int examineCode) {
         int result=-1;
         //传入的审批码正确则进行更新操作
-        if(examineCode==PlanStateEnum.审核通过.getCode()||examineCode==PlanStateEnum.被驳回.getCode()){
+        if(examineCode== PlanAuditStatusEnum.审核通过.getCode()||examineCode==PlanAuditStatusEnum.被驳回.getCode()){
             result=planExamineDao.updateState(productionNo,examineCode);
             if(result>0){
                 //从Plan对象中独立出状态字段用于更新

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanAuditStatusEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.PlanStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.AutoGenerateUtil;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.Bean2Utils;
@@ -63,16 +64,17 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
     public Plan save(PlanVo planVo) {
         synchronized (this) {
             Plan lastPlan = baseMapper.selectByIdDescLimitOne();
-            if (Optional.ofNullable(lastPlan).isPresent()) {
-                planVo.setProductionNo(AutoGenerateUtil.createIncreaseOdd(lastPlan.getProductionNo()));
-            } else {
-                planVo.setProductionNo(AutoGenerateUtil.createTodayFirstOdd("SC"));
-            }
-            planVo.setCreateEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
-            planVo.setCreateDate(DateUtil.now());
-            planVo.setState(PlanStateEnum.新计划);
-            planVo.setActivity(true);
             Plan plan = (Plan) Bean2Utils.copyProperties(planVo, Plan.class);
+            if (Optional.ofNullable(lastPlan).isPresent()) {
+                plan.setProductionNo(AutoGenerateUtil.createIncreaseOdd(lastPlan.getProductionNo()));
+            } else {
+                plan.setProductionNo(AutoGenerateUtil.createTodayFirstOdd("SC"));
+            }
+            plan.setCreateEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
+            plan.setCreateDate(DateUtil.now());
+            plan.setState(PlanStateEnum.新计划);
+            plan.setActivity(true);
+            plan.setAuditStatus(PlanAuditStatusEnum.待审核);
             if (Optional.ofNullable(plan).isPresent() && plan.insert()) {
                 return plan;
             } else {
@@ -96,6 +98,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         }
         plan.setCreateDate(DateUtil.now());
         plan.setState(PlanStateEnum.新计划);
+        plan.setAuditStatus(PlanAuditStatusEnum.待审核);
         if(plan.insert()){
             return plan;
         }else{
