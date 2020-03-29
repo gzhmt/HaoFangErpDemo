@@ -15,6 +15,9 @@ import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -32,21 +35,29 @@ public class PlanExamineServiceImpl implements PlanExamineService {
     @Autowired
     @Qualifier("examineRedisTemplate")
     private RedisTemplate redisTemplate;
-
-   /* 仅用于缓存计划的状态时作为redis键的前缀
-    key格式【prefix:productionNo】*/
+    //-------------去掉与redis相关代码----------------------------------------------------------------------------
+/*
+   *//* 仅用于缓存计划的状态时作为redis键的前缀
+    key格式【prefix:productionNo】*//*
     private static final String plansStatePrefix="p_state:";
-    /* 存放【生产单号ID】和【创建时间戳】的zset key 利用redis zset的特性，按照时间戳排序 */
+    *//* 存放【生产单号ID】和【创建时间戳】的zset key 利用redis zset的特性，按照时间戳排序 *//*
     private static final String plansZsetKey="z_plans";
-    /* 存放【计划对象】的hash key ，状态另取*/
-    private static final String plansHashKey="h_plans";
-
+    *//* 存放【计划对象】的hash key ，状态另取*//*
+    private static final String plansHashKey="h_plans";*/
+//----------------------------------------------------------------
     @Override
     public List<Plan> getPlanByPagging(PaggingParams params,long total) throws PageSizeException, TotalException {
         PaggingBean paggingBean=new PaggingBean(params,total);//利用封装的bean获取起始索引和结束索引
-        List<Plan> plans=new ArrayList<>();//用于存放操作结果
+        //-----------------暂时注释---------------------
+        //=new ArrayList<>();//用于存放操作结果
+        List<Plan> plans;
+        //-------------只查mysql----------------
+        plans = planExamineDao.getPlanByPagging(paggingBean.getOffset(), paggingBean.getCorrectPageSize());
+
         //若redis缓存有数据，从缓存中获取，否则从数据库获取并存入缓存
-            if (redisTemplate.hasKey(plansZsetKey)) {
+        //-------------去掉与redis相关代码----------------------------------------------------------------------------
+/*
+        if (redisTemplate.hasKey(plansZsetKey)) {
                 Set<String> plansSet= redisTemplate.opsForZSet().range(plansZsetKey,paggingBean.getOffset(),paggingBean.getEnd());
                 if(plansSet!=null&&!plansSet.isEmpty()){
                     //执行结果存放在result中
@@ -80,7 +91,8 @@ public class PlanExamineServiceImpl implements PlanExamineService {
                        return null;
                    });
                 }
-            }
+            }*/
+//----------------------------------------------------------------------------------------------------------------------------
         return plans;
     }
 
@@ -94,10 +106,14 @@ public class PlanExamineServiceImpl implements PlanExamineService {
             if(result>0){
                 //从Plan对象中独立出状态字段用于更新
                 //更新redis缓存 以 【自定义前缀+生产单号】 为key，以 【计划状态码】为value
-                    redisTemplate.opsForValue().set(plansStatePrefix + productionNo, PlanStateEnum.getPlanStateEnumByCode(examineCode).getCode());
+
+
+                //--------------暂时去掉redis部分-------------------------------------------------------------------------------------
+                 //redisTemplate.opsForValue().set(plansStatePrefix + productionNo, PlanStateEnum.getPlanStateEnumByCode(examineCode).getCode());
+                //------------------------------------------------------------
                 return Result.success("审批成功");
             }else{
-                return Result.error("审批失败,没有此生产单号");
+                return Result.error("审批失败,没有此生产单号或该生产单号已作废");
             }
         }
         return Result.error("审批码不正确");

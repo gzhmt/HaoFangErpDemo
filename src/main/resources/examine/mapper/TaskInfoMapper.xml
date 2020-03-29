@@ -14,8 +14,8 @@
       product_no,product_number,scrap_number,remarks
     </sql>
     <!--分页查询任务信息-->
-    <select id="getTaskByPagging" parameterType="string" resultType="taskVo">
-        SELECT <include refid="task_field"/> FROM task WHERE production_plan_no=#{productionNo} ORDER BY forecast_start_date LIMIT #{offset},#{count}
+    <select id="getTaskByPagging"  resultType="taskVo">
+        SELECT <include refid="task_field"/> FROM production_task WHERE production_plan_no=#{productionNo,jdbcType=VARCHAR} ORDER BY forecast_start_date LIMIT #{offset},#{count}
     </select>
 
     <!--查询任务总记录数-->
@@ -25,7 +25,7 @@
 
     <!--按任务编号查询原料信息-->
     <select id="getTaskMaterialByTaskNo" parameterType="string" resultType="taskMaterialVo">
-      SELECT <include refid="material_field"/> FROM production_task_material WHERE task_no=#{taskNo}
+      SELECT <include refid="material_field"/> FROM production_task_material WHERE task_no=#{taskNo,jdbcType=VARCHAR}
     </select>
 
     <!--按任务编号查询成品信息-->
