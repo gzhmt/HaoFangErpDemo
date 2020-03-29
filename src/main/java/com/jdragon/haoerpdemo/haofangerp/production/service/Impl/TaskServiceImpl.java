@@ -74,9 +74,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
             // 如果生产计划单号不存在，则抛出异常
             Plan plan = planService.getByProductionNo(productionPlanNo);
             // 判断生产计划是否通过审核
-            PlanStateEnum state = plan.getState();
             PlanAuditStatusEnum auditStatus= plan.getAuditStatus();
-            if ( state == PlanStateEnum.新计划  || auditStatus == PlanAuditStatusEnum.被驳回 ) {
+            if ( auditStatus != PlanAuditStatusEnum.审核通过 ) {
                 throw new Exception("该生产单号计划未通过审核");
             }
             // 验证货品是否存在
@@ -84,18 +83,22 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
             int flag = 0;
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0; i < taskVo.getTaskMaterialVos().size(); i++) {
+                // 构建sql
                 TaskMaterialVo taskMaterialVo = taskVo.getTaskMaterialVos().get(i);
                 LambdaQueryWrapper<Goods> queryWrapper = new LambdaQueryWrapper<>();
                 queryWrapper.eq(Goods::getGoodsNo, taskMaterialVo.getMaterialNo());
+                // 查询
                 if ( !Optional.ofNullable(goodsMapper.selectOne(queryWrapper)).isPresent() ) {
                     stringBuffer.append(taskMaterialVo.getMaterialNo() + "材料不存在");
                     flag++;
                 }
             }
             for (int i = 0; i < taskVo.getTaskProductVos().size(); i++) {
+                // 构建sql
                 TaskProductVo taskProductVo = taskVo.getTaskProductVos().get(i);
                 LambdaQueryWrapper<Goods> queryWrapper = new LambdaQueryWrapper<>();
                 queryWrapper.eq(Goods::getGoodsNo,taskProductVo.getProductNo());
+                // 查询
                 if ( !Optional.ofNullable(goodsMapper.selectOne(queryWrapper)).isPresent() ){
                     stringBuffer.append(taskProductVo.getProductNo()+"原料不存在");
                     flag++;
@@ -103,10 +106,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
             }
             // 货品不存在则抛出异常
             if ( flag > 0 ) {
-                log.info(stringBuffer.toString());
                 throw new Exception(stringBuffer.toString());
             }
-
             // 生成任务单号
             LambdaQueryWrapper<Task> taskLambdaQueryWrapper = new LambdaQueryWrapper<>();
             taskLambdaQueryWrapper.orderByDesc(Task::getId).last("limit 1");
@@ -118,7 +119,6 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
                 taskNo = AutoGenerateUtil.createTodayFirstOdd("SC");
             }
             // 获取任务实体类
-
             taskVo.setSequenceId(taskNo);
             taskVo.setState(TaskStateEnum.正常);
             taskVo.setStateChangeDate(DateUtil.now());
@@ -128,6 +128,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
             // 创建任务
             if (task !=null && task.insert()) {
                 for (int i = 0; i < taskVo.getTaskProductVos().size(); i++) {
+                    // 创建任务成品关系
                     TaskProduct taskProduct = (TaskProduct) Bean2Utils.copyProperties(taskVo.getTaskProductVos().get(i), TaskProduct.class);
                     taskProduct.setTaskNo(taskNo);
                     if (taskProduct == null || !taskProduct.insert()) {
@@ -135,6 +136,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
                     }
                 }
                 for (int i = 0; i < taskVo.getTaskMaterialVos().size(); i++) {
+                    // 创建任务原料关系
                     TaskMaterial taskMaterial = (TaskMaterial) Bean2Utils.copyProperties(taskVo.getTaskMaterialVos().get(i), TaskMaterial.class);
                     taskMaterial.setTaskNo(taskNo);
                     if (taskMaterial == null || !taskMaterial.insert()) {
@@ -152,6 +154,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
     @Override
     public boolean delete(String[] taskNo) throws Exception{
         if (Optional.ofNullable(taskNo).isPresent()) {
+            // 构造wrapper
             LambdaQueryWrapper<Task> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
             for (int i = 0; i < taskNo.length; i++) {
                 planLambdaQueryWrapper.eq(Task::getTaskNo,taskNo[i]);
@@ -159,6 +162,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
                     planLambdaQueryWrapper.or();
                 }
             }
+            // 删除任务
             if (baseMapper.delete(planLambdaQueryWrapper) > 0) {
                 return true;
             } else {

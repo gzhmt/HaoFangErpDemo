@@ -41,6 +41,14 @@ public class TaskVo {
     @ApiModelProperty(example = "admin")
     private String operatorEmployeeNo;
 
+    @NotNull(message = "成品名称不能为空")
+    @ApiModelProperty(example = "成品1")
+    private String productionName;
+
+    @NotNull(message = "成品数量不能为空")
+    @ApiModelProperty(example = "10")
+    private String productionNumber;
+
     @ApiModelProperty(hidden = true)
     private TaskStateEnum state;
 

@@ -50,11 +50,18 @@ public class Task extends Model<Task>{
      * 生产计划编号
      */
     private String productionPlanNo;
-
     /**
      * 操作人员
      */
     private String operatorEmployeeNo;
+    /**
+     * 产品名称
+     */
+    private String productionName;
+    /**
+     * 产品数量
+     */
+    private String productionNumber;
     /**
      * 任务状态
      */
