@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlanMapper extends BaseMapper<Plan> {
 
-    @Select("select * from production_plan where production_no=#{productionNo} and activity=true")
+    @Select("select * from production_plan where production_no=#{productionNo} and deleted=false")
     Plan selectByProductionNo(String productionNo);
 
     @Select("select * from production_plan order by id Desc limit 1")
