@@ -8,8 +8,8 @@ import java.util.List;
  * @date 2020/3/28 17:53
  */
 public class ResponseVo<T> {
-    private List<T> data;
-    private long total;
+    private List<T> data;//数据
+    private long total;//总记录数
 
     public List<T> getData() {
         return data;
