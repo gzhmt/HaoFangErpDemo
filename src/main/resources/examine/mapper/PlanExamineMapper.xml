@@ -8,16 +8,16 @@
     </sql>
     <!--根据指定生产单号改变其状态-->
     <update id="updateState">
-        UPDATE production_plan SET audit_status=#{examineCode} WHERE activity=TRUE AND production_no=#{productionNo,jdbcType=VARCHAR}
+        UPDATE production_plan SET audit_status=#{examineCode} WHERE deleted=FALSE AND production_no=#{productionNo,jdbcType=VARCHAR}
     </update>
 
     <!--分页返回未删除的计划列表 按日期排序-->
     <select id="getPlanByPagging"  resultType="plan">
-        SELECT <include refid="plan_field"/> FROM production_plan WHERE activity=TRUE ORDER BY create_date LIMIT #{offset},#{count}
+        SELECT <include refid="plan_field"/> FROM production_plan WHERE deleted=FALSE ORDER BY create_date LIMIT #{offset},#{count}
     </select>
 
     <!--获取总记录数（排除无效记录）-->
     <select id="totalCount" resultType="_long">
-      SELECT COUNT(*) FROM production_plan WHERE activity=TRUE
+      SELECT COUNT(*) FROM production_plan WHERE deleted=FALSE
     </select>
 </mapper>
