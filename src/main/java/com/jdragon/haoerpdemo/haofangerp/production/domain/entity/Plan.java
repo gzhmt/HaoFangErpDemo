@@ -2,6 +2,7 @@ package com.jdragon.haoerpdemo.haofangerp.production.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -60,6 +61,7 @@ public class Plan extends Model<Plan>{
 
     private String remarks;
 
+    @TableLogic(value = "1",delval = "0")
     private boolean activity;
     @Override
     protected Serializable pkVal(){

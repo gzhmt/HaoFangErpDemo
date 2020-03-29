@@ -1,6 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.production.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -111,8 +112,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         if (isFounder(productionNo)){
             Plan plan = baseMapper.selectByProductionNo(productionNo);
             if(Optional.ofNullable(plan).isPresent()){
-                plan.setActivity(false);
-                if(plan.updateById()){
+                if(plan.deleteById()){
                     return true;
                 }else{
                     throw new UnknownError("删除失败");
