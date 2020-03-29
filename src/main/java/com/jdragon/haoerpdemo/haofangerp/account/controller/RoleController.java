@@ -1,5 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.account.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.RoleVo;
 import com.jdragon.haoerpdemo.haofangerp.account.service.RoleService;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author zhu
@@ -32,30 +35,36 @@ public class RoleController {
     RoleService roleService;
 
     /**
-     * 获取角色列表(按权重从大到小排列)
+     * 分页获取角色列表
+     * @param pageNo 页码
+     * @param pageSize 每页大小
      * @return
      */
-    @GetMapping("/listRoles")
-    @ApiOperation("获取角色列表(按权重从大到小排列)")
-    public Result ListRoles(){
-        List<Role> roles= roleService.listRoles();
-        return Result.success(Result.SUCCESS_MESSAGE).setResult(roles);
+    @GetMapping("/list/{pageNo}/{pageSize}")
+    @ApiOperation("分页获取角色列表")
+    public Result listRoles(@ApiParam(name = "pageNo",value = "页码")@PathVariable("pageNo")int pageNo,
+                            @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize){
+        return Result.success(Result.SUCCESS_MESSAGE).setResult(roleService.listRoles(new Page<>(pageNo,pageSize)));
     }
 
     /**
      * 添加角色
      * @param roleVo 角色vo类
-     * @param bindingResult
+     * @param bindingResult 校验参数接口
      * @return
      */
-    @PostMapping("/addRole")
+    @PostMapping("/add")
     @ApiOperation("添加角色")
     public Result addRole(@ApiParam(name = "roleVo",value = "角色vo类")@RequestBody @Validated RoleVo roleVo, BindingResult bindingResult){
         Map<String, String> map = ValidationUtils.checkBindingResult(bindingResult);
-        if (map != null) {
+        if (Optional.ofNullable(map).isPresent()) {
             return Result.error("请求参数非法");
         }
-        return roleService.addRole(roleVo);
+        try{
+            return Result.success().setResult(roleService.addRole(roleVo));
+        }catch (Exception e){
+            return Result.error().setResult(e.getMessage());
+        }
     }
 
     /**
@@ -63,41 +72,43 @@ public class RoleController {
      * @param roleId 角色id
      * @return
      */
-    @PostMapping("/deleteRole/{roleId}")
+    @PostMapping("/delete/{roleId}")
     @ApiOperation("根据角色id删除角色")
     public Result deleteRole(@ApiParam(name = "roleId",value = "角色id")@PathVariable("roleId")int roleId){
-        return roleService.deleteRole(roleId);
+        try{
+            return Result.success().setResult(roleService.deleteRole(roleId));
+        }catch (Exception e){
+            return Result.error().setResult(e.getMessage());
+        }
     }
 
     /**
-     * 根据员工id分页获取已赋予角色列表(按权重从大到小排列)
+     * 根据员工id分页获取已赋予角色列表
      * @param pageNo 页数
      * @param pageSize 每一页的大小
      * @param employeeId 员工id
      * @return
      */
-    @GetMapping("/assignedRoles/{pageNo}/{pageSize}/{employeeId}")
+    @GetMapping("/assigned/{pageNo}/{pageSize}/{employeeId}")
     @ApiOperation("根据员工id分页获取已赋予角色列表")
     public Result getAssignedRolesByEmployeeId(@ApiParam(name = "pageNo",value = "页数")@PathVariable("pageNo")int pageNo, @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize,
                            @ApiParam(name = "employeeId",value = "员工id")@PathVariable("employeeId")int employeeId){
-        List<Role> roles= roleService.getAssignedRolesByEmployeeId(pageNo, pageSize, employeeId);
-        return Result.success(Result.SUCCESS_MESSAGE).setResult(roles);
+        return Result.success(Result.SUCCESS_MESSAGE).setResult(roleService.getAssignedRolesByEmployeeId(pageNo, pageSize, employeeId));
     }
 
 
     /**
-     * 根据员工id分页获取未赋予角色列表(按权重从大到小排列)
+     * 根据员工id分页获取未赋予角色列表
      * @param pageNo 页数
      * @param pageSize 每一页的大小
      * @param employeeId 员工id
      * @return
      */
-    @GetMapping("/unAssignedRoles/{pageNo}/{pageSize}/{employeeId}")
+    @GetMapping("/unAssigned/{pageNo}/{pageSize}/{employeeId}")
     @ApiOperation("根据员工id分页获取未赋予角色列表")
     public Result getUnAssignedRolesByEmployeeId(@ApiParam(name = "pageNo",value = "页数")@PathVariable("pageNo")int pageNo, @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize,
                            @ApiParam(name = "employeeId",value = "员工id")@PathVariable("employeeId")int employeeId){
-        List<Role> roles= roleService.getUnAssignedRolesByEmployeeId(pageNo, pageSize, employeeId);
-        return Result.success(Result.SUCCESS_MESSAGE).setResult(roles);
+        return Result.success(Result.SUCCESS_MESSAGE).setResult(roleService.getUnAssignedRolesByEmployeeId(pageNo, pageSize, employeeId));
     }
 
     /**
@@ -110,7 +121,11 @@ public class RoleController {
     @ApiOperation("添加员工角色")
     public Result addRoleOfEmployee(@ApiParam(name = "employeeId",value = "员工id")@PathVariable("employeeId")int employeeId,
                                        @ApiParam(name = "roleId",value = "角色id")@PathVariable("roleId")int roleId){
-        return roleService.addRoleOfEmployee(employeeId, roleId);
+        try{
+            return Result.success().setResult(roleService.addRoleOfEmployee(employeeId, roleId));
+        }catch (Exception e){
+            return Result.error().setResult(e.getMessage());
+        }
     }
 
     /**
@@ -123,13 +138,10 @@ public class RoleController {
     @ApiOperation("删除员工角色")
     public Result deleteRoleOfEmployee(@ApiParam(name = "employeeId",value = "员工id")@PathVariable("employeeId")int employeeId,
                                     @ApiParam(name = "roleId",value = "角色id")@PathVariable("roleId")int roleId){
-        return roleService.deleteRoleOfEmployee(employeeId, roleId);
+        try{
+            return Result.success().setResult(roleService.deleteRoleOfEmployee(employeeId, roleId));
+        }catch (Exception e){
+            return Result.error().setResult(e.getMessage());
+        }
     }
-
-
-
-
-
-
-
 }

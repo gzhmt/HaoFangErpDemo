@@ -31,8 +31,6 @@ public class Role extends Model<Role> {
 
     private String roleName;
 
-    private int roleSort;
-
     private String roleDescribe;
 
     @Override

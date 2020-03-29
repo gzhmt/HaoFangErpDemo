@@ -26,13 +26,6 @@ public interface PowerMapper extends BaseMapper<Power> {
     List<Power> getPowerByEmployeeNo(String employeeNo);
 
     /**
-     * 获取权限列表(按权重从大到小排列)
-     * @return
-     */
-    @Select("select * from system_power p order by p.api_sort desc")
-    List<Power> listPowers();
-
-    /**
      * 根据角色id获取已赋予权限列表
      * @param roleId 角色id
      * @return
@@ -62,6 +55,6 @@ public interface PowerMapper extends BaseMapper<Power> {
             " (select p.id from system_power p" +
             " join system_role_power rp on p.id=rp.power_id" +
             " join system_role r on r.id=rp.role_id" +
-            " where r.id=#{roleId}) order by p.api_sort desc")
+            " where r.id=#{roleId})")
     List<Power> getUnAssignedPowersByRoleId(int roleId);
 }

@@ -22,8 +22,5 @@ public class RoleVo {
     private String roleName;
 
     @NotNull(message = "请求参数不能为空")
-    private int roleSort;
-
-    @NotNull(message = "请求参数不能为空")
     private String roleDescribe;
 }

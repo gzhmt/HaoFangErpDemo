@@ -34,10 +34,6 @@ public class Power extends Model<Power> {
 
     private String apiMethod;
 
-    private int apiSort;
-
-    private int pid;
-
     private String powerDescribe;
 
     @Override

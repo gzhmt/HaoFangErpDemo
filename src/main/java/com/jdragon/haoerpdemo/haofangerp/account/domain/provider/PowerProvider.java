@@ -42,7 +42,6 @@ public class PowerProvider {
                 FROM("system_role r");
                 JOIN("system_role_power rp on r.id=rp.role_id",
                         "system_power p on p.id=rp.power_id");
-                ORDER_BY("p.api_sort desc");
                 WHERE("r.id=#{roleId}");
             }
         }.toString();
