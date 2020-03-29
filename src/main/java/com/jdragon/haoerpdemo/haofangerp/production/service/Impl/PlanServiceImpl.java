@@ -46,7 +46,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         LambdaQueryWrapper<Plan> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Plan::getPrincipalEmployeeNo,
                 SecurityContextHolderHelper.getEmployeeNo())
-                .eq(Plan::isActivity,true);
+                .eq(Plan::isDeleted,false);
         if(Optional.ofNullable(state).isPresent()){
             lambdaQueryWrapper.eq(Plan::getState,PlanStateEnum.valueOf(state).getCode());
         }
@@ -74,7 +74,6 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
             plan.setCreateEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
             plan.setCreateDate(DateUtil.now());
             plan.setState(PlanStateEnum.新计划);
-            plan.setActivity(true);
             plan.setAuditStatus(PlanAuditStatusEnum.待审核);
             if (Optional.ofNullable(plan).isPresent() && plan.insert()) {
                 return plan;
@@ -129,7 +128,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
     @Override
     public Plan getByProductionNo(String productionNo) throws Exception {
         LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        planLambdaQueryWrapper.eq(Plan::getProductionNo,productionNo).eq(Plan::isActivity,true);
+        planLambdaQueryWrapper.eq(Plan::getProductionNo,productionNo).eq(Plan::isDeleted,false);
         Plan plan = this.getOne(planLambdaQueryWrapper);
         if(Optional.ofNullable(plan).isPresent()){
             return plan;
