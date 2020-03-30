@@ -6,8 +6,8 @@ import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.PageSizeEx
 import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.TotalException;
 import com.jdragon.haoerpdemo.haofangerp.examine.dao.TaskInfoDao;
 import com.jdragon.haoerpdemo.haofangerp.examine.service.TaskInfoService;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskMaterialVo;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskProductVo;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.TaskMaterialVo;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.TaskProductVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

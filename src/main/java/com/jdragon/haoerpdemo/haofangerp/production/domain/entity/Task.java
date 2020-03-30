@@ -2,6 +2,7 @@ package com.jdragon.haoerpdemo.haofangerp.production.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -90,6 +91,11 @@ public class Task extends Model<Task>{
      * 备注
      */
     private String remarks;
+    /**
+     * 数据有效
+     */
+    @TableLogic(value = "0",delval = "1")
+    private boolean deleted;
 
 
     @Override
