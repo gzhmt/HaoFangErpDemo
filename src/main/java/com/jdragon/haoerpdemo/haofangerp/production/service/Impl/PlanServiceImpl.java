@@ -17,6 +17,7 @@ import com.jdragon.haoerpdemo.haofangerp.security.commons.SecurityContextHolderH
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.DateUtil;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -86,22 +87,42 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
             throw new UnknownError("复制失败");
         }
     }
+
+    @Override
+    public Plan update(String productionNo,PlanVo planVo) throws Exception {
+        if(!isFounder(productionNo)){
+            throw new Exception("不是你管理的生产计划不能更改");
+        }
+        Plan plan = baseMapper.selectByProductionNo(productionNo);
+        if(plan==null){
+            throw new Exception("没有这个计划");
+        }
+        if(plan.getStatus().equals(PlanStateEnum.生产中)){
+            throw new Exception("正在生产，无法更改，请等待生产完毕");
+        }
+        BeanUtils.copyProperties(planVo,plan);
+        if(plan.updateById()){
+            return plan;
+        }else{
+            throw new UnknownError("更新失败");
+        }
+    }
+
     @CacheEvict
     @Override
     public boolean delete(String productionNo) throws Exception {
-        if (isFounder(productionNo)){
-            Plan plan = baseMapper.selectByProductionNo(productionNo);
-            if(Optional.ofNullable(plan).isPresent()){
-                if(plan.deleteById()){
-                    return true;
-                }else{
-                    throw new UnknownError("删除失败");
-                }
+        if (!isFounder(productionNo)) {
+            throw new Exception("不是你管理的生产计划不能删除");
+        }
+        Plan plan = baseMapper.selectByProductionNo(productionNo);
+        if(Optional.ofNullable(plan).isPresent()){
+            if(plan.deleteById()){
+                return true;
             }else{
-                throw new Exception("无该计划，无法删除");
+                throw new UnknownError("删除失败");
             }
         }else{
-            throw new Exception("不是你管理的生产计划不能删除");
+            throw new Exception("无该计划，无法删除");
         }
     }
 

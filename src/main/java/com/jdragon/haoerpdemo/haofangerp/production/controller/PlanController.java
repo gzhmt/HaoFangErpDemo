@@ -2,6 +2,7 @@ package com.jdragon.haoerpdemo.haofangerp.production.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.pagehelper.PageInfo;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.PlanVo;
@@ -23,14 +24,14 @@ import javax.validation.constraints.NotNull;
  */
 @Slf4j
 @RestController
-@RequestMapping("plan")
+@RequestMapping("/plan")
 @Api(tags = "生产计划相关")
 public class PlanController {
 
     @Autowired
     PlanService planService;
 
-    @GetMapping("/productionNo/{productionNo}")
+    @GetMapping("/{productionNo}")
     @ApiOperation("根据计划单号获取计划")
     public Result byId(@ApiParam(name = "productionNo",value = "计划单号")@PathVariable String productionNo){
         try {
@@ -60,9 +61,9 @@ public class PlanController {
         }
     }
 
-    @PostMapping("/copy/{productionNo}")
+    @PostMapping("/copy")
     @ApiOperation("复制生产计划")
-    public Result update(@ApiParam(name = "productionNo",value = "计划单号")@PathVariable String productionNo){
+    public Result update(@ApiParam(name = "productionNo",value = "计划单号")@RequestParam String productionNo){
         try{
             return Result.success().setResult(planService.copy(productionNo));
         }catch (UnknownError e){
@@ -73,11 +74,24 @@ public class PlanController {
     }
 
 
-    @DeleteMapping("/delete/{productionNo}")
+    @DeleteMapping("/delete")
     @ApiOperation("删除生产计划")
-    public Result delete(@ApiParam(name = "productionNo",value = "计划生产单号") @PathVariable String productionNo){
+    public Result delete(@ApiParam(name = "productionNo",value = "计划生产单号") @RequestParam String productionNo){
         try {
             return Result.success().setResult(planService.delete(productionNo));
+        }catch (UnknownError e){
+            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
+        }catch (Exception e) {
+            return Result.error().setResult(e.getMessage());
+        }
+    }
+
+    @PutMapping("/update")
+    @ApiOperation("更新生产计划")
+    public Result update(@ApiParam(name = "productionNo",value = "计划生产单号")@RequestParam String productionNo,
+                         @ApiParam(name = "planVo",value = "计划具体参数")@RequestBody @Valid PlanVo planVo){
+        try {
+            return Result.success().setResult(planService.update(productionNo,planVo));
         }catch (UnknownError e){
             return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
         }catch (Exception e) {

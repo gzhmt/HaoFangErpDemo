@@ -10,6 +10,7 @@ import com.jdragon.haoerpdemo.haofangerp.commons.tools.ValidationUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -28,7 +29,7 @@ import java.util.Optional;
 @RestController
 @Validated
 @RequestMapping("/role")
-@Api(tags = "权限控制")
+@Api(tags = "角色控制")
 public class RoleController {
 
     @Autowired
@@ -72,9 +73,9 @@ public class RoleController {
      * @param roleId 角色id
      * @return
      */
-    @PostMapping("/delete/{roleId}")
+    @DeleteMapping("/delete")
     @ApiOperation("根据角色id删除角色")
-    public Result deleteRole(@ApiParam(name = "roleId",value = "角色id")@PathVariable("roleId")int roleId){
+    public Result deleteRole(@ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId){
         try{
             return Result.success().setResult(roleService.deleteRole(roleId));
         }catch (Exception e){
@@ -89,10 +90,10 @@ public class RoleController {
      * @param employeeId 员工id
      * @return
      */
-    @GetMapping("/assigned/{pageNo}/{pageSize}/{employeeId}")
+    @GetMapping("/assigned/{pageNo}/{pageSize}")
     @ApiOperation("根据员工id分页获取已赋予角色列表")
     public Result getAssignedRolesByEmployeeId(@ApiParam(name = "pageNo",value = "页数")@PathVariable("pageNo")int pageNo, @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize,
-                           @ApiParam(name = "employeeId",value = "员工id")@PathVariable("employeeId")int employeeId){
+                           @ApiParam(name = "employeeId",value = "员工id")@RequestParam("employeeId")int employeeId){
         return Result.success(Result.SUCCESS_MESSAGE).setResult(roleService.getAssignedRolesByEmployeeId(pageNo, pageSize, employeeId));
     }
 
@@ -104,10 +105,11 @@ public class RoleController {
      * @param employeeId 员工id
      * @return
      */
-    @GetMapping("/unAssigned/{pageNo}/{pageSize}/{employeeId}")
+    @GetMapping("/unAssigned/{pageNo}/{pageSize}")
     @ApiOperation("根据员工id分页获取未赋予角色列表")
-    public Result getUnAssignedRolesByEmployeeId(@ApiParam(name = "pageNo",value = "页数")@PathVariable("pageNo")int pageNo, @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize,
-                           @ApiParam(name = "employeeId",value = "员工id")@PathVariable("employeeId")int employeeId){
+    public Result getUnAssignedRolesByEmployeeId(@ApiParam(name = "pageNo",value = "页数")@PathVariable("pageNo")int pageNo,
+                                                 @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize,
+                            @ApiParam(name = "employeeId",value = "员工id")@RequestParam("employeeId")int employeeId){
         return Result.success(Result.SUCCESS_MESSAGE).setResult(roleService.getUnAssignedRolesByEmployeeId(pageNo, pageSize, employeeId));
     }
 
@@ -117,10 +119,10 @@ public class RoleController {
      * @param roleId 角色id
      * @return
      */
-    @PostMapping("/addRoleOfEmployee/{employeeId}/{roleId}")
+    @PostMapping("/addRoleOfEmployee")
     @ApiOperation("添加员工角色")
-    public Result addRoleOfEmployee(@ApiParam(name = "employeeId",value = "员工id")@PathVariable("employeeId")int employeeId,
-                                       @ApiParam(name = "roleId",value = "角色id")@PathVariable("roleId")int roleId){
+    public Result addRoleOfEmployee(@ApiParam(name = "employeeId",value = "员工id")@RequestParam("employeeId")int employeeId,
+                                       @ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId){
         try{
             return Result.success().setResult(roleService.addRoleOfEmployee(employeeId, roleId));
         }catch (Exception e){
@@ -134,10 +136,10 @@ public class RoleController {
      * @param roleId 角色id
      * @return
      */
-    @PostMapping("/deleteRoleOfEmployee/{employeeId}/{roleId}")
+    @DeleteMapping("/deleteRoleOfEmployee")
     @ApiOperation("删除员工角色")
-    public Result deleteRoleOfEmployee(@ApiParam(name = "employeeId",value = "员工id")@PathVariable("employeeId")int employeeId,
-                                    @ApiParam(name = "roleId",value = "角色id")@PathVariable("roleId")int roleId){
+    public Result deleteRoleOfEmployee(@ApiParam(name = "employeeId",value = "员工id")@RequestParam("employeeId")int employeeId,
+                                    @ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId){
         try{
             return Result.success().setResult(roleService.deleteRoleOfEmployee(employeeId, roleId));
         }catch (Exception e){
