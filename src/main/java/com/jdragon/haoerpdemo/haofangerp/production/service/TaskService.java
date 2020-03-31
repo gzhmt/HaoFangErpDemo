@@ -7,6 +7,7 @@ import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.BaseTaskVo;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.TaskDetailVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.TaskInsertVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.TaskUpdateVo;
 
@@ -42,22 +43,22 @@ public interface TaskService extends IService<Task> {
      * @return boolean
      **/
     boolean delete(String[] taskNo) throws Exception;
-//    /**
-//     * @Author kimi
-//     * @Description:更新用户
-//     * @Date 2020/3/30 18:41
-//     * @Param [taskUpdateVo]
-//     * @return boolean
-//     **/
-//    boolean update(TaskUpdateVo taskUpdateVo) throws Exception;
     /**
      * @Author kimi
-     * @Description:查询任务闲情页
+     * @Description:更新用户
+     * @Date 2020/3/30 18:41
+     * @Param [taskUpdateVo]
+     * @return boolean
+     **/
+    boolean update(TaskUpdateVo taskUpdateVo) throws Exception;
+    /**
+     * @Author kimi
+     * @Description:查询任务详情页
      * @Date 2020/3/30 18:41
      * @Param [taskNo]
      * @return com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.BaseTaskVo
      **/
-    BaseTaskVo queryTaskDetail(String taskNo) throws Exception;
+    TaskDetailVo queryTaskDetail(String taskNo) throws Exception;
     /**
      * @Author kimi
      * @Description:根据任务编号查询任务

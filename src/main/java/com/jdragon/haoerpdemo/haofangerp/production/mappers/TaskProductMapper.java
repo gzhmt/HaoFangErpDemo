@@ -26,7 +26,7 @@ public interface TaskProductMapper extends BaseMapper<TaskProduct> {
      * @return java.util.List<com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.TaskProductGoodsVo>
      **/
     @Select("select product_no, product_number, scrap_number, ptp.remarks, " +
-            "goods_name, goods_type， goods_unit, gi.remarks " +
+            "goods_name, goods_type, goods_unit, gi.remarks " +
             "from production_task_product ptp " +
             "inner join goods_info gi " +
             "on ptp.product_no = gi.goods_no " +

@@ -51,7 +51,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
    private TaskProductMapper taskProductMapper;
 
     @Override
-    public BaseTaskVo queryTaskDetail(String taskNo) throws Exception{
+    public TaskDetailVo queryTaskDetail(String taskNo) throws Exception{
         // 通过任务编号查询任务详情页
         if (Optional.ofNullable(taskNo).isPresent()) {
             LambdaQueryWrapper<Task> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -66,10 +66,10 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
                     taskDetailVo.setTaskProductGoodsVos(taskProductGoodsVos);
                     return taskDetailVo;
                 } else {
-                    throw new Exception("没有这个生产单号的任务");
+                    throw new UnknownError("材料或原料获取失败");
                 }
             } else {
-                throw new Exception("没有这个生产单号的任务");
+                throw new Exception("该任务编号不存在");
             }
         } else {
             throw new Exception("任务编号不能为空");
@@ -100,34 +100,34 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
             String taskNo = createTaskNo();
             // 获取任务实体类
             Task task = (Task) Bean2Utils.copyProperties(taskInsertVo, Task.class);
-            // 暂时假设流水线与任务编号一致
-            task.setSequenceId(taskNo);
+            // 暂时假设流水线与任务编号后缀一致
+            task.setSequenceId(taskNo.replace("RW","LS"));
             task.setTaskNo(taskNo);
             task.setState(TaskStateEnum.正常);
             task.setStateChangeDate(DateUtil.now());
             task.setCreateDate(DateUtil.now());
             // 创建任务
-            if (task !=null && task.insert()) {
+            if (task.insert()) {
                 for (int i = 0; i < taskInsertVo.getTaskProductVos().size(); i++) {
                     // 创建任务成品关系
                     TaskProduct taskProduct = (TaskProduct) Bean2Utils.copyProperties(taskInsertVo.getTaskProductVos().get(i), TaskProduct.class);
                     taskProduct.setTaskNo(taskNo);
-                    if (taskProduct == null || !taskProduct.insert()) {
-                        throw new Exception(taskInsertVo.getTaskProductVos().get(i).getProductNo()+"关系创建失败");
+                    if (!taskProduct.insert()) {
+                        throw new UnknownError(taskInsertVo.getTaskProductVos().get(i).getProductNo()+"关系创建失败");
                     }
                 }
                 for (int i = 0; i < taskInsertVo.getTaskMaterialVos().size(); i++) {
                     // 创建任务原料关系
                     TaskMaterial taskMaterial = (TaskMaterial) Bean2Utils.copyProperties(taskInsertVo.getTaskMaterialVos().get(i), TaskMaterial.class);
                     taskMaterial.setTaskNo(taskNo);
-                    if (taskMaterial == null || !taskMaterial.insert()) {
-                        throw new Exception(taskInsertVo.getTaskProductVos().get(i).getProductNo()+"关系创建失败");
+                    if (!taskMaterial.insert()) {
+                        throw new UnknownError(taskInsertVo.getTaskProductVos().get(i).getProductNo()+"关系创建失败");
                     }
                 }
                 // 返回任务简略项
                 return task;
             } else {
-                throw new Exception("创建任务失败");
+                throw new UnknownError("创建任务失败");
             }
         }
     }
@@ -146,7 +146,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
         if (Optional.ofNullable(lastTask).isPresent()) {
             return AutoGenerateUtil.createIncreaseOdd(lastTask.getTaskNo());
         } else {
-            return AutoGenerateUtil.createTodayFirstOdd("SC");
+            return AutoGenerateUtil.createTodayFirstOdd("RW");
         }
     }
     /**
@@ -197,7 +197,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
         if (!Optional.ofNullable(taskNos).isPresent() || taskNos.length == 0) {
             throw new Exception("任务编号不为空");
         }
-        // 查询任务是否存在
+        // 查询任务是否存在否则抛出异常
         for (int i = 0; i < taskNos.length; i++) {
             getByTaskNo(taskNos[i]);
         }
@@ -213,52 +213,52 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
         if (baseMapper.delete(planLambdaQueryWrapper) > 0) {
             return true;
         } else {
-            throw new Exception("删除任务失败");
+            throw new UnknownError("删除任务失败");
         }
     }
 
-//    @CachePut(key = "#taskVo")
-//    @Override
-//    public boolean update(TaskUpdateVo taskUpdateVo) throws Exception {
-//        // 查询任务编号是否存在，不存在则报错
-//        getByTaskNo(taskUpdateVo.getTaskNo());
-//        // 查询原料和成品是否存在，不存在则抛出异常
-//        queryGoodsExist(taskUpdateVo);
-//        Task task = (Task)Bean2Utils.copyProperties(taskUpdateVo, Task.class);
-//        // 获取任务编号
-//        String taskNo = taskUpdateVo.getTaskNo();
-//        // 状态改变就设置新的状态改变时间
-//        if (!getByTaskNo(taskNo).getState().equals(taskUpdateVo.getState())) {
-//            task.setStateChangeDate(DateUtil.now());
-//        }
-//        // 构造queryWrapper
-//        LambdaQueryWrapper<Task> taskLambdaQueryWrapper = new LambdaQueryWrapper<>();
-//        taskLambdaQueryWrapper.eq(Task::getTaskNo, taskNo);
-//        // 修改任务
-//        if (baseMapper.update(task, taskLambdaQueryWrapper) > 0) {
-//            for (int i = 0; i < taskUpdateVo.getTaskProductVos().size(); i++) {
-//                // 创建任务成品关系
-//                TaskProduct taskProduct = (TaskProduct) Bean2Utils.copyProperties(taskUpdateVo.getTaskProductVos().get(i), TaskProduct.class);
-//                taskProduct.setTaskNo(taskNo);
-//                // 从任务编号和成品编号角度查询是否存在
-//                LambdaQueryWrapper<TaskProduct> taskProductLambdaQueryWrapper = new LambdaQueryWrapper<>();
-//                taskProductLambdaQueryWrapper.eq(TaskProduct::getTaskNo, taskNo)
-//                        .eq(TaskProduct::getProductNo, taskProduct.getProductNo());
-//
-//            }
-//            for (int i = 0; i < taskUpdateVo.getTaskMaterialVos().size(); i++) {
-//                // 创建任务原料关系
-//                TaskMaterial taskMaterial = (TaskMaterial) Bean2Utils.copyProperties(taskUpdateVo.getTaskMaterialVos().get(i), TaskMaterial.class);
-//                taskMaterial.setTaskNo(taskNo);
-//                if (!Optional.ofNullable(taskMaterial).isPresent() || !taskMaterial.insert()) {
-//                    throw new Exception(taskUpdateVo.getTaskProductVos().get(i).getProductNo()+"关系创建失败");
-//                }
-//            }
-//            return true;
-//        } else {
-//            throw new Exception("修改任务失败");
-//        }
-//    }
+    @CachePut(key = "#taskVo")
+    @Override
+    public boolean update(TaskUpdateVo taskUpdateVo) throws Exception {
+        // 查询任务编号是否存在，不存在则报错
+        getByTaskNo(taskUpdateVo.getTaskNo());
+        // 查询原料和成品是否存在，不存在则抛出异常
+        queryGoodsExist(taskUpdateVo);
+        Task task = (Task)Bean2Utils.copyProperties(taskUpdateVo, Task.class);
+        // 获取任务编号
+        String taskNo = taskUpdateVo.getTaskNo();
+        // 状态改变就设置新的状态改变时间
+        if (!getByTaskNo(taskNo).getState().equals(taskUpdateVo.getState())) {
+            task.setStateChangeDate(DateUtil.now());
+        }
+        // 构造queryWrapper
+        LambdaQueryWrapper<Task> taskLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        taskLambdaQueryWrapper.eq(Task::getTaskNo, taskNo);
+        // 修改任务
+        if (baseMapper.update(task, taskLambdaQueryWrapper) > 0) {
+            for (int i = 0; i < taskUpdateVo.getTaskProductVos().size(); i++) {
+                // 创建任务成品关系
+                TaskProduct taskProduct = (TaskProduct) Bean2Utils.copyProperties(taskUpdateVo.getTaskProductVos().get(i), TaskProduct.class);
+                taskProduct.setTaskNo(taskNo);
+                // 从任务编号和成品编号角度查询是否存在
+                LambdaQueryWrapper<TaskProduct> taskProductLambdaQueryWrapper = new LambdaQueryWrapper<>();
+                taskProductLambdaQueryWrapper.eq(TaskProduct::getTaskNo, taskNo)
+                        .eq(TaskProduct::getProductNo, taskProduct.getProductNo());
+
+            }
+            for (int i = 0; i < taskUpdateVo.getTaskMaterialVos().size(); i++) {
+                // 创建任务原料关系
+                TaskMaterial taskMaterial = (TaskMaterial) Bean2Utils.copyProperties(taskUpdateVo.getTaskMaterialVos().get(i), TaskMaterial.class);
+                taskMaterial.setTaskNo(taskNo);
+                if (!Optional.ofNullable(taskMaterial).isPresent() || !taskMaterial.insert()) {
+                    throw new Exception(taskUpdateVo.getTaskProductVos().get(i).getProductNo()+"关系创建失败");
+                }
+            }
+            return true;
+        } else {
+            throw new Exception("修改任务失败");
+        }
+    }
 
 //    public boolean updateOrInsertTaskRelation(Object obj,LambdaQueryWrapper lambdaQueryWrapper){
 //        if (Optional.ofNullable(obj).isPresent()) {
@@ -309,5 +309,4 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
             throw new Exception("任务编号["+taskNo+"]不存在");
         }
     }
-
 }

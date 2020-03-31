@@ -24,9 +24,9 @@ public class TaskInsertVo extends BaseTaskVo {
     @NotNull(message = "计划编号名称不能为空")
     @ApiModelProperty(example = "SC-20200326-0001")
     private String productionPlanNo;
-    @NotEmpty(message = "成品不能为空")
-    private List<TaskProductVo> taskProductVos;
-
-    @NotEmpty(message = "材料不能为空")
-    private List<TaskMaterialVo> taskMaterialVos;
+//    @NotEmpty(message = "成品不能为空")
+//    private List<TaskProductVo> taskProductVos;
+//
+//    @NotEmpty(message = "材料不能为空")
+//    private List<TaskMaterialVo> taskMaterialVos;
 }

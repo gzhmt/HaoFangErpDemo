@@ -20,7 +20,15 @@ import java.util.List;
 @Data
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TaskDetailVo extends BaseTaskVo{
+public class TaskDetailVo{
+    /**
+     * 唯一编号
+     */
+    private Long id;
+    /**
+     * 任务名称
+     */
+    private String taskName;
     /**
      * 生产任务编号
      */
@@ -33,6 +41,10 @@ public class TaskDetailVo extends BaseTaskVo{
      * 流水号
      */
     private String sequenceId;
+    /**
+     * 操作员
+     */
+    private String operatorEmployeeNo;
     /**
      * 生产任务状态
      */
@@ -47,8 +59,34 @@ public class TaskDetailVo extends BaseTaskVo{
      */
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
-
-    private List<TaskProductGoodsVo> taskProductGoodsVos;
-
+    /**
+     * 成品名称
+     */
+    private String productionName;
+    /**
+     * 成品数量
+     */
+    private String productionNumber;
+    /**
+     * 预计开始时间
+     */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date forecastStartDate;
+    /**
+     * 预计结束时间
+     */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date forecastEndDate;
+    /**
+     * 备注
+     */
+    private String remarks;
+    /**
+     * 材料货品
+     */
     private List<TaskMaterialGoodsVo> taskMaterialGoodsVos;
+    /**
+     * 成品货品
+     */
+    private  List<TaskProductGoodsVo> taskProductGoodsVos;
 }
