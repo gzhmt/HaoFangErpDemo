@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.RoleVo;
 import com.jdragon.haoerpdemo.haofangerp.account.service.RoleService;
+import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.ValidationUtils;
 import io.swagger.annotations.Api;
@@ -45,7 +46,7 @@ public class RoleController {
     @ApiOperation("分页获取角色列表")
     public Result listRoles(@ApiParam(name = "pageNo",value = "页码")@PathVariable("pageNo")int pageNo,
                             @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize){
-        return Result.success(Result.SUCCESS_MESSAGE).setResult(roleService.listRoles(new Page<>(pageNo,pageSize)));
+        return Result.success().setResult(roleService.listRoles(new Page<>(pageNo,pageSize)));
     }
 
     /**
@@ -64,7 +65,7 @@ public class RoleController {
         try{
             return Result.success().setResult(roleService.addRole(roleVo));
         }catch (Exception e){
-            return Result.error().setResult(e.getMessage());
+            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
         }
     }
 
@@ -79,7 +80,7 @@ public class RoleController {
         try{
             return Result.success().setResult(roleService.deleteRole(roleId));
         }catch (Exception e){
-            return Result.error().setResult(e.getMessage());
+            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
         }
     }
 
@@ -126,7 +127,7 @@ public class RoleController {
         try{
             return Result.success().setResult(roleService.addRoleOfEmployee(employeeId, roleId));
         }catch (Exception e){
-            return Result.error().setResult(e.getMessage());
+            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
         }
     }
 
@@ -143,7 +144,7 @@ public class RoleController {
         try{
             return Result.success().setResult(roleService.deleteRoleOfEmployee(employeeId, roleId));
         }catch (Exception e){
-            return Result.error().setResult(e.getMessage());
+            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
         }
     }
 }

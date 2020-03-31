@@ -1,7 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.examine.dao;
 
-import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskMaterialVo;
-import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskProductVo;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.TaskMaterialVo;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.TaskProductVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

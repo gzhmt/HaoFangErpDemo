@@ -15,5 +15,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TaskMapper extends BaseMapper<Task> {
 
-
 }
