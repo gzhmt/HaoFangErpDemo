@@ -5,11 +5,9 @@ import com.jdragon.haoerpdemo.haofangerp.examine.component.PaggingParams;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.PaggingParamsException;
 import com.jdragon.haoerpdemo.haofangerp.examine.domain.vo.ResponseVo;
 import com.jdragon.haoerpdemo.haofangerp.examine.service.PlanExamineService;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.PlanAuditStatusEnum;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,15 +31,16 @@ public class    PlanExamineController {
     @Autowired
     private PlanExamineService planExamineService;
     //将PATCH改为POST才能正常运行此URL
-    @PostMapping("/{productionNo}/{examineCode}")
+    @PostMapping
     @ApiOperation("计划审核结果提交")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="productionNo",value = "生产单号",required = true,dataType="String"),
-            @ApiImplicitParam(name="examineCode",value = "审批结果,整型，传5表示审核通过，传2表示驳回",required = true,dataType="int")}
-    )
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name="productionNo",value = "生产单号",required = true,dataType="String"),
+//            @ApiImplicitParam(name="examineCode",value = "审批结果,整型，传5表示审核通过，传2表示驳回",required = true,dataType="int")}
+//    )
 
-    public Result passExamine(@PathVariable("productionNo") String productionNo,@PathVariable("examineCode") int examineCode){
-        return planExamineService.updateState(productionNo,examineCode);
+    public Result passExamine(@ApiParam(name = "productionNo",value = "计划生产单号")@RequestParam String productionNo,
+                              @ApiParam(name = "planAuditStatusEnum",value = "审核后状态")@RequestParam PlanAuditStatusEnum planAuditStatusEnum){
+        return planExamineService.updateState(productionNo,planAuditStatusEnum.getCode());
     }
 
     @GetMapping("/plans")

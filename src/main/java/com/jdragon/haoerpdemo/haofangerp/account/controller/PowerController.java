@@ -20,7 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/power")
-@Api(tags = "角色控制")
+@Api(tags = "权限控制")
 public class PowerController {
 
     @Autowired
@@ -44,10 +44,10 @@ public class PowerController {
      * @param roleId 角色id
      * @return
      */
-    @GetMapping("/assigned/{pageNo}/{pageSize}/{roleId}")
+    @GetMapping("/assigned/{pageNo}/{pageSize}")
     @ApiOperation("根据员工id分页获取已赋予角色列表")
     public Result getAssignedPowersByRoleId(@ApiParam(name = "pageNo",value = "页数")@PathVariable("pageNo")int pageNo, @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize,
-                                               @ApiParam(name = "roleId",value = "角色id")@PathVariable("roleId")int roleId){
+                                               @ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId){
         return Result.success(Result.SUCCESS_MESSAGE).setResult(powerService.getAssignedPowersByRoleId(pageNo, pageSize, roleId));
     }
 
@@ -71,10 +71,10 @@ public class PowerController {
      * @param powerId 权限id
      * @return
      */
-    @PostMapping("/addPowerOfRole/{roleId}/{powerId}")
+    @PostMapping("/addPowerOfRole")
     @ApiOperation("添加角色权限")
-    public Result addPowerOfRole(@ApiParam(name = "roleId",value = "角色id")@PathVariable("roleId")int roleId,
-                                    @ApiParam(name = "powerId",value = "权限id")@PathVariable("powerId")int powerId){
+    public Result addPowerOfRole(@ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId,
+                                    @ApiParam(name = "powerId",value = "权限id")@RequestParam("powerId")int powerId){
         try{
             return Result.success().setResult(powerService.addPowerOfRole(roleId, powerId));
         }catch (Exception e){
@@ -88,10 +88,10 @@ public class PowerController {
      * @param powerId 权限id
      * @return
      */
-    @PostMapping("/deletePowerOfRole/{roleId}/{powerId}")
+    @DeleteMapping("/deletePowerOfRole")
     @ApiOperation("删除角色权限")
-    public Result deletePowerOfRole(@ApiParam(name = "roleId",value = "角色id")@PathVariable("roleId")int roleId,
-                                 @ApiParam(name = "powerId",value = "权限id")@PathVariable("powerId")int powerId){
+    public Result deletePowerOfRole(@ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId,
+                                 @ApiParam(name = "powerId",value = "权限id")@RequestParam("powerId")int powerId){
         try{
             return Result.success().setResult(powerService.deletePowerOfRole(roleId, powerId));
         }catch (Exception e){
