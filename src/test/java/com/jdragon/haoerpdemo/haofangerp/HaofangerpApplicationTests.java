@@ -26,5 +26,4 @@ import java.util.*;
 class HaofangerpApplicationTests {
 
 
-
 }
