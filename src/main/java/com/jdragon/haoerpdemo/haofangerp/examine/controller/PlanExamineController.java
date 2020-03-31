@@ -1,5 +1,6 @@
 package com.jdragon.haoerpdemo.haofangerp.examine.controller;
 
+import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.PaggingParams;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.PaggingParamsException;
@@ -50,16 +51,17 @@ public class    PlanExamineController {
         try {
             long total=planExamineService.totalCount();//获取总记录数
             List<Plan> plans=planExamineService.getPlanByPagging(params,total);
+            ResponseVo<Plan> responseVo=new ResponseVo<>();
+            responseVo.setData(plans);
             if(plans.isEmpty()){
-                return Result.success("无数据");
+                responseVo.setTotal(0);
+                return Result.error().setResult(responseVo);
             }else{
-                ResponseVo<Plan> responseVo=new ResponseVo<>();
-                responseVo.setData(plans);
                 responseVo.setTotal(total);
-                return Result.success("获取数据成功").setResult(responseVo);
+                return Result.success().setResult(responseVo);
             }
         }catch(PaggingParamsException e){
-            return Result.error("分页参数错误");
+            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
         }catch(Exception e){
             return Result.error(e.getMessage());
         }
