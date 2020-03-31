@@ -1,4 +1,4 @@
-package com.jdragon.haoerpdemo.haofangerp.production.domain.vo;
+package com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -22,14 +22,14 @@ import javax.validation.constraints.NotNull;
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TaskMaterialVo{
-    @TableId(type = IdType.AUTO)
-    @ApiModelProperty(hidden = true)
-    private Long id;
-    /**
-     * 任务编号
-     */
-    @ApiModelProperty(hidden = true)
-    private String taskNo;
+
+//    @ApiModelProperty(hidden = true)
+//    private Long id;
+//    /**
+//     * 任务编号
+//     */
+//    @ApiModelProperty(hidden = true)
+//    private String taskNo;
     /**
      * 材料编号
      */

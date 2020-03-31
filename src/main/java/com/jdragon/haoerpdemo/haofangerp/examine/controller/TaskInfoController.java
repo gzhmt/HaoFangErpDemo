@@ -1,5 +1,6 @@
 package com.jdragon.haoerpdemo.haofangerp.examine.controller;
 
+import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.PaggingParams;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.PaggingParamsException;
@@ -38,12 +39,13 @@ public class TaskInfoController {
             responseVo.setTotal(total);
             responseVo.setData(taskVoList);
             if(taskVoList.isEmpty()) {
-                return Result.error("找不到数据");
+                responseVo.setTotal(0);
+                return Result.error().setResult(responseVo);
             }else{
-                return Result.success("获取成功").setResult(responseVo);
+                return Result.success().setResult(responseVo);
             }
         }catch(PaggingParamsException e){
-            return Result.error("分页参数错误");
+            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
         }catch(Exception e){
             return Result.error(e.getMessage());
         }

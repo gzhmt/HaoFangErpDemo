@@ -6,6 +6,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.BaseTaskVo;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.TaskDetailVo;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.TaskInsertVo;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.TaskUpdateVo;
 
 /**
  * @Author: Jdragon
@@ -15,9 +19,52 @@ import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task;
  */
 
 public interface TaskService extends IService<Task> {
+    /**
+     * @Author kimi
+     * @Description:分页查询
+     * @Date 2020/3/30 18:40
+     * @Param [page]
+     * @return com.baomidou.mybatisplus.core.metadata.IPage<com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task>
+     **/
     IPage<Task> list(Page<Task> page) throws Exception;
-    Task save(TaskVo taskVo) throws Exception;
+    /**
+     * @Author kimi
+     * @Description:添加任务
+     * @Date 2020/3/30 18:40
+     * @Param [taskInsertVo]
+     * @return com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task
+     **/
+    Task save(TaskInsertVo taskInsertVo) throws Exception;
+    /**
+     * @Author kimi
+     * @Description:删除任务
+     * @Date 2020/3/30 18:40
+     * @Param [taskNo]
+     * @return boolean
+     **/
     boolean delete(String[] taskNo) throws Exception;
-    boolean update(String taskNo, TaskVo taskVo) throws Exception;
-    Task queryTaskDetail(String taskNo) throws Exception;
+    /**
+     * @Author kimi
+     * @Description:更新用户
+     * @Date 2020/3/30 18:41
+     * @Param [taskUpdateVo]
+     * @return boolean
+     **/
+    boolean update(TaskUpdateVo taskUpdateVo) throws Exception;
+    /**
+     * @Author kimi
+     * @Description:查询任务详情页
+     * @Date 2020/3/30 18:41
+     * @Param [taskNo]
+     * @return com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.BaseTaskVo
+     **/
+    TaskDetailVo queryTaskDetail(String taskNo) throws Exception;
+    /**
+     * @Author kimi
+     * @Description:根据任务编号查询任务
+     * @Date 2020/3/30 18:41
+     * @Param [taskNo]
+     * @return com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task
+     **/
+    Task getByTaskNo(String taskNo) throws Exception;
 }

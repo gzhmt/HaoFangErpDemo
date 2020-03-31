@@ -3,6 +3,7 @@ package com.jdragon.haoerpdemo.haofangerp.account.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Power;
 import com.jdragon.haoerpdemo.haofangerp.account.service.PowerService;
+import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -78,7 +79,7 @@ public class PowerController {
         try{
             return Result.success().setResult(powerService.addPowerOfRole(roleId, powerId));
         }catch (Exception e){
-            return Result.error().setResult(e.getMessage());
+            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
         }
     }
 
@@ -95,7 +96,7 @@ public class PowerController {
         try{
             return Result.success().setResult(powerService.deletePowerOfRole(roleId, powerId));
         }catch (Exception e){
-            return Result.error().setResult(e.getMessage());
+            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
         }
     }
 

@@ -2,10 +2,12 @@ package com.jdragon.haoerpdemo.haofangerp.production.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.*;
 import com.jdragon.haoerpdemo.haofangerp.production.service.TaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,54 +36,60 @@ public class TaskController {
     @Autowired
     TaskService taskService;
 
-    @GetMapping("task/{taskNo}")
+    @GetMapping("/{taskNo}")
     @ApiOperation("根据任务单号获取生产任务详情")
     public Result byId(@ApiParam("计划单号")@PathVariable String taskNo){
         try {
             return Result.success().setResult(taskService.queryTaskDetail(taskNo));
+        } catch (UnknownError e){
+            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
         } catch (Exception e) {
             return Result.error().setResult(e.getMessage());
         }
     }
 
-    @GetMapping("tasks/{page}")
+    @GetMapping("list/{page}/{size}")
     @ApiOperation("获取生产任务列表")
-    public Result getList(@ApiParam(value = "页码", defaultValue="1")@PathVariable  int page,
-                          @ApiParam(value = "页面大小", defaultValue="20")@PathVariable  int size){
+    public Result getList(@ApiParam(value = "页码", defaultValue="1")@PathVariable  Integer page,
+                          @ApiParam(value = "页面大小", defaultValue="20")@PathVariable  Integer size){
         try {
             return Result.success().setResult(taskService.list(new Page<>(page,size)));
+        } catch (UnknownError e){
+            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
         } catch (Exception e){
             return Result.error().setResult(e.getMessage());
         }
     }
 
-    @PostMapping("/task")
+    @PostMapping("/create")
     @ApiOperation("创建生产任务")
-    public Result create( @Valid @RequestBody TaskVo taskVo){
-        log.info(taskVo.toString());
+    public Result create( @Valid @RequestBody TaskInsertVo taskInsertVo){
         try{
-            return Result.success().setResult(taskService.save(taskVo));
+            return Result.success().setResult(taskService.save(taskInsertVo));
+        } catch (UnknownError e){
+            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
         }catch (Exception e){
             return Result.error().setResult(e.getMessage());
         }
     }
 
-    @PutMapping("/task/{taskNo}")
-    @ApiOperation("修改生产任务")
-    public Result update(@ApiParam("任务单号")@PathVariable @RequestBody String taskNo,
-                             @ApiParam("生产任务") @RequestBody TaskVo taskVo){
-        try {
-            return Result.success().setResult(taskService.update(taskNo,taskVo));
-        } catch (Exception e) {
-            return Result.error().setResult(e.getMessage());
-        }
-    }
+//    @PutMapping("/task")
+//    @ApiOperation("修改生产任务")
+//    public Result update(@ApiParam("生产任务") @RequestBody @Valid TaskUpdateVo taskUpdateVo){
+//        try {
+//            return Result.success().setResult(taskService.update(taskUpdateVo));
+//        } catch (Exception e) {
+//            return Result.error().setResult(e.getMessage());
+//        }
+//    }
 
-    @DeleteMapping("/tasks")
+    @DeleteMapping("/delete")
     @ApiOperation("根据任意个生产单号删除生产任务")
     public Result delete(@ApiParam(value = "生产单号")@RequestBody String[] taskNo){
         try {
             return Result.success().setResult(taskService.delete(taskNo));
+        } catch (UnknownError e){
+            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
         } catch (Exception e) {
             return Result.error().setResult(e.getMessage());
         }

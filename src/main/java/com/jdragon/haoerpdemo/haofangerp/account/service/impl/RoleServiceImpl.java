@@ -73,7 +73,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public boolean deleteRole(int roleId) throws Exception {
         if(roleMapper.getEmployeeRoleCountByRoleId(roleId) == 0){
-            if(roleMapper.deleteById(roleId) > 0 && rolePowerMapper.deleteByRoleId(roleId) > 0){
+            if(roleMapper.deleteById(roleId) > 0){
+                rolePowerMapper.deleteByRoleId(roleId);
                 return true;
             }else {
                 throw new Exception("无该角色,删除失败");
