@@ -1,5 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.account.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Power;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
@@ -18,10 +20,10 @@ public interface PowerService extends IService<Power> {
     List<Power> getPowerByEmployeeNo(String employeeNo);
 
     /**
-     * 获取权限列表(按权重从大到小排列)
+     * 分页获取权限列表
      * @return
      */
-    List<Power> listPowers();
+    IPage<Power> listPowers(Page<Power> page);
 
     /**
      * 根据角色id分页获取已赋予权限列表
@@ -47,7 +49,7 @@ public interface PowerService extends IService<Power> {
      * @param powerId 权限id
      * @return
      */
-    Result addPowerOfRole(int roleId, int powerId);
+    boolean addPowerOfRole(int roleId, int powerId) throws Exception;
 
     /**
      * 删除角色权限
@@ -55,5 +57,5 @@ public interface PowerService extends IService<Power> {
      * @param powerId 权限id
      * @return
      */
-    Result deletePowerOfRole(int roleId, int powerId);
+    boolean deletePowerOfRole(int roleId, int powerId) throws Exception;
 }

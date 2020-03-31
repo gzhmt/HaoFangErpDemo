@@ -61,8 +61,8 @@ public class Plan extends Model<Plan>{
 
     private String remarks;
 
-    @TableLogic(value = "1",delval = "0")
-    private boolean activity;
+    @TableLogic(value = "0",delval = "1")
+    private boolean deleted;
     @Override
     protected Serializable pkVal(){
         return this.id;

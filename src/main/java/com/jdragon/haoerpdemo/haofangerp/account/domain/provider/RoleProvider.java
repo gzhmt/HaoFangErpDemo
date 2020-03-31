@@ -37,7 +37,6 @@ public class RoleProvider {
                 SELECT("r.*");
                 FROM("system_role r");
                 JOIN("system_employee_role mr on r.id=mr.role_id","system_employee m on m.id=mr.employee_id");
-                ORDER_BY("r.role_sort desc");
                 WHERE("mr.employee_id = #{employeeId}");
             }
         }.toString();

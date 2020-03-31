@@ -1,5 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.account.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Power;
@@ -40,12 +42,12 @@ public class PowerServiceImpl extends ServiceImpl<PowerMapper, Power> implements
     }
 
     @Override
-    public List<Power> listPowers() {
-        return powerMapper.listPowers();
+    public IPage<Power> listPowers(Page<Power> page) {
+        return baseMapper.selectPage(page,null);
     }
 
     @Override
-    public List<Power>  getAssignedPowersByRoleId(int pageNo, int pageSize, int roleId) {
+    public List<Power> getAssignedPowersByRoleId(int pageNo, int pageSize, int roleId) {
         PageHelper.startPage(pageNo, pageSize);
         return powerMapper.getAssignedPowersByRoleId(roleId);
     }
@@ -60,7 +62,7 @@ public class PowerServiceImpl extends ServiceImpl<PowerMapper, Power> implements
     }
 
     @Override
-    public Result addPowerOfRole(int roleId, int powerId) {
+    public boolean addPowerOfRole(int roleId, int powerId) throws Exception{
         if(powerMapper.getCountByRoleIdAndApiUrl(roleId, "/**") == 0){
             if(!Optional.ofNullable(rolePowerMapper.getRolePower(roleId, powerId)).isPresent()){
                 if(powerMapper.selectById(powerId).getApiUrl().equals("/**")) {
@@ -69,22 +71,25 @@ public class PowerServiceImpl extends ServiceImpl<PowerMapper, Power> implements
                 RolePower rolePower = new RolePower();
                 rolePower.setRoleId(roleId);
                 rolePower.setPowerId(powerId);
-                rolePowerMapper.insert(rolePower);
-                return Result.success("添加角色权限成功");
+                if(rolePowerMapper.insert(rolePower) > 0){
+                    return true;
+                }else {
+                    throw new Exception("添加角色权限失败");
+                }
+            }else {
+                throw new Exception("该角色权限已存在");
             }
-            return Result.error("该角色权限已存在");
+        }else {
+            throw new Exception("该角色已拥有全部权限,不需要再添加");
         }
-        return Result.error("该角色已拥有全部权限,不需要再添加");
     }
 
     @Override
-    public Result deletePowerOfRole(int roleId, int powerId) {
-        if(Optional.ofNullable(rolePowerMapper.getRolePower(roleId, powerId)).isPresent()){
-            rolePowerMapper.deleteRolePower(roleId, powerId);
-            return Result.success("删除角色权限成功");
+    public boolean deletePowerOfRole(int roleId, int powerId) throws Exception {
+        if (rolePowerMapper.deleteRolePower(roleId, powerId) > 0) {
+            return true;
+        } else {
+            throw new Exception("无该角色权限关系,无法删除");
         }
-        return Result.error("该角色权限不存在,无法删除");
     }
-
-
 }

@@ -46,7 +46,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         LambdaQueryWrapper<Plan> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Plan::getPrincipalEmployeeNo,
                 SecurityContextHolderHelper.getEmployeeNo())
-                .eq(Plan::isActivity,true);
+                .eq(Plan::isDeleted,false);
         if(Optional.ofNullable(state).isPresent()){
             lambdaQueryWrapper.eq(Plan::getState,PlanStateEnum.valueOf(state).getCode());
         }
@@ -64,19 +64,8 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
     @Override
     public Plan save(PlanVo planVo) {
         synchronized (this) {
-            Plan lastPlan = baseMapper.selectByIdDescLimitOne();
             Plan plan = (Plan) Bean2Utils.copyProperties(planVo, Plan.class);
-            if (Optional.ofNullable(lastPlan).isPresent()) {
-                plan.setProductionNo(AutoGenerateUtil.createIncreaseOdd(lastPlan.getProductionNo()));
-            } else {
-                plan.setProductionNo(AutoGenerateUtil.createTodayFirstOdd("SC"));
-            }
-            plan.setCreateEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
-            plan.setCreateDate(DateUtil.now());
-            plan.setState(PlanStateEnum.新计划);
-            plan.setActivity(true);
-            plan.setAuditStatus(PlanAuditStatusEnum.待审核);
-            if (Optional.ofNullable(plan).isPresent() && plan.insert()) {
+            if (planInit(plan).insert()) {
                 return plan;
             } else {
                 throw new UnknownError("创建失败");
@@ -91,16 +80,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         if(!Optional.ofNullable(plan).isPresent()){
             throw new Exception("无该计划，无法复制");
         }
-        Plan lastPlan = baseMapper.selectByIdDescLimitOne();
-        if (Optional.ofNullable(lastPlan).isPresent()) {
-            plan.setProductionNo(AutoGenerateUtil.createIncreaseOdd(lastPlan.getProductionNo()));
-        } else {
-            plan.setProductionNo(AutoGenerateUtil.createTodayFirstOdd("SC"));
-        }
-        plan.setCreateDate(DateUtil.now());
-        plan.setState(PlanStateEnum.新计划);
-        plan.setAuditStatus(PlanAuditStatusEnum.待审核);
-        if(plan.insert()){
+        if(planInit(plan).insert()){
             return plan;
         }else{
             throw new UnknownError("复制失败");
@@ -129,7 +109,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
     @Override
     public Plan getByProductionNo(String productionNo) throws Exception {
         LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        planLambdaQueryWrapper.eq(Plan::getProductionNo,productionNo).eq(Plan::isActivity,true);
+        planLambdaQueryWrapper.eq(Plan::getProductionNo,productionNo).eq(Plan::isDeleted,false);
         Plan plan = this.getOne(planLambdaQueryWrapper);
         if(Optional.ofNullable(plan).isPresent()){
             return plan;
@@ -138,8 +118,26 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         }
     }
 
-
-
+    /**
+     * @Author: Jdragon
+     * @Date: 2020.03.29 下午 8:20
+     * @params: [plan]
+     * @return: com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan
+     * @Description: 创建和复制都需要做的初始化plan
+     **/
+    private Plan planInit(Plan plan){
+        Plan lastPlan = baseMapper.selectByIdDescLimitOne();
+        if (Optional.ofNullable(lastPlan).isPresent()) {
+            plan.setProductionNo(AutoGenerateUtil.createIncreaseOdd(lastPlan.getProductionNo()));
+        } else {
+            plan.setProductionNo(AutoGenerateUtil.createTodayFirstOdd("SC"));
+        }
+        plan.setCreateEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
+        plan.setCreateDate(DateUtil.now());
+        plan.setState(PlanStateEnum.新计划);
+        plan.setAuditStatus(PlanAuditStatusEnum.待审核);
+        return plan;
+    }
 
     /**
      * @Author: Jdragon

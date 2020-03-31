@@ -1,6 +1,8 @@
 package com.jdragon.haoerpdemo.haofangerp.account.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Employee;
@@ -9,13 +11,16 @@ import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.RoleVo;
 import com.jdragon.haoerpdemo.haofangerp.account.mappers.EmployeeRoleMapper;
 import com.jdragon.haoerpdemo.haofangerp.account.mappers.RoleMapper;
+import com.jdragon.haoerpdemo.haofangerp.account.mappers.RolePowerMapper;
 import com.jdragon.haoerpdemo.haofangerp.account.service.RoleService;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author zhu
@@ -32,38 +37,50 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Autowired
     private EmployeeRoleMapper employeeRoleMapper;
 
+    @Autowired
+    private RolePowerMapper rolePowerMapper;
+
     @Override
     public List<String> getRolesByEmployeeNo(String employeeNo) {
         return baseMapper.getRolesByEmployeeNo(employeeNo);
     }
 
     @Override
-    public List<Role> listRoles() {
-        return roleMapper.listRoles();
+    public IPage<Role> listRoles(Page<Role> page) {
+        return baseMapper.selectPage(page,null);
     }
 
     @Override
-    public Result addRole(RoleVo roleVo) {
+    public Role addRole(RoleVo roleVo) throws Exception{
         String prefix = "ROLE_";
         String roleName = prefix + roleVo.getRoleName().toUpperCase();
-        if(roleMapper.getRoleByRoleName(roleName) != null) {
-            return Result.error("该角色已存在");
+        LambdaQueryWrapper<Role> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Role::getRoleName, roleName);
+        if(Optional.ofNullable(this.getOne(lambdaQueryWrapper)).isPresent()) {
+            throw new Exception("该角色已存在");
+        }else {
+            Role role = new Role();
+            role.setRoleName(roleName);
+            role.setRoleDescribe(roleVo.getRoleDescribe());
+            if(role.insert()){
+                return role;
+            }else {
+                throw new Exception("添加角色失败");
+            }
         }
-        Role role = new Role();
-        role.setRoleName(roleName);
-        role.setRoleSort(roleVo.getRoleSort());
-        role.setRoleDescribe(roleVo.getRoleDescribe());
-        roleMapper.insert(role);
-        return Result.success("增加角色成功");
     }
 
     @Override
-    public Result deleteRole(int roleId) {
-        if(roleMapper.getRoleCountByRoleId(roleId) == 0){
-            roleMapper.deleteById(roleId);
-            return Result.success("删除角色成功");
+    public boolean deleteRole(int roleId) throws Exception {
+        if(roleMapper.getEmployeeRoleCountByRoleId(roleId) == 0){
+            if(roleMapper.deleteById(roleId) > 0 && rolePowerMapper.deleteByRoleId(roleId) > 0){
+                return true;
+            }else {
+                throw new Exception("无该角色,删除失败");
+            }
+        }else {
+            throw new Exception("该角色被员工依赖,无法删除");
         }
-        return Result.error("该角色被员工依赖,无法删除");
     }
 
     @Override
@@ -79,23 +96,27 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public Result addRoleOfEmployee(int employeeId, int roleId) {
-        if(employeeRoleMapper.getEmployRole(employeeId, roleId) == null){
+    public boolean addRoleOfEmployee(int employeeId, int roleId) throws Exception{
+        if(!Optional.ofNullable(employeeRoleMapper.getEmployRole(employeeId, roleId)).isPresent()){
             EmployeeRole employeeRole = new EmployeeRole();
             employeeRole.setEmployeeId(employeeId);
             employeeRole.setRoleId(roleId);
-            employeeRoleMapper.insert(employeeRole);
-            return Result.success("添加员工角色成功");
+            if(employeeRole.insert()){
+                return true;
+            }else {
+                throw new Exception("添加员工角色失败");
+            }
+        }else {
+            throw new Exception("该员工角色已存在");
         }
-        return Result.error("该员工角色已存在");
     }
 
     @Override
-    public Result deleteRoleOfEmployee(int employeeId, int roleId) {
-        if(employeeRoleMapper.getEmployRole(employeeId, roleId) != null){
-            employeeRoleMapper.deleteEmployRole(employeeId, roleId);
-            return Result.success("删除员工角色成功");
+    public boolean deleteRoleOfEmployee(int employeeId, int roleId) throws Exception {
+        if (employeeRoleMapper.deleteEmployRole(employeeId, roleId) > 0) {
+            return true;
+        } else {
+            throw new Exception("无该员工角色关系,无法删除");
         }
-        return Result.error("该员工角色不存在,无法删除");
     }
 }

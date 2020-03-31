@@ -21,30 +21,13 @@ public interface RoleMapper extends BaseMapper<Role> {
     @SelectProvider(type = RoleProvider.class,method = "roleByEmployeeNo")
     List<String> getRolesByEmployeeNo(String employeeNo);
 
-
-    /**
-     * 获取角色列表(按权重从大到小排列)
-     * @return
-     */
-    @Select("select * from system_role r order by r.role_sort desc")
-    List<Role> listRoles();
-
-
-    /**
-     * 根据角色名称获取角色信息
-     * @param roleName
-     * @return
-     */
-    @Select("select * from system_role where role_name = #{roleName}")
-    Role getRoleByRoleName(String roleName);
-
     /**
      * 根据角色id查询此角色被员工依赖次数
      * @param roleId 角色id
      * @return
      */
     @Select("select count(*) from system_employee_role mr where mr.role_id = #{roleId}")
-    int getRoleCountByRoleId(int roleId);
+    int getEmployeeRoleCountByRoleId(int roleId);
 
     /**
      * 根据员工id获取已赋予角色列表
@@ -59,7 +42,11 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @param EmployeeId 员工id
      * @return
      */
-    @Select("select * from system_role r where r.id not in (select r.id from system_role r join system_employee_role mr on r.id=mr.role_id join system_employee m on m.id=mr.employee_id where mr.employee_id = #{employeeId}) order by r.role_sort desc")
+    @Select("select * from system_role r where r.id not in" +
+            " (select r.id from system_role r " +
+            " join system_employee_role mr on r.id=mr.role_id" +
+            " join system_employee m on m.id=mr.employee_id" +
+            " where mr.employee_id = #{employeeId})")
     List<Role> getUnAssignedRolesByEmployeeId(int employeeId);
 
 }

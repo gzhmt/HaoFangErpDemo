@@ -1,5 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.account.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.RoleVo;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
@@ -23,10 +25,11 @@ public interface RoleService {
 
 
     /**
-     * 获取角色列表(按权重从大到小排列)
+     * 分页获取角色列表
+     * @param page 页面
      * @return
      */
-    List<Role> listRoles();
+    IPage<Role> listRoles(Page<Role> page);
 
 
     /**
@@ -34,14 +37,14 @@ public interface RoleService {
      * @param roleVo 角色vo类
      * @return
      */
-    Result addRole(RoleVo roleVo);
+    Role addRole(RoleVo roleVo) throws Exception;
 
     /**
      * 根据角色id删除角色
      * @param roleId 角色id
      * @return
      */
-    Result deleteRole(int roleId);
+    boolean deleteRole(int roleId) throws Exception;
 
     /**
      * 根据员工id分页获取已赋予角色列表
@@ -69,7 +72,7 @@ public interface RoleService {
      * @param roleId 角色id
      * @return
      */
-    Result addRoleOfEmployee(int employeeId, int roleId);
+    boolean addRoleOfEmployee(int employeeId, int roleId) throws Exception;
 
     /**
      * 删除员工角色
@@ -77,7 +80,7 @@ public interface RoleService {
      * @param roleId 角色id
      * @return
      */
-    Result deleteRoleOfEmployee(int employeeId, int roleId);
+    boolean deleteRoleOfEmployee(int employeeId, int roleId) throws Exception;
 //
 //    /**
 //     * 根据roleId找用户以及用户是否被设置在某个角色上，用在显示在用于角色设置处
