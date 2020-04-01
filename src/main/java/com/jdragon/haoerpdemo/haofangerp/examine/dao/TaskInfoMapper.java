@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Repository
 @Mapper
-public interface TaskInfoDao extends BaseMapper<ExamineTaskDetailVo> {
+public interface TaskInfoMapper extends BaseMapper<ExamineTaskDetailVo> {
 //    *
 //     * 根据生产计划编号获取所属任务列表信息
 //     *

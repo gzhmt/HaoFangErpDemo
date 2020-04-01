@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.PaggingParamsException;
-import com.jdragon.haoerpdemo.haofangerp.examine.dao.TaskInfoDao;
+import com.jdragon.haoerpdemo.haofangerp.examine.dao.TaskInfoMapper;
 import com.jdragon.haoerpdemo.haofangerp.examine.domain.vo.ExamineTaskDetailVo;
 import com.jdragon.haoerpdemo.haofangerp.examine.service.TaskInfoService;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.*;
@@ -23,7 +23,7 @@ import java.util.List;
  * @date 2020/3/26 22:26
  */
 @Service
-public class TaskInfoServiceImpl extends ServiceImpl<TaskInfoDao,ExamineTaskDetailVo> implements TaskInfoService {
+public class TaskInfoServiceImpl extends ServiceImpl<TaskInfoMapper,ExamineTaskDetailVo> implements TaskInfoService {
     //注入两个Mapper用于查询任务对应的原料、半成品信息
     @Autowired
     private TaskMaterialMapper taskMaterialMapper;
