@@ -1,9 +1,14 @@
 package com.jdragon.haoerpdemo.haofangerp.examine.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.PaggingParams;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.PageSizeException;
+import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.PaggingParamsException;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.TotalException;
+import com.jdragon.haoerpdemo.haofangerp.examine.domain.vo.ExamineTaskDetailVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskVo;
+import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.TaskDetailVo;
 
 import java.util.List;
 
@@ -13,6 +18,5 @@ import java.util.List;
  * @date 2020/3/26 22:21
  */
 public interface TaskInfoService {
-    List<TaskVo> getTaskByPagging(String productionNo, PaggingParams params,long total) throws PageSizeException, TotalException;
-    long getTaskToal();
+    IPage<ExamineTaskDetailVo> getTaskByPagging(String productionNo, Page<ExamineTaskDetailVo> page) throws PaggingParamsException;
 }
