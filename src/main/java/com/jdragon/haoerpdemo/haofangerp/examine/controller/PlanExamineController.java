@@ -1,8 +1,8 @@
 package com.jdragon.haoerpdemo.haofangerp.examine.controller;
 
-import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
-import com.jdragon.haoerpdemo.haofangerp.examine.component.PaggingParams;
 import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.PaggingParamsException;
 import com.jdragon.haoerpdemo.haofangerp.examine.domain.vo.ResponseVo;
 import com.jdragon.haoerpdemo.haofangerp.examine.service.PlanExamineService;
@@ -28,7 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/examine")
 @Api(tags = "计划审核接口")
-public class    PlanExamineController {
+public class  PlanExamineController {
     @Autowired
     private PlanExamineService planExamineService;
     //将PATCH改为POST才能正常运行此URL
@@ -44,26 +44,28 @@ public class    PlanExamineController {
         return planExamineService.updateState(productionNo,planAuditStatusEnum.getCode());
     }
 
-    @GetMapping("/plans")
+    @GetMapping("/plans/{pageNum}/{pageSize}")
     @ApiOperation("分页形式获取所有未删除的计划列表")
-    @ApiImplicitParam(name="params",value = "分页所需参数",required = true,dataType="PaggingParams")
-    public Result getAllPlansToExamine(@RequestBody @NotNull PaggingParams params){
+    public Result getAllPlansToExamine(@ApiParam(value = "当前页码",defaultValue = "1") @PathVariable("pageNum") int pageNum,
+                                       @ApiParam(value = "每页条数",defaultValue = "3") @PathVariable("pageSize") int pageSize){
         try {
-            long total=planExamineService.totalCount();//获取总记录数
-            List<Plan> plans=planExamineService.getPlanByPagging(params,total);
+            //  long total=planExamineService.totalCount();//获取总记录数
+            IPage<Plan> iPage=planExamineService.getPlanByPagging(new Page<>(pageNum,pageSize));
+            List<Plan> plans=iPage.getRecords();
             ResponseVo<Plan> responseVo=new ResponseVo<>();
             responseVo.setData(plans);
             if(plans.isEmpty()){
                 responseVo.setTotal(0);
                 return Result.error().setResult(responseVo);
             }else{
-                responseVo.setTotal(total);
+                responseVo.setTotal(iPage.getTotal());
                 return Result.success().setResult(responseVo);
             }
         }catch(PaggingParamsException e){
-            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
-        }catch(Exception e){
-            return Result.error(e.getMessage());
+            return Result.error().setResult(e.getMessage());
+        }
+        catch(Exception e){
+            return Result.error().setResult(e.getMessage());
         }
     }
 

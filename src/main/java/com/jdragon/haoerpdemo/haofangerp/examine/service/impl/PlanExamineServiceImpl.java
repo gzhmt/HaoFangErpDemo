@@ -1,11 +1,12 @@
 package com.jdragon.haoerpdemo.haofangerp.examine.service.impl;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.PaggingParamsException;
 import com.jdragon.haoerpdemo.haofangerp.production.constant.PlanAuditStatusEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
-import com.jdragon.haoerpdemo.haofangerp.examine.component.PaggingBean;
-import com.jdragon.haoerpdemo.haofangerp.examine.component.PaggingParams;
-import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.PageSizeException;
-import com.jdragon.haoerpdemo.haofangerp.examine.component.exceptions.TotalException;
-import com.jdragon.haoerpdemo.haofangerp.examine.dao.PlanExamineDao;
+import com.jdragon.haoerpdemo.haofangerp.examine.dao.PlanExamineMapper;
 import com.jdragon.haoerpdemo.haofangerp.examine.service.PlanExamineService;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 /**
  * @author 金柏宇
@@ -22,16 +22,14 @@ import java.util.List;
  * @date 2020/3/26 22:26
  */
 @Service
-public class PlanExamineServiceImpl implements PlanExamineService {
-    @Autowired
-    private  PlanExamineDao planExamineDao;
+public class PlanExamineServiceImpl extends ServiceImpl<PlanExamineMapper,Plan> implements PlanExamineService {
 
     @Autowired
     @Qualifier("examineRedisTemplate")
     private RedisTemplate redisTemplate;
     //-------------去掉与redis相关代码----------------------------------------------------------------------------
-/*
-   *//* 仅用于缓存计划的状态时作为redis键的前缀
+    /*
+     *//* 仅用于缓存计划的状态时作为redis键的前缀
     key格式【prefix:productionNo】*//*
     private static final String plansStatePrefix="p_state:";
     *//* 存放【生产单号ID】和【创建时间戳】的zset key 利用redis zset的特性，按照时间戳排序 *//*
@@ -40,13 +38,22 @@ public class PlanExamineServiceImpl implements PlanExamineService {
     private static final String plansHashKey="h_plans";*/
 //----------------------------------------------------------------
     @Override
-    public List<Plan> getPlanByPagging(PaggingParams params,long total) throws PageSizeException, TotalException {
-        PaggingBean paggingBean=new PaggingBean(params,total);//利用封装的bean获取起始索引和结束索引
+    public IPage<Plan> getPlanByPagging(Page<Plan> page) throws PaggingParamsException {
+        //PaggingBean paggingBean=new PaggingBean(params,total);//利用封装的bean获取起始索引和结束索引
         //-----------------暂时注释---------------------
         //=new ArrayList<>();//用于存放操作结果
-        List<Plan> plans;
+        if(page.getSize()<=0){
+            throw new PaggingParamsException("参数异常");
+        }
+        LambdaQueryWrapper<Plan> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Plan::isDeleted,false).orderByAsc(Plan::getCreateDate);
+        //分页查询出Ipage对象(存放查询记录、总条数等信息)
+        IPage<Plan> ipage=baseMapper.selectPage(page,wrapper);
+
+
         //-------------只查mysql----------------
-        plans = planExamineDao.getPlanByPagging(paggingBean.getOffset(), paggingBean.getCorrectPageSize());
+        // plans = planExamineDao.getPlanByPagging(paggingBean.getOffset(), paggingBean.getCorrectPageSize());
+
 
         //若redis缓存有数据，从缓存中获取，否则从数据库获取并存入缓存
         //-------------去掉与redis相关代码----------------------------------------------------------------------------
@@ -87,7 +94,7 @@ public class PlanExamineServiceImpl implements PlanExamineService {
                 }
             }*/
 //----------------------------------------------------------------------------------------------------------------------------
-        return plans;
+        return ipage;
     }
 
     @Override
@@ -96,14 +103,14 @@ public class PlanExamineServiceImpl implements PlanExamineService {
         int result=-1;
         //传入的审批码正确则进行更新操作
         if(examineCode== PlanAuditStatusEnum.审核通过.getCode()||examineCode==PlanAuditStatusEnum.被驳回.getCode()){
-            result=planExamineDao.updateState(productionNo,examineCode);
+            result=baseMapper.updateState(productionNo,examineCode);
             if(result>0){
                 //从Plan对象中独立出状态字段用于更新
                 //更新redis缓存 以 【自定义前缀+生产单号】 为key，以 【计划状态码】为value
 
 
                 //--------------暂时去掉redis部分-------------------------------------------------------------------------------------
-                 //redisTemplate.opsForValue().set(plansStatePrefix + productionNo, PlanStateEnum.getPlanStateEnumByCode(examineCode).getCode());
+                //redisTemplate.opsForValue().set(plansStatePrefix + productionNo, PlanStateEnum.getPlanStateEnumByCode(examineCode).getCode());
                 //------------------------------------------------------------
                 return Result.success();//审核成功
             }else{
@@ -113,9 +120,4 @@ public class PlanExamineServiceImpl implements PlanExamineService {
         return Result.error().setResult("审批码不正确");
     }
 
-    @Override
-    public long totalCount() {
-        long total=planExamineDao.totalCount();
-        return total;
-    }
 }
