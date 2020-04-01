@@ -34,10 +34,10 @@ public class EmployeeController {
     @ApiOperation("注册")
     public Result register(@RequestBody EmployeeVo employeeVo) {
         try {
-            return Result.success("注册成功")
+            return Result.success()
                     .setResult(employeeService.register(employeeVo));
         }catch (Exception e){
-            return Result.success(e.getMessage());
+            return Result.error().setResult(e.getMessage());
         }
     }
 }

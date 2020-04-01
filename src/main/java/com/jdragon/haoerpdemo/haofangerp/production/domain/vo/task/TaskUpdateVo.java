@@ -5,11 +5,8 @@ import com.jdragon.haoerpdemo.haofangerp.production.constant.TaskStateEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
-import sun.plugin2.message.Message;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * @Auther: kimid

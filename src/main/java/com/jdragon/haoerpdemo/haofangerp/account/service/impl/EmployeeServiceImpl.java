@@ -52,7 +52,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         }
     }
 
-    @Cacheable(key = "#employeeNo")
+    @Cacheable(key = "#employeeVo.employeeNo")
     @Override
     public Employee register(EmployeeVo employeeVo) throws Exception {
         if(employeeVo !=null) {
