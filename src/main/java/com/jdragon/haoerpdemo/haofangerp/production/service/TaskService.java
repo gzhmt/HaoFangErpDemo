@@ -26,7 +26,7 @@ public interface TaskService extends IService<Task> {
      * @Param [page]
      * @return com.baomidou.mybatisplus.core.metadata.IPage<com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task>
      **/
-    IPage<Task> list(Page<Task> page) throws Exception;
+    IPage<Task> list(Page<Task> page,String planNo) throws Exception;
     /**
      * @Author kimi
      * @Description:添加任务

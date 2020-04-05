@@ -77,8 +77,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
     }
 
     @Override
-    public IPage<Task> list(Page<Task> page) throws Exception {
-        return baseMapper.selectPage(page,null);
+    public IPage<Task> list(Page<Task> page,String planNo) throws Exception {
+        return baseMapper.selectPage(page,new LambdaQueryWrapper<Task>().eq(Task::getProductionPlanNo,planNo));
     }
 
     @Transactional

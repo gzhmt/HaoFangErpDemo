@@ -49,11 +49,12 @@ public class TaskController {
     }
 
     @GetMapping("list/{page}/{size}")
-    @ApiOperation("获取生产任务列表")
+    @ApiOperation("根据生产计划单号获取生产任务列表")
     public Result getList(@ApiParam(value = "页码", defaultValue="1")@PathVariable  Integer page,
-                          @ApiParam(value = "页面大小", defaultValue="20")@PathVariable  Integer size){
+                          @ApiParam(value = "页面大小", defaultValue="20")@PathVariable  Integer size,
+                          @ApiParam(value = "生产计划单号", defaultValue="SC-20200323-0001") @RequestParam String planNo){
         try {
-            return Result.success().setResult(taskService.list(new Page<>(page,size)));
+            return Result.success().setResult(taskService.list(new Page<>(page,size),planNo));
         } catch (UnknownError e){
             return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
         } catch (Exception e){
