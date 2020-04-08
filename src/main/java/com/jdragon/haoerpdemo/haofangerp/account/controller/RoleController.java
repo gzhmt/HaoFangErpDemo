@@ -77,6 +77,7 @@ public class RoleController {
     @DeleteMapping("/delete")
     @ApiOperation("根据角色id删除角色")
     public Result deleteRole(@ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId){
+        System.out.println("123");
         try{
             return Result.success().setResult(roleService.deleteRole(roleId));
         }catch (Exception e){

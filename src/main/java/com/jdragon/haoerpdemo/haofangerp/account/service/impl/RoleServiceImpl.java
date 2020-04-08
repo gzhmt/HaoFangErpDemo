@@ -8,6 +8,7 @@ import com.github.pagehelper.PageHelper;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Employee;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.EmployeeRole;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.RolePower;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.RoleVo;
 import com.jdragon.haoerpdemo.haofangerp.account.mappers.EmployeeRoleMapper;
 import com.jdragon.haoerpdemo.haofangerp.account.mappers.RoleMapper;

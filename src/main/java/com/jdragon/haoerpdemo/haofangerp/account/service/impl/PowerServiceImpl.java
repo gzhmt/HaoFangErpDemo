@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Power;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.RolePower;
@@ -48,18 +49,24 @@ public class PowerServiceImpl extends ServiceImpl<PowerMapper, Power> implements
     }
 
     @Override
-    public List<Power> getAssignedPowersByRoleId(int pageNo, int pageSize, int roleId) {
+    public PageInfo<Power> getAssignedPowersByRoleId(int pageNo, int pageSize, int roleId) {
         PageHelper.startPage(pageNo, pageSize);
-        return powerMapper.getAssignedPowersByRoleId(roleId);
+        List<Power> list = powerMapper.getAssignedPowersByRoleId(roleId);
+        PageInfo<Power> pageInfo = new PageInfo<>(list);
+        return pageInfo;
     }
 
     @Override
-    public List<Power> getUnAssignedPowersByRoleId(int pageNo, int pageSize, int roleId) {
+    public PageInfo<Power> getUnAssignedPowersByRoleId(int pageNo, int pageSize, int roleId) {
         if(powerMapper.getCountByRoleIdAndApiUrl(roleId, "/**") == 0){
             PageHelper.startPage(pageNo, pageSize);
-            return powerMapper.getUnAssignedPowersByRoleId(roleId);
+            List<Power> list = powerMapper.getUnAssignedPowersByRoleId(roleId);
+            PageInfo<Power> pageInfo = new PageInfo<>(list);
+            return pageInfo;
         }
-        return null;
+        List<Power> list = new ArrayList<>();
+        PageInfo<Power> pageInfo = new PageInfo<>(list);
+        return pageInfo;
     }
 
     @Override

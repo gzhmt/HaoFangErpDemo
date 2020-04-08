@@ -46,7 +46,7 @@ public class PowerController {
      * @return
      */
     @GetMapping("/assigned/{pageNo}/{pageSize}")
-    @ApiOperation("根据员工id分页获取已赋予角色列表")
+    @ApiOperation("根据角色id分页获取已赋予角色列表")
     public Result getAssignedPowersByRoleId(@ApiParam(name = "pageNo",value = "页数")@PathVariable("pageNo")int pageNo, @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize,
                                                @ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId){
         return Result.success(Result.SUCCESS_MESSAGE).setResult(powerService.getAssignedPowersByRoleId(pageNo, pageSize, roleId));
@@ -60,7 +60,7 @@ public class PowerController {
      * @return
      */
     @GetMapping("/unAssigned/{pageNo}/{pageSize}")
-    @ApiOperation("根据员工id分页获取未赋予角色列表")
+    @ApiOperation("根据角色id分页获取未赋予角色列表")
     public Result getUnAssignedPowersByEmployeeId(@ApiParam(name = "pageNo",value = "页数")@PathVariable("pageNo")int pageNo, @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize,
                                                  @ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId){
         return Result.success(Result.SUCCESS_MESSAGE).setResult(powerService.getUnAssignedPowersByRoleId(pageNo, pageSize, roleId));

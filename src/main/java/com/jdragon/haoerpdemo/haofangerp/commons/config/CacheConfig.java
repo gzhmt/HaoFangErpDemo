@@ -71,5 +71,6 @@ public class CacheConfig {
                 .initialCacheNames(cacheNames)
                 .withInitialCacheConfigurations(configMap)
                 .build();
+
     }
 }

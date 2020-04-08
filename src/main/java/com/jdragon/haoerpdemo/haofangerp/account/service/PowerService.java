@@ -3,6 +3,7 @@ package com.jdragon.haoerpdemo.haofangerp.account.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.pagehelper.PageInfo;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Power;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
@@ -32,7 +33,7 @@ public interface PowerService extends IService<Power> {
      * @param roleId 角色id
      * @return
      */
-    List<Power> getAssignedPowersByRoleId(int pageNo, int pageSize, int roleId);
+    PageInfo<Power> getAssignedPowersByRoleId(int pageNo, int pageSize, int roleId);
 
     /**
      * 根据角色id分页获取未赋予权限列表
@@ -41,7 +42,7 @@ public interface PowerService extends IService<Power> {
      * @param roleId 角色id
      * @return
      */
-    List<Power> getUnAssignedPowersByRoleId(int pageNo, int pageSize, int roleId);
+    PageInfo<Power> getUnAssignedPowersByRoleId(int pageNo, int pageSize, int roleId);
 
     /**
      * 添加角色权限
