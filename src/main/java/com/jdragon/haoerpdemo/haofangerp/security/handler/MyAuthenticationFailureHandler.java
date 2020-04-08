@@ -24,7 +24,7 @@ public class MyAuthenticationFailureHandler  extends JSONAuthentication implemen
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest,
                                         HttpServletResponse httpServletResponse,
                                         AuthenticationException e) throws IOException, ServletException {
-        Result result = Result.authFail("登录失败"+e.getMessage());
+        Result result = Result.authFail().setResult("登录失败"+e.getMessage());
         //输出
         this.writeJSON(httpServletRequest, httpServletResponse, result);
     }
