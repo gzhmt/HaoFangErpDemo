@@ -25,7 +25,7 @@ public class MyAccessDeniedHandler extends JSONAuthentication implements AccessD
     public void handle(HttpServletRequest httpServletRequest,
                        HttpServletResponse httpServletResponse,
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        Result result = Result.authFail("权限不足:"+accessDeniedException.getMessage());
+        Result result = Result.PermissionsNotEnough("权限不足:"+accessDeniedException.getMessage());
         //输出
         this.writeJSON(httpServletRequest, httpServletResponse, result);
     }

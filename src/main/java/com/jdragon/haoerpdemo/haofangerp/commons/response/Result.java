@@ -101,6 +101,12 @@ public class Result implements Serializable {
         return new Result(resultCode.getCode(),resultCode.getMessage(),null);
     }
 
+
+
+    public static Result PermissionsNotEnough(String message) {
+        return error(ResultCode.PERMISSIONS_NOT_ENOUGH).setResult(message);
+    }
+
     public static Result authFail(String message){
         return new Result(AUTH_FAIL_CODE, message, null);
     }
