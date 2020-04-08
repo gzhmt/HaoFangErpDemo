@@ -1,6 +1,5 @@
 package com.jdragon.haoerpdemo.haofangerp.security.handler;
 
-import com.baomidou.mybatisplus.extension.api.R;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.security.commons.JSONAuthentication;
 import org.springframework.security.access.AccessDeniedException;
@@ -25,7 +24,7 @@ public class MyAccessDeniedHandler extends JSONAuthentication implements AccessD
     public void handle(HttpServletRequest httpServletRequest,
                        HttpServletResponse httpServletResponse,
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        Result result = Result.PermissionsNotEnough("权限不足:"+accessDeniedException.getMessage());
+        Result result = Result.permissionsNotEnough("权限不足:"+accessDeniedException.getMessage());
         //输出
         this.writeJSON(httpServletRequest, httpServletResponse, result);
     }

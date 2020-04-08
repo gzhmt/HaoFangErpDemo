@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
 import com.jdragon.haoerpdemo.haofangerp.production.constant.PlanAuditStatusEnum;
 import com.jdragon.haoerpdemo.haofangerp.production.constant.PlanStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.AutoGenerateUtil;
@@ -23,7 +24,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
+
+import java.util.*;
 
 /**
  * @Author: Jdragon
@@ -76,18 +78,34 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
 
     @CachePut(key = "#result.productionNo")
     @Override
-    public Plan copy(String productionNo) throws Exception {
+    public synchronized Plan copy(String productionNo) throws Exception {
         Plan plan = baseMapper.selectByProductionNo(productionNo);
-        if(!Optional.ofNullable(plan).isPresent()){
+        if (!Optional.ofNullable(plan).isPresent()) {
             throw new Exception("无该计划，无法复制");
         }
-        if(planInit(plan).insert()){
+        if (planInit(plan).insert()) {
             return plan;
-        }else{
+        } else {
             throw new UnknownError("复制失败");
         }
     }
-
+    @CacheEvict
+    @Override
+    public boolean delete(String productionNo) throws Exception {
+        if (!isFounder(productionNo)) {
+            throw new Exception("不是你管理的生产计划不能删除");
+        }
+        Plan plan = baseMapper.selectByProductionNo(productionNo);
+        if(Optional.ofNullable(plan).isPresent()){
+            if(plan.deleteById()){
+                return true;
+            }else{
+                throw new UnknownError("删除失败");
+            }
+        }else{
+            throw new Exception("无该计划，无法删除");
+        }
+    }
     @Override
     public Plan update(String productionNo,PlanVo planVo) throws Exception {
         if(!isFounder(productionNo)){
@@ -108,23 +126,49 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         }
     }
 
-    @CacheEvict
     @Override
-    public boolean delete(String productionNo) throws Exception {
-        if (!isFounder(productionNo)) {
-            throw new Exception("不是你管理的生产计划不能删除");
-        }
-        Plan plan = baseMapper.selectByProductionNo(productionNo);
-        if(Optional.ofNullable(plan).isPresent()){
-            if(plan.deleteById()){
-                return true;
-            }else{
-                throw new UnknownError("删除失败");
+    public List<Map<String,String>> copyPlans(String[] productionNoList) {
+        List<Map<String,String>> copyResults = new LinkedList<>();
+        for(String productionNo:productionNoList){
+            Map<String,String> copyResult = new HashMap<>();
+            copyResults.add(copyResult);
+            copyResult.put("编号",productionNo);
+            try {
+                Plan plan = copy(productionNo);
+                if(Optional.ofNullable(plan).isPresent()){
+                    copyResult.put("结果",plan.getProductionNo());
+                }else{
+                    copyResult.put("结果","未知原因复制失败");
+                }
+            } catch (Exception e) {
+                copyResult.put("结果",e.getMessage());
+            }catch (UnknownError e){
+                copyResult.put("结果",
+                        ResultCode.SYSTEM_UN_KNOW_ERROR.getMessage()+e.getMessage());
             }
-        }else{
-            throw new Exception("无该计划，无法删除");
         }
+        return copyResults;
     }
+
+    @Override
+    public  List<Map<String,String>> deletePlans(String[] productionNoList) {
+        List<Map<String,String>> deleteResults = new LinkedList<>();
+        for(String productionNo:productionNoList){
+            Map<String,String> deleteResult = new HashMap<>();
+            deleteResults.add(deleteResult);
+            deleteResult.put("编号",productionNo);
+            try{
+                deleteResult.put("结果", String.valueOf(delete(productionNo)));
+            }catch (Exception e){
+                deleteResult.put("结果",e.getMessage());
+            }catch (UnknownError e){
+                deleteResult.put("结果",
+                        ResultCode.SYSTEM_UN_KNOW_ERROR.getMessage()+e.getMessage());
+            }
+        }
+        return deleteResults;
+    }
+
 
     @Cacheable
     @Override

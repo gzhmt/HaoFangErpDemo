@@ -103,7 +103,7 @@ public class Result implements Serializable {
 
 
 
-    public static Result PermissionsNotEnough(String message) {
+    public static Result permissionsNotEnough(String message) {
         return error(ResultCode.PERMISSIONS_NOT_ENOUGH).setResult(message);
     }
 

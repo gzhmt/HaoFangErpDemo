@@ -6,6 +6,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.PlanVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Author: Jdragon
  * @email: 1061917196@qq.com
@@ -21,4 +25,6 @@ public interface PlanService extends IService<Plan> {
     Plan getByProductionNo(String productionNo) throws Exception;
     Plan copy(String productionNo) throws Exception;
     Plan update(String productionNo,PlanVo planVo) throws Exception;
+    List<Map<String,String>> copyPlans(String[] productionNoList);
+    List<Map<String,String>> deletePlans(String[] productionNoList);
 }

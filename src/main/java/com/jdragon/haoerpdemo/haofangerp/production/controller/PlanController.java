@@ -63,27 +63,13 @@ public class PlanController {
 
     @PostMapping("/copy")
     @ApiOperation("复制生产计划")
-    public Result update(@ApiParam(name = "productionNo",value = "计划单号")@RequestParam String productionNo){
-        try{
-            return Result.success().setResult(planService.copy(productionNo));
-        }catch (UnknownError e){
-            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
-        }catch (Exception e){
-            return Result.error().setResult(e.getMessage());
-        }
+    public Result update(@ApiParam(name = "productionNoList",value = "计划单号")@RequestBody String[] productionNoList){
+        return Result.success().setResult(planService.copyPlans(productionNoList));
     }
-
-
     @DeleteMapping("/delete")
     @ApiOperation("删除生产计划")
-    public Result delete(@ApiParam(name = "productionNo",value = "计划生产单号") @RequestParam String productionNo){
-        try {
-            return Result.success().setResult(planService.delete(productionNo));
-        }catch (UnknownError e){
-            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
-        }catch (Exception e) {
-            return Result.error().setResult(e.getMessage());
-        }
+    public Result delete(@ApiParam(name = "productionNoList",value = "计划生产单号") @RequestBody String[] productionNoList){
+        return Result.success().setResult(planService.deletePlans(productionNoList));
     }
 
     @PutMapping("/update")
