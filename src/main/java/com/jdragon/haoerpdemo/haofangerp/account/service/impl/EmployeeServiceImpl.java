@@ -1,8 +1,11 @@
 package com.jdragon.haoerpdemo.haofangerp.account.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Employee;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.EmployeeVo;
 import com.jdragon.haoerpdemo.haofangerp.account.mappers.EmployeeMapper;
 import com.jdragon.haoerpdemo.haofangerp.account.service.EmployeeService;
@@ -70,5 +73,15 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         }else{
             throw new Exception("错误消息：用户对象为空！");
         }
+    }
+
+    /**
+     * 分页获取员工列表
+     * @param page 页面
+     * @return
+     */
+    @Override
+    public IPage<Employee> listEmployees(Page<Employee> page) {
+        return baseMapper.selectPage(page,null);
     }
 }

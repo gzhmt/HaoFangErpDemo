@@ -1,5 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.account.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Employee;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.EmployeeVo;
@@ -35,5 +37,8 @@ public interface EmployeeService extends IService<Employee> {
      * @throws Exception
      */
     Employee register(EmployeeVo employeeVo) throws Exception;
+
+
+    IPage<Employee> listEmployees(Page<Employee> page);
 }
 
