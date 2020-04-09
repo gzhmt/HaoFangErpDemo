@@ -65,14 +65,12 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
      **/
     @CachePut(key = "#result.productionNo")
     @Override
-    public Plan save(PlanVo planVo) {
-        synchronized (this) {
-            Plan plan = (Plan) Bean2Utils.copyProperties(planVo, Plan.class);
-            if (planInit(plan).insert()) {
-                return plan;
-            } else {
-                throw new UnknownError("创建失败");
-            }
+    public synchronized Plan save(PlanVo planVo) {
+        Plan plan = (Plan) Bean2Utils.copyProperties(planVo, Plan.class);
+        if (planInit(plan).insert()) {
+            return plan;
+        } else {
+            throw new UnknownError("创建失败");
         }
     }
 
@@ -136,15 +134,19 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
             try {
                 Plan plan = copy(productionNo);
                 if(Optional.ofNullable(plan).isPresent()){
-                    copyResult.put("结果",plan.getProductionNo());
+                    copyResult.put("消息",plan.getProductionNo());
+                    copyResult.put("结果","成功");
                 }else{
-                    copyResult.put("结果","未知原因复制失败");
+                    copyResult.put("消息","未知原因复制失败");
+                    copyResult.put("结果","失败");
                 }
             } catch (Exception e) {
-                copyResult.put("结果",e.getMessage());
+                copyResult.put("消息",e.getMessage());
+                copyResult.put("结果","失败");
             }catch (UnknownError e){
-                copyResult.put("结果",
+                copyResult.put("消息",
                         ResultCode.SYSTEM_UN_KNOW_ERROR.getMessage()+e.getMessage());
+                copyResult.put("结果","失败");
             }
         }
         return copyResults;
@@ -158,12 +160,15 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
             deleteResults.add(deleteResult);
             deleteResult.put("编号",productionNo);
             try{
-                deleteResult.put("结果", String.valueOf(delete(productionNo)));
+                deleteResult.put("消息", String.valueOf(delete(productionNo)));
+                deleteResult.put("结果","成功");
             }catch (Exception e){
-                deleteResult.put("结果",e.getMessage());
+                deleteResult.put("消息",e.getMessage());
+                deleteResult.put("结果","失败");
             }catch (UnknownError e){
-                deleteResult.put("结果",
+                deleteResult.put("消息",
                         ResultCode.SYSTEM_UN_KNOW_ERROR.getMessage()+e.getMessage());
+                deleteResult.put("结果","失败");
             }
         }
         return deleteResults;
