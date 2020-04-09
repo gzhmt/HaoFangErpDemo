@@ -2,6 +2,7 @@ package com.jdragon.haoerpdemo.haofangerp.account.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.pagehelper.PageInfo;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.RoleVo;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
@@ -53,7 +54,7 @@ public interface RoleService {
      * @param employeeId 员工id
      * @return
      */
-    List<Role> getAssignedRolesByEmployeeId(int pageNo, int pageSize, int employeeId);
+    PageInfo<Role> getAssignedRolesByEmployeeId(int pageNo, int pageSize, int employeeId);
 
 
     /**
@@ -63,7 +64,7 @@ public interface RoleService {
      * @param employeeId 员工id
      * @return
      */
-    List<Role> getUnAssignedRolesByEmployeeId(int pageNo, int pageSize, int employeeId);
+    PageInfo<Role> getUnAssignedRolesByEmployeeId(int pageNo, int pageSize, int employeeId);
 
 
     /**

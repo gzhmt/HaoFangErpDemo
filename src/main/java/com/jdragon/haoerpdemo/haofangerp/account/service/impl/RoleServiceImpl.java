@@ -5,10 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
-import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Employee;
-import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.EmployeeRole;
-import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
-import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.RolePower;
+import com.github.pagehelper.PageInfo;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.*;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.RoleVo;
 import com.jdragon.haoerpdemo.haofangerp.account.mappers.EmployeeRoleMapper;
 import com.jdragon.haoerpdemo.haofangerp.account.mappers.RoleMapper;
@@ -86,15 +84,19 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public List<Role> getAssignedRolesByEmployeeId(int pageNo, int pageSize, int employeeId){
+    public PageInfo<Role> getAssignedRolesByEmployeeId(int pageNo, int pageSize, int employeeId){
         PageHelper.startPage(pageNo, pageSize);
-        return roleMapper.getAssignedRolesByEmployeeId(employeeId);
+        List<Role> list = roleMapper.getAssignedRolesByEmployeeId(employeeId);
+        PageInfo<Role> pageInfo = new PageInfo<>(list);
+        return pageInfo;
     }
 
     @Override
-    public List<Role> getUnAssignedRolesByEmployeeId(int pageNo, int pageSize, int employeeId) {
+    public PageInfo<Role> getUnAssignedRolesByEmployeeId(int pageNo, int pageSize, int employeeId) {
         PageHelper.startPage(pageNo, pageSize);
-        return roleMapper.getUnAssignedRolesByEmployeeId(employeeId);
+        List<Role> list = roleMapper.getUnAssignedRolesByEmployeeId(employeeId);
+        PageInfo<Role> pageInfo = new PageInfo<>(list);
+        return pageInfo;
     }
 
     @Override

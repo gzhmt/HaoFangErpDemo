@@ -1,15 +1,14 @@
 package com.jdragon.haoerpdemo.haofangerp.account.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.EmployeeVo;
 import com.jdragon.haoerpdemo.haofangerp.account.service.EmployeeService;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author zhu
@@ -40,4 +39,19 @@ public class EmployeeController {
             return Result.error().setResult(e.getMessage());
         }
     }
+
+    /**
+     * 分页获取员工列表
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return
+     */
+    @GetMapping("/list/{pageNo}/{pageSize}")
+    @ApiOperation("分页获取角色列表")
+    public Result listRoles(@ApiParam(name = "pageNo",value = "页码")@PathVariable("pageNo")int pageNo,
+                            @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize){
+        return Result.success().setResult(employeeService.listEmployees(new Page<>(pageNo,pageSize)));
+    }
+
+
 }
