@@ -27,7 +27,7 @@ import java.util.Optional;
  * @date 2020/3/26 下午4:41
  * @Description: 用户权限服务接口实现类
  */
-@CacheConfig(cacheNames = "power")
+//@CacheConfig(cacheNames = "power")
 @Service
 public class PowerServiceImpl extends ServiceImpl<PowerMapper, Power> implements PowerService {
 
@@ -36,8 +36,7 @@ public class PowerServiceImpl extends ServiceImpl<PowerMapper, Power> implements
 
     @Autowired
     private RolePowerMapper rolePowerMapper;
-
-    @Cacheable
+    
     @Override
     public List<Power> getPowerByEmployeeNo(String employeeNo) {
         return baseMapper.getPowerByEmployeeNo(employeeNo);

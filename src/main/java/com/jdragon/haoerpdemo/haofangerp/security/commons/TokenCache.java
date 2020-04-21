@@ -3,6 +3,8 @@ package com.jdragon.haoerpdemo.haofangerp.security.commons;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @Author: Jdragon
  * @email: 1061917196@qq.com
@@ -11,7 +13,7 @@ import com.google.common.cache.CacheBuilder;
  */
 public class TokenCache {
     private static final String TOKEN_KEY = "token_";
-    private static Cache<String,String> cache = CacheBuilder.newBuilder().build();
+    private static Cache<String,String> cache = CacheBuilder.newBuilder().expireAfterWrite(3600, TimeUnit.SECONDS).build();
 
     /**
      * 保存

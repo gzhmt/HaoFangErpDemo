@@ -23,13 +23,13 @@ import org.springframework.stereotype.Service;
  * @Description: 用户服务接口实现类
  */
 @Service
-@CacheConfig(cacheNames = "employee")
+//@CacheConfig(cacheNames = "employee")
 public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService {
 
     @Autowired
     BCryptPasswordEncoderUtil bCryptPasswordEncoderUtil;
 
-    @Cacheable
+//    @Cacheable
     @Override
     public Employee getEmployeeByEmployeeNo(String employeeNo) {
         LambdaQueryWrapper<Employee> lambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -55,7 +55,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         }
     }
 
-    @Cacheable(key = "#employeeVo.employeeNo")
+//    @Cacheable(key = "#employeeVo.employeeNo")
     @Override
     public Employee register(EmployeeVo employeeVo) throws Exception {
         if(employeeVo !=null) {

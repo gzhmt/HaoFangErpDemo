@@ -33,7 +33,7 @@ import java.util.Optional;
  * @Date: 2020.03.18 17:16
  * @Description: 生产任务服务接口实现类
  */
-@CacheConfig(cacheNames = "task")
+//@CacheConfig(cacheNames = "task")
 @Slf4j
 @Service
 public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements TaskService {
@@ -82,7 +82,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
     }
 
     @Transactional
-    @CachePut(key = "#result.taskNo")
+//    @CachePut(key = "#result.taskNo")
     @Override
     public Task save(TaskInsertVo taskInsertVo) throws Exception{
         synchronized (this) {
@@ -191,7 +191,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
         }
     }
 
-    @CacheEvict
+//    @CacheEvict
     @Override
     public boolean delete(String[] taskNos) throws Exception{
         if (!Optional.ofNullable(taskNos).isPresent() || taskNos.length == 0) {
@@ -217,7 +217,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
         }
     }
 
-    @CachePut(key = "#taskVo")
+//    @CachePut(key = "#taskVo")
     @Override
     public boolean update(TaskUpdateVo taskUpdateVo) throws Exception {
         // 查询任务编号是否存在，不存在则报错

@@ -27,7 +27,7 @@ import java.util.Optional;
  * @date 2020/3/26 下午3:55
  * @Description: 用户角色服务接口实现类
  */
-@CacheConfig(cacheNames = "role")
+//@CacheConfig(cacheNames = "role")
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
     @Autowired

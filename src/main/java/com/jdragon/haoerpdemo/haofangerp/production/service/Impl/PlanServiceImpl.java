@@ -35,7 +35,7 @@ import java.util.*;
  */
 
 @Slf4j
-@CacheConfig(cacheNames = "plan")
+//@CacheConfig(cacheNames = "plan")
 @Service
 public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements PlanService {
 
@@ -63,7 +63,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
      * @return: com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan
      * @Description: 保存plan，传入的vo，会强制修改productionNo,createDate,state
      **/
-    @CachePut(key = "#result.productionNo")
+//    @CachePut(key = "#result.productionNo")
     @Override
     public synchronized Plan save(PlanVo planVo) {
         Plan plan = (Plan) Bean2Utils.copyProperties(planVo, Plan.class);
@@ -74,7 +74,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         }
     }
 
-    @CachePut(key = "#result.productionNo")
+//    @CachePut(key = "#result.productionNo")
     @Override
     public synchronized Plan copy(String productionNo) throws Exception {
         Plan plan = baseMapper.selectByProductionNo(productionNo);
@@ -87,7 +87,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
             throw new UnknownError("复制失败");
         }
     }
-    @CacheEvict
+//    @CacheEvict
     @Override
     public boolean delete(String productionNo) throws Exception {
         if (!isFounder(productionNo)) {
@@ -175,7 +175,8 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
     }
 
 
-    @Cacheable
+
+//    @Cacheable
     @Override
     public Plan getByProductionNo(String productionNo) throws Exception {
         LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
