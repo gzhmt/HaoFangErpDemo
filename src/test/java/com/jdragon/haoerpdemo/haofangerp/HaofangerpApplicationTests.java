@@ -25,5 +25,4 @@ import java.util.*;
 @SpringBootTest
 class HaofangerpApplicationTests {
 
-
 }

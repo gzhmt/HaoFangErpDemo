@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 /**
  * @Author: Jdragon
@@ -27,7 +26,6 @@ import javax.validation.constraints.NotNull;
 @RequestMapping("/plan")
 @Api(tags = "生产计划相关")
 public class PlanController {
-
     @Autowired
     PlanService planService;
 
