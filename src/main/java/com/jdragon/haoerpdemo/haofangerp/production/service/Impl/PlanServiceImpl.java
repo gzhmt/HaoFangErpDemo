@@ -1,11 +1,12 @@
 package com.jdragon.haoerpdemo.haofangerp.production.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.BatchResultType;
+import com.jdragon.haoerpdemo.haofangerp.production.constant.BatchResult;
 import com.jdragon.haoerpdemo.haofangerp.production.constant.PlanAuditStatusEnum;
 import com.jdragon.haoerpdemo.haofangerp.production.constant.PlanStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.AutoGenerateUtil;
@@ -19,10 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanUtils;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -41,7 +38,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
 
     @Test
     public void test(){
-        System.out.println(PlanStateEnum.valueOf("新计划").getCode());
+        System.out.println(BatchResultType.消息);
     }
 
     @Override
@@ -124,29 +121,30 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         }
     }
 
+
     @Override
     public List<Map<String,String>> copyPlans(String[] productionNoList) {
         List<Map<String,String>> copyResults = new LinkedList<>();
         for(String productionNo:productionNoList){
             Map<String,String> copyResult = new HashMap<>();
             copyResults.add(copyResult);
-            copyResult.put("编号",productionNo);
+            copyResult.put(BatchResultType.编号.getDes(),productionNo);
             try {
                 Plan plan = copy(productionNo);
                 if(Optional.ofNullable(plan).isPresent()){
-                    copyResult.put("消息",plan.getProductionNo());
-                    copyResult.put("结果","成功");
+                    copyResult.put(BatchResultType.消息.getDes(),plan.getProductionNo());
+                    copyResult.put(BatchResultType.结果.getDes(), BatchResult.成功.getDes());
                 }else{
-                    copyResult.put("消息","未知原因复制失败");
-                    copyResult.put("结果","失败");
+                    copyResult.put(BatchResultType.消息.getDes(),"未知原因复制失败");
+                    copyResult.put(BatchResultType.结果.getDes(),BatchResult.失败.getDes());
                 }
             } catch (Exception e) {
-                copyResult.put("消息",e.getMessage());
-                copyResult.put("结果","失败");
+                copyResult.put(BatchResultType.消息.getDes(),e.getMessage());
+                copyResult.put(BatchResultType.结果.getDes(),BatchResult.失败.getDes());
             }catch (UnknownError e){
-                copyResult.put("消息",
+                copyResult.put(BatchResultType.消息.getDes(),
                         ResultCode.SYSTEM_UN_KNOW_ERROR.getMessage()+e.getMessage());
-                copyResult.put("结果","失败");
+                copyResult.put(BatchResultType.结果.getDes(),BatchResult.失败.getDes());
             }
         }
         return copyResults;
@@ -158,17 +156,17 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         for(String productionNo:productionNoList){
             Map<String,String> deleteResult = new HashMap<>();
             deleteResults.add(deleteResult);
-            deleteResult.put("编号",productionNo);
+            deleteResult.put(BatchResultType.编号.getDes(),productionNo);
             try{
-                deleteResult.put("消息", String.valueOf(delete(productionNo)));
-                deleteResult.put("结果","成功");
+                deleteResult.put(BatchResultType.消息.getDes(), String.valueOf(delete(productionNo)));
+                deleteResult.put(BatchResultType.结果.getDes(),BatchResult.成功.getDes());
             }catch (Exception e){
-                deleteResult.put("消息",e.getMessage());
-                deleteResult.put("结果","失败");
+                deleteResult.put(BatchResultType.消息.getDes(),e.getMessage());
+                deleteResult.put(BatchResultType.结果.getDes(),BatchResult.失败.getDes());
             }catch (UnknownError e){
-                deleteResult.put("消息",
+                deleteResult.put(BatchResultType.消息.getDes(),
                         ResultCode.SYSTEM_UN_KNOW_ERROR.getMessage()+e.getMessage());
-                deleteResult.put("结果","失败");
+                deleteResult.put(BatchResultType.结果.getDes(),BatchResult.失败.getDes());
             }
         }
         return deleteResults;
@@ -215,7 +213,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
      * @Date: 2020.03.25 下午 3:44
      * @params: [productionNo]
      * @return: boolean
-     * @Description:根据计划单号判断这个计划是否是你创建，或是你负责的
+     * @Description: 根据计划单号判断这个计划是否是你创建，或是你负责的
      **/
     private boolean isFounder(String productionNo) throws Exception {
         Optional<Plan> plan = Optional.ofNullable(this.getByProductionNo(productionNo));
