@@ -25,11 +25,9 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         if(!Optional.ofNullable(rootDepartment).isPresent()){
             return null;
         }
-        this.recursiveDepartment(rootDepartment);
-        System.out.println(rootDepartment.toString());
-        return rootDepartment;
+        return recursiveDepartment(rootDepartment);
     }
-    public void recursiveDepartment(Department parentDepartment){
+    public Department recursiveDepartment(Department parentDepartment){
         List<Department> departments = baseMapper
                 .selectList(new LambdaQueryWrapper<Department>()
                         .eq(Department::getPid,parentDepartment.getId()));
@@ -37,5 +35,6 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         for(Department department:departments){
             recursiveDepartment(department);
         }
+        return parentDepartment;
     }
 }
