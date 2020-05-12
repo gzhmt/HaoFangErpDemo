@@ -41,6 +41,14 @@ public class Employee extends Model<Employee> {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date entryTime;
 
+    private int departmentId;
+
+    private String tel;
+
+    private String idCard;
+
+    private String photoUrl;
+
     @Override
     protected Serializable pkVal(){
         return this.id;

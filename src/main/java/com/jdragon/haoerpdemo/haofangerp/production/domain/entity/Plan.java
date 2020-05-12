@@ -41,6 +41,8 @@ public class Plan extends Model<Plan>{
 
     private String principalEmployeeNo;
 
+    private String ApprovedEmployeeNo;
+
     private String productionNo;
 
     private PlanStateEnum state;

@@ -10,5 +10,7 @@ import com.jdragon.haoerpdemo.haofangerp.department.domain.Department;
  * @Description:
  */
 public interface DepartmentService extends IService<Department> {
-    Department getOrganizational();
+    Department getAllOrganizational();
+    Department getSupOrganizational();
+    Department getSubOrganizational();
 }
