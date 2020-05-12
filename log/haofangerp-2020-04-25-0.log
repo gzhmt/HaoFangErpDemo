@@ -1,0 +1,23 @@
+2020-04-25 20:58:55.159 [ main ] - [ INFO  ] [ c.j.haoerpdemo.haofangerp.HaofangerpApplication : 55 ] - Starting HaofangerpApplication on LAPTOP-SUDRNI87 with PID 18460 (C:\Users\10619\IdeaProjects\otherPro\haofangerp\target\classes started by 10619 in C:\Users\10619\IdeaProjects\otherPro\haofangerp)
+2020-04-25 20:58:55.171 [ main ] - [ DEBUG ] [ c.j.haoerpdemo.haofangerp.HaofangerpApplication : 56 ] - Running with Spring Boot v2.2.5.RELEASE, Spring v5.2.4.RELEASE
+2020-04-25 20:58:55.171 [ main ] - [ INFO  ] [ c.j.haoerpdemo.haofangerp.HaofangerpApplication : 655 ] - The following profiles are active: dev
+2020-04-25 20:58:57.319 [ main ] - [ WARN  ] [ org.mybatis.spring.mapper.ClassPathMapperScanner : 44 ] - Skipping MapperFactoryBean with name 'planExamineMapper' and 'com.jdragon.haoerpdemo.haofangerp.examine.dao.PlanExamineMapper' mapperInterface. Bean already defined with the same name!
+2020-04-25 20:58:57.320 [ main ] - [ WARN  ] [ org.mybatis.spring.mapper.ClassPathMapperScanner : 44 ] - Skipping MapperFactoryBean with name 'taskInfoMapper' and 'com.jdragon.haoerpdemo.haofangerp.examine.dao.TaskInfoMapper' mapperInterface. Bean already defined with the same name!
+2020-04-25 20:58:57.321 [ main ] - [ WARN  ] [ org.mybatis.spring.mapper.ClassPathMapperScanner : 44 ] - No MyBatis mapper was found in '[com.jdragon.haoerpdemo.haofangerp.examine]' package. Please check your configuration.
+2020-04-25 20:58:58.261 [ main ] - [ INFO  ] [ org.apache.coyote.http11.Http11NioProtocol : 173 ] - Initializing ProtocolHandler ["http-nio-8082"]
+2020-04-25 20:58:58.262 [ main ] - [ INFO  ] [ org.apache.catalina.core.StandardService : 173 ] - Starting service [Tomcat]
+2020-04-25 20:58:58.263 [ main ] - [ INFO  ] [ org.apache.catalina.core.StandardEngine : 173 ] - Starting Servlet engine: [Apache Tomcat/9.0.31]
+2020-04-25 20:58:58.390 [ main ] - [ INFO  ] [ o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] : 173 ] - Initializing Spring embedded WebApplicationContext
+2020-04-25 20:59:01.982 [ main ] - [ INFO  ] [ com.alibaba.druid.pool.DruidDataSource : 1010 ] - {dataSource-1} inited
+2020-04-25 20:59:03.145 [ main ] - [ DEBUG ] [ c.j.h.h.security.filter.MyOncePerRequestFilter : 242 ] - Filter 'myOncePerRequestFilter' configured for use
+2020-04-25 20:59:03.147 [ main ] - [ DEBUG ] [ c.j.h.h.s.f.MyUsernamePasswordAuthenticationFilter : 242 ] - Filter 'myUsernamePasswordAuthenticationFilter' configured for use
+2020-04-25 20:59:05.480 [ main ] - [ INFO  ] [ s.d.s.w.PropertySourcedRequestMappingHandlerMapping : 69 ] - Mapped URL path [/v2/api-docs] onto method [springfox.documentation.swagger2.web.Swagger2Controller#getDocumentation(String, HttpServletRequest)]
+2020-04-25 20:59:07.602 [ main ] - [ INFO  ] [ s.d.s.web.plugins.DocumentationPluginsBootstrapper : 147 ] - Context refreshed
+2020-04-25 20:59:07.633 [ main ] - [ INFO  ] [ s.d.s.web.plugins.DocumentationPluginsBootstrapper : 150 ] - Found 1 custom documentation plugin(s)
+2020-04-25 20:59:07.721 [ main ] - [ INFO  ] [ s.d.spring.web.scanners.ApiListingReferenceScanner : 41 ] - Scanning for api listing references
+2020-04-25 20:59:08.236 [ main ] - [ INFO  ] [ s.d.s.w.r.operation.CachingOperationNameGenerator : 40 ] - Generating unique operation named: listRolesUsingGET_1
+2020-04-25 20:59:08.240 [ main ] - [ INFO  ] [ s.d.s.w.r.operation.CachingOperationNameGenerator : 40 ] - Generating unique operation named: byIdUsingGET_1
+2020-04-25 20:59:08.258 [ main ] - [ INFO  ] [ s.d.s.w.r.operation.CachingOperationNameGenerator : 40 ] - Generating unique operation named: createUsingPOST_1
+2020-04-25 20:59:08.263 [ main ] - [ INFO  ] [ s.d.s.w.r.operation.CachingOperationNameGenerator : 40 ] - Generating unique operation named: deleteUsingDELETE_1
+2020-04-25 20:59:08.299 [ main ] - [ INFO  ] [ org.apache.coyote.http11.Http11NioProtocol : 173 ] - Starting ProtocolHandler ["http-nio-8082"]
+2020-04-25 20:59:08.331 [ main ] - [ INFO  ] [ c.j.haoerpdemo.haofangerp.HaofangerpApplication : 61 ] - Started HaofangerpApplication in 14.27 seconds (JVM running for 16.302)
