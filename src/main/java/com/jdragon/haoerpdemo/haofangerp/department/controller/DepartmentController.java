@@ -1,16 +1,16 @@
 package com.jdragon.haoerpdemo.haofangerp.department.controller;
 
+import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.department.service.DepartmentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author: Jdragon
@@ -34,14 +34,41 @@ public class DepartmentController {
 
 
     @GetMapping("/getSupOrganizational")
-    @ApiOperation("根据员工号获取上级")
+    @ApiOperation("获取我的上级部门")
     public Result getSupOrganizational(){
         return Result.success().setResult(departmentService.getSupOrganizational());
     }
 
     @GetMapping("/getSubOrganizational")
-    @ApiOperation("根据员工号获取下级")
+    @ApiOperation("获取我下级部门")
     public Result getSubOrganizational(){
         return Result.success().setResult(departmentService.getSubOrganizational());
+    }
+
+    @DeleteMapping("/deleteDepartment")
+    @ApiOperation("根据部门id删除部门")
+    public Result deleteDepartment(@ApiParam(name = "departmentId",value = "部门id")@RequestParam int departmentId){
+        try{
+            if(departmentService.deleteDepartment(departmentId)){
+                return Result.success().setResult("删除成功");
+            }
+            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult("删除失败");
+        }catch (HFException e){
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/mergeDepartment")
+    @ApiOperation("根据部门id来合并两个部门")
+    public Result mergeDepartment(@ApiParam(name = "mergedDepartmentId",value = "被合并的部门id")@RequestParam int mergedDepartmentId,
+                                  @ApiParam(name = "mergingDepartmentId",value = "扩大的部门id")@RequestParam int mergingDepartmentId){
+        try{
+            if(departmentService.mergeDepartment(mergedDepartmentId,mergingDepartmentId)){
+                return Result.success().setResult("合并成功");
+            }
+            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult("合并失败");
+        }catch (HFException e){
+            return Result.error(e.getMessage());
+        }
     }
 }

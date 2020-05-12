@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.apache.ibatis.annotations.Many;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ import java.util.List;
 @TableName("system_department")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Department extends Model<Department> {
-
+    @TableField
     private int id;
 
     private String name;
@@ -41,4 +42,8 @@ public class Department extends Model<Department> {
     @TableField(exist = false)
     private List<Department> departments;
 
+    @Override
+    protected Serializable pkVal(){
+        return this.id;
+    }
 }
