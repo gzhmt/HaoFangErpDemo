@@ -3,8 +3,15 @@ package com.jdragon.haoerpdemo.haofangerp.account.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.pagehelper.PageInfo;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Employee;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.EmployeeVo;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.LatestEmployeeVo;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.ModifyEmployeeVo;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.QueryEmployeeVo;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author zhu
@@ -38,7 +45,37 @@ public interface EmployeeService extends IService<Employee> {
      */
     Employee register(EmployeeVo employeeVo) throws Exception;
 
+    /**
+     * 分页查询员工列表
+     * @param pageNo
+     * @param pageSize
+     * @param keyWord
+     * @return
+     */
+    PageInfo<QueryEmployeeVo> listEmployees(int pageNo, int pageSize, String keyWord);
 
-    IPage<Employee> listEmployees(Page<Employee> page);
+    /**
+     * 上传员工头像
+     * @param avatarFile 头像文件
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    String uploadAvatar(MultipartFile avatarFile, HttpServletRequest request) throws Exception;
+
+    /**
+     * 修改员工个人信息
+     * @param modifyEmployeeVo
+     * @return
+     */
+    boolean updateEmployeeInfo(ModifyEmployeeVo modifyEmployeeVo) throws Exception;
+
+    /**
+     * 回显当前登录员工个人信息
+     * @return
+     */
+    LatestEmployeeVo getLoginEmployeeInfo();
+
+    boolean resetEmployeePassword(String password) throws Exception;
 }
 
