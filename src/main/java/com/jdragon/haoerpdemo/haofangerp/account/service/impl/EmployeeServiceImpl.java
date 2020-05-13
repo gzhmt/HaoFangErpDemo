@@ -109,8 +109,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     @Transactional(rollbackFor = Exception.class)
     @Override
     public String uploadAvatar(MultipartFile avatarFile, HttpServletRequest request) throws Exception {
-        String realPath = request.getSession().getServletContext().getRealPath(Constants.AVATAR_DIR);
-        File folder = new File(realPath);
+        File folder = new File(Constants.AVATAR_DIR);
         if(!folder.isDirectory()){
             folder.mkdirs();
         }
@@ -121,14 +120,17 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         }
         String newName = UUID.randomUUID().toString() + suffix;
         File targetFile = new File(folder, newName);
+        String employeeNo = SecurityContextHolderHelper.getEmployeeNo();
+        LambdaQueryWrapper<Employee> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Employee::getEmployeeNo, employeeNo);
         try {
+            Employee employee = baseMapper.selectOne(lambdaQueryWrapper);
+            String oldPhotoName = employee.getPhotoUrl().substring(employee.getPhotoUrl().lastIndexOf("/") + 1);
+            new File(Constants.AVATAR_DIR, oldPhotoName).delete();
             avatarFile.transferTo(targetFile);
         } catch (IOException e) {
             throw new Exception("上传头像出错,请重新尝试");
         }
-        String employeeNo = SecurityContextHolderHelper.getEmployeeNo();
-        LambdaQueryWrapper<Employee> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Employee::getEmployeeNo, employeeNo);
         Employee employee = new Employee();
         String photoUrl = request.getScheme() + "://" + request.getServerName()+":" + request.getServerPort() + Constants.AVATAR_DIR + newName;
         employee.setPhotoUrl(photoUrl);

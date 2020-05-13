@@ -1,5 +1,6 @@
 package com.jdragon.haoerpdemo.haofangerp.commons.config;
 
+import com.jdragon.haoerpdemo.haofangerp.commons.tools.SystemUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -61,5 +62,11 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
+        if(SystemUtils.isWindows()){
+            registry.addResourceHandler("/tmp/static/avatar/**").addResourceLocations("file:D:/tmp/static/avatar/");
+        }else {
+            registry.addResourceHandler("/tmp/static/avatar/**").addResourceLocations("file:/tmp/static/avatar/");
+        }
+
     }
 }
