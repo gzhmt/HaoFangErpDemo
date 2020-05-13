@@ -32,7 +32,6 @@ import java.util.*;
  */
 
 @Slf4j
-//@CacheConfig(cacheNames = "plan")
 @Service
 public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements PlanService {
 
@@ -60,9 +59,9 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
      * @return: com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan
      * @Description: 保存plan，传入的vo，会强制修改productionNo,createDate,state
      **/
-//    @CachePut(key = "#result.productionNo")
     @Override
     public synchronized Plan save(PlanVo planVo) {
+
         Plan plan = (Plan) Bean2Utils.copyProperties(planVo, Plan.class);
         if (planInit(plan).insert()) {
             return plan;
@@ -71,7 +70,6 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         }
     }
 
-//    @CachePut(key = "#result.productionNo")
     @Override
     public synchronized Plan copy(String productionNo) throws Exception {
         Plan plan = baseMapper.selectByProductionNo(productionNo);
@@ -84,7 +82,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
             throw new UnknownError("复制失败");
         }
     }
-//    @CacheEvict
+
     @Override
     public boolean delete(String productionNo) throws Exception {
         if (!isFounder(productionNo)) {
@@ -172,9 +170,13 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         return deleteResults;
     }
 
+    @Override
+    public List<String> getFuzzyPlanName(String fuzzyName) {
+        return baseMapper.selectFuzzyPlanName("%"+fuzzyName+"%");
+    }
 
 
-//    @Cacheable
+    //    @Cacheable
     @Override
     public Plan getByProductionNo(String productionNo) throws Exception {
         LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -203,7 +205,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
         }
         plan.setCreateEmployeeNo(SecurityContextHolderHelper.getEmployeeNo());
         plan.setCreateDate(DateUtil.now());
-        plan.setState(PlanStateEnum.新计划);
+        plan.setState(PlanStateEnum.新任务);
         plan.setAuditStatus(PlanAuditStatusEnum.待审核);
         return plan;
     }

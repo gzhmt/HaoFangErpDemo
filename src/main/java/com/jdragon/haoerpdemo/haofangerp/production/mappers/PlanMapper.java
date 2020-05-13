@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @Author: Jdragon
  * @email: 1061917196@qq.com
@@ -22,4 +24,7 @@ public interface PlanMapper extends BaseMapper<Plan> {
 
     @Select("select * from production_plan order by id Desc limit 1")
     Plan selectByIdDescLimitOne();
+
+    @Select("select production_no from production_plan where production_no like #{productionNo}")
+    List<String> selectFuzzyPlanName(String productionNo);
 }

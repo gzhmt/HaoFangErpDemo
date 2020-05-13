@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 public enum PlanStateEnum {
 
-    新计划(1,"新计划"),
+    新任务(1,"新任务"),
     生产中(2,"生产中"),
     已完成(3,"已完成");
 

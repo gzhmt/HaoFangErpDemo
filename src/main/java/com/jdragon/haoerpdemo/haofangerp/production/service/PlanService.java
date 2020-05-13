@@ -19,12 +19,24 @@ import java.util.Map;
 
 
 public interface PlanService extends IService<Plan> {
-    IPage<Plan> list(Page<Plan> page,String state);
-    Plan save(PlanVo planVo) ;
+    IPage<Plan> list(Page<Plan> page, String state);
+
+    Plan save(PlanVo planVo);
+
     boolean delete(String productionNo) throws Exception;
+
     Plan getByProductionNo(String productionNo) throws Exception;
+
     Plan copy(String productionNo) throws Exception;
-    Plan update(String productionNo,PlanVo planVo) throws Exception;
-    List<Map<String,String>> copyPlans(String[] productionNoList);
-    List<Map<String,String>> deletePlans(String[] productionNoList);
+
+    Plan update(String productionNo, PlanVo planVo) throws Exception;
+
+    List<Map<String, String>> copyPlans(String[] productionNoList);
+
+    List<Map<String, String>> deletePlans(String[] productionNoList);
+
+    /**
+     * 模糊查询计划号
+     */
+    List<String> getFuzzyPlanName(String fuzzy);
 }
