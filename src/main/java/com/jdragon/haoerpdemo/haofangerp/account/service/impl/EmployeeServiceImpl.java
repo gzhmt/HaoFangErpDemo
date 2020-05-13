@@ -142,8 +142,9 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
         String employeeNo = SecurityContextHolderHelper.getEmployeeNo();
         Employee employee = getEmployeeByEmployeeNo(employeeNo);
+        String oldPhotoUrl = Optional.ofNullable(employee.getPhotoUrl()).orElse("");
         //获取旧头像名称
-        String oldPhotoName = employee.getPhotoUrl().substring(employee.getPhotoUrl().lastIndexOf("/") + 1);
+        String oldPhotoName = oldPhotoUrl.substring(oldPhotoUrl.lastIndexOf("/") + 1);
         //设置新图片url
         employee.setPhotoUrl(photoUrl);
         //进行数据库更新
