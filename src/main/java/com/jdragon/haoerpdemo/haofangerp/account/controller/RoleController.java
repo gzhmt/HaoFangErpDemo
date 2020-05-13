@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -57,11 +58,7 @@ public class RoleController {
      */
     @PostMapping("/add")
     @ApiOperation("添加角色")
-    public Result addRole(@ApiParam(name = "roleVo",value = "角色vo类")@RequestBody @Validated RoleVo roleVo, BindingResult bindingResult){
-        Map<String, String> map = ValidationUtils.checkBindingResult(bindingResult);
-        if (Optional.ofNullable(map).isPresent()) {
-            return Result.error("请求参数非法");
-        }
+    public Result addRole(@ApiParam(name = "roleVo",value = "角色vo类")@RequestBody @Valid RoleVo roleVo){
         try{
             return Result.success().setResult(roleService.addRole(roleVo));
         }catch (Exception e){

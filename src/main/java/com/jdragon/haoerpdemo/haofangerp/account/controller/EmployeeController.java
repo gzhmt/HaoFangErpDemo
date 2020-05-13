@@ -1,7 +1,7 @@
 package com.jdragon.haoerpdemo.haofangerp.account.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.EmployeeVo;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.LatestEmployeeVo;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.ModifyEmployeeVo;
 import com.jdragon.haoerpdemo.haofangerp.account.service.EmployeeService;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.Constants;
@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,7 +97,7 @@ public class EmployeeController {
 
     /**
      * 修改员工个人信息
-     * @param modifyEmployeeVo
+     * @param latestEmployeeVo
      * @return
      */
     @PutMapping("/updateEmployeeInfo")
@@ -116,9 +115,7 @@ public class EmployeeController {
      * @return
      */
     @PutMapping("/resetEmployeePassword")
-    public Result resetEmployeePassword(@ApiParam(name = "password",value = "员工密码")
-                                        @RequestParam("password") @NotBlank(message = "请求参数不能为空")
-                                        String password){
+    public Result resetEmployeePassword(@RequestParam("password") String password){
         try{
             if (!password.matches(Constants.PASSWORD_REGEX)) {
                 throw new Exception("密码必须为8～16位，且同时包含至少一个字母，一个数字，一个特殊字符(@$!%*#?&_.)");

@@ -76,6 +76,12 @@ public interface EmployeeService extends IService<Employee> {
      */
     LatestEmployeeVo getLoginEmployeeInfo();
 
+    /**
+     * 重置员工密码
+     * @param password
+     * @return
+     * @throws Exception
+     */
     boolean resetEmployeePassword(String password) throws Exception;
 }
 

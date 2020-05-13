@@ -11,7 +11,7 @@ public class Constants {
     /**
      * 存储用户头像的目录
      */
-    public static final String AVATAR_DIR = "/static/avatar/";
+    public static final String AVATAR_DIR = "/tmp/static/avatar/";
 
     /**
      * 匹配密码的正则表达式:8～16位，必须同时包含至少一个字母，一个数字，一个特殊字符(包括@$!%*#?&_.)
