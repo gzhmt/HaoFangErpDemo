@@ -126,7 +126,10 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         try {
             Employee employee = baseMapper.selectOne(lambdaQueryWrapper);
             String oldPhotoName = employee.getPhotoUrl().substring(employee.getPhotoUrl().lastIndexOf("/") + 1);
-            new File(Constants.AVATAR_DIR, oldPhotoName).delete();
+            File file = new File(Constants.AVATAR_DIR, oldPhotoName);
+            if(file.exists()){
+                file.delete();
+            }
             avatarFile.transferTo(targetFile);
         } catch (IOException e) {
             throw new Exception("上传头像出错,请重新尝试");
