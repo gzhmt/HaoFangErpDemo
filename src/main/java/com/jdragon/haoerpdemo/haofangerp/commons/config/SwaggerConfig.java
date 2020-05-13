@@ -25,6 +25,7 @@ import java.util.List;
  */
 @Configuration
 public class SwaggerConfig implements WebMvcConfigurer {
+
     @Bean
     public Docket createRestApi() {
         //添加head参数配置start

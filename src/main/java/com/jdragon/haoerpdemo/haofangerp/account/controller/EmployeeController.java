@@ -2,13 +2,23 @@ package com.jdragon.haoerpdemo.haofangerp.account.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.EmployeeVo;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.ModifyEmployeeVo;
 import com.jdragon.haoerpdemo.haofangerp.account.service.EmployeeService;
+import com.jdragon.haoerpdemo.haofangerp.commons.constant.Constants;
+import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author zhu
@@ -88,7 +98,7 @@ public class EmployeeController {
 
     /**
      * 修改员工个人信息
-     * @param latestEmployeeVo
+     * @param modifyEmployeeVo
      * @return
      */
     @PutMapping("/updateEmployeeInfo")
