@@ -9,6 +9,7 @@ import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.EmployeeVo;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.LatestEmployeeVo;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.ModifyEmployeeVo;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.QueryEmployeeVo;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,7 +62,7 @@ public interface EmployeeService extends IService<Employee> {
      * @return
      * @throws Exception
      */
-    String uploadAvatar(MultipartFile avatarFile, HttpServletRequest request) throws Exception;
+    String uploadAvatar(MultipartFile avatarFile, HttpServletRequest request) throws HFException;
 
     /**
      * 修改员工个人信息

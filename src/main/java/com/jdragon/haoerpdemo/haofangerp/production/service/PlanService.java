@@ -3,6 +3,7 @@ package com.jdragon.haoerpdemo.haofangerp.production.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.PlanVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 
@@ -21,7 +22,7 @@ import java.util.Map;
 public interface PlanService extends IService<Plan> {
     IPage<Plan> list(Page<Plan> page, String state);
 
-    Plan save(PlanVo planVo);
+    Plan save(PlanVo planVo) throws HFException;
 
     boolean delete(String productionNo) throws Exception;
 

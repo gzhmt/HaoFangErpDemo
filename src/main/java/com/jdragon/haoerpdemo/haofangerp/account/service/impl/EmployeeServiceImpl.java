@@ -15,11 +15,16 @@ import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.QueryEmployeeVo;
 import com.jdragon.haoerpdemo.haofangerp.account.mappers.EmployeeMapper;
 import com.jdragon.haoerpdemo.haofangerp.account.service.EmployeeService;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.Constants;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.Bean2Utils;
+import com.jdragon.haoerpdemo.haofangerp.commons.tools.FileUtils;
+import com.jdragon.haoerpdemo.haofangerp.commons.tools.SystemUtils;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task;
 import com.jdragon.haoerpdemo.haofangerp.security.commons.BCryptPasswordEncoderUtil;
 import com.jdragon.haoerpdemo.haofangerp.security.commons.SecurityContextHolderHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,7 +44,7 @@ import java.util.UUID;
  * @Description: 用户服务接口实现类
  */
 @Service
-//@CacheConfig(cacheNames = "employee")
+@PropertySource("classpath:application.yml")
 public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService {
 
     @Autowired
@@ -105,42 +110,45 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         return pageInfo;
     }
 
+    @Value("${project.windowsPath}")
+    String windowsPath;
+    @Value("${project.linuxPath}")
+    String linuxPath;
+    @Value("${project.avatarUrl}")
+    String avatarUrl;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public String uploadAvatar(MultipartFile avatarFile, HttpServletRequest request) throws Exception {
-        File folder = new File(Constants.AVATAR_DIR);
-        if(!folder.isDirectory()){
-            folder.mkdirs();
-        }
+    public String uploadAvatar(MultipartFile avatarFile, HttpServletRequest request) throws HFException {
+        //根据系统获取基本路径，后拼接图片存放实际路径
+        String basePath = SystemUtils.isLinux()?linuxPath:windowsPath;
+        String avatarDir = basePath + avatarUrl;
+
+        //判断文件后缀是否符合规范
         String oldName = avatarFile.getOriginalFilename();
         String suffix = oldName.substring(oldName.lastIndexOf("."));
         if(!(suffix.equals(".jpg") || suffix.equals(".jpeg") || suffix.equals(".png"))){
-            throw new Exception("上传的头像不合法,请上传jpg，png或者jpeg格式的文件");
+            throw new HFException("上传的头像不合法,请上传jpg，png或者jpeg格式的文件");
         }
-        String newName = UUID.randomUUID().toString() + suffix;
-        File targetFile = new File(folder, newName);
+        //上传图片如果出错，就中断程序，防止旧头像在上传新头像失败时被误删
+        String photoUrl = FileUtils.uploadFileReturnUrl(request,basePath,avatarFile,avatarUrl);
+
         String employeeNo = SecurityContextHolderHelper.getEmployeeNo();
-        LambdaQueryWrapper<Employee> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Employee::getEmployeeNo, employeeNo);
-        try {
-            Employee employee = baseMapper.selectOne(lambdaQueryWrapper);
-            String oldPhotoName = employee.getPhotoUrl().substring(employee.getPhotoUrl().lastIndexOf("/") + 1);
-            File file = new File(Constants.AVATAR_DIR, oldPhotoName);
+        Employee employee = getEmployeeByEmployeeNo(employeeNo);
+        //获取旧头像名称
+        String oldPhotoName = employee.getPhotoUrl().substring(employee.getPhotoUrl().lastIndexOf("/") + 1);
+        //设置新图片url
+        employee.setPhotoUrl(photoUrl);
+        //进行数据库更新
+        if(employee.updateById()){
+            //如果更新成功了，才将旧头像删除
+            File file = new File(avatarDir, oldPhotoName);
             if(file.exists()){
                 file.delete();
             }
-            avatarFile.transferTo(targetFile);
-        } catch (IOException e) {
-            throw new Exception("上传头像出错,请重新尝试");
-        }
-        Employee employee = new Employee();
-        String photoUrl = request.getScheme() + "://" + request.getServerName()+":" + request.getServerPort() + Constants.AVATAR_DIR + newName;
-        employee.setPhotoUrl(photoUrl);
-        if(baseMapper.update(employee,lambdaQueryWrapper) > 0){
             return photoUrl;
         } else {
-            throw new Exception("上传头像出错,请重新尝试");
+            throw new HFException("上传头像出错,请重新尝试,上传失败");
         }
     }
 

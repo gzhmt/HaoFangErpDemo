@@ -6,6 +6,7 @@ import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.ModifyEmployeeVo;
 import com.jdragon.haoerpdemo.haofangerp.account.service.EmployeeService;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.Constants;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -77,7 +78,7 @@ public class EmployeeController {
             Map<String, String> map = new HashMap<>();
             map.put("photoUrl", photoUrl);
             return Result.success().setResult(map);
-        } catch (Exception e) {
+        } catch (HFException e) {
             return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
         }
     }

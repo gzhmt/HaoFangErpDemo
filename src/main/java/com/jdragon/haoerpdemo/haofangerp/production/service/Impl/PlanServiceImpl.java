@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Employee;
+import com.jdragon.haoerpdemo.haofangerp.account.service.EmployeeService;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import com.jdragon.haoerpdemo.haofangerp.production.constant.BatchResultType;
 import com.jdragon.haoerpdemo.haofangerp.production.constant.BatchResult;
 import com.jdragon.haoerpdemo.haofangerp.production.constant.PlanAuditStatusEnum;
@@ -20,8 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 /**
@@ -34,6 +39,9 @@ import java.util.*;
 @Slf4j
 @Service
 public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements PlanService {
+
+    @Autowired
+    EmployeeService employeeService;
 
     @Test
     public void test(){
@@ -60,7 +68,18 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
      * @Description: 保存plan，传入的vo，会强制修改productionNo,createDate,state
      **/
     @Override
-    public synchronized Plan save(PlanVo planVo) {
+    public synchronized Plan save(PlanVo planVo) throws HFException {
+        String principalEmployeeNo = planVo.getPrincipalEmployeeNo();
+        String approvedEmployeeNo = planVo.getApprovedEmployeeNo();
+
+        Employee principalEmployee = employeeService.getEmployeeByEmployeeNo(principalEmployeeNo);
+        Employee approvedEmployee = employeeService.getEmployeeByEmployeeNo(approvedEmployeeNo);
+
+        if(principalEmployee==null){
+            throw new HFException("负责人不存在");
+        }else if(approvedEmployee==null){
+            throw new HFException("审批人不存在");
+        }
 
         Plan plan = (Plan) Bean2Utils.copyProperties(planVo, Plan.class);
         if (planInit(plan).insert()) {
@@ -172,11 +191,11 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
 
     @Override
     public List<String> getFuzzyPlanName(String fuzzyName) {
+        fuzzyName =  fuzzyName==null?"%":fuzzyName;
         return baseMapper.selectFuzzyPlanName("%"+fuzzyName+"%");
     }
 
 
-    //    @Cacheable
     @Override
     public Plan getByProductionNo(String productionNo) throws Exception {
         LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();

@@ -26,6 +26,10 @@ public class PlanVo {
     @ApiModelProperty(example = "admin")
     private String principalEmployeeNo;
 
+    @NotNull(message = "请输入审批人工号")
+    @ApiModelProperty(example = "admin")
+    private String approvedEmployeeNo;
+
     @NotNull(message = "请输入状况")
     private PlanStatusEnum status;
 

@@ -1,8 +1,10 @@
 package com.jdragon.haoerpdemo.haofangerp.commons.config;
 
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.SystemUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -25,6 +27,7 @@ import java.util.List;
  * @Description: swagger2的api文档配置
  */
 @Configuration
+@PropertySource("classpath:application.yml")
 public class SwaggerConfig implements WebMvcConfigurer {
 
     @Bean
@@ -49,6 +52,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .build()
                 .globalOperationParameters(pars);//注意这里
     }
+
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("HAOFANG Erp API 文档")
@@ -56,6 +60,14 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .version("1.0.0")
                 .build();
     }
+
+    @Value("${project.windowsPath}")
+    String windowsPath;
+    @Value("${project.linuxPath}")
+    String linuxPath;
+    @Value("${project.avatarUrl}")
+    String avatarUrl;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
@@ -63,10 +75,10 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
-        if(SystemUtils.isWindows()){
-            registry.addResourceHandler("/tmp/static/avatar/**").addResourceLocations("file:D:/tmp/static/avatar/");
-        }else {
-            registry.addResourceHandler("/tmp/static/avatar/**").addResourceLocations("file:/tmp/static/avatar/");
+        if (SystemUtils.isWindows()) {
+            registry.addResourceHandler(avatarUrl + "**").addResourceLocations("file:" + windowsPath + avatarUrl);
+        } else {
+            registry.addResourceHandler(avatarUrl + "**").addResourceLocations("file:" + linuxPath + avatarUrl);
         }
 
     }

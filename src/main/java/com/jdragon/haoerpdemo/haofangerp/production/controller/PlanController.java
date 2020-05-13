@@ -3,6 +3,7 @@ package com.jdragon.haoerpdemo.haofangerp.production.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.PlanVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
@@ -55,6 +56,8 @@ public class PlanController {
             return Result.success().setResult(plan);
         }catch (UnknownError e){
             return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
+        } catch (HFException e) {
+            return Result.error().setResult(e.getMessage());
         }
     }
 
@@ -84,7 +87,7 @@ public class PlanController {
 
     @GetMapping("/planNameFuzzyQuery")
     @ApiOperation("模糊查询计划号")
-    public Result planNameFuzzyQuery(@ApiParam(name = "productionNo",value = "计划生产单号")@RequestParam String productionNo){
+    public Result planNameFuzzyQuery(@ApiParam(name = "productionNo",value = "计划生产单号")@RequestParam(required = false) String productionNo){
         return Result.success().setResult(planService.getFuzzyPlanName(productionNo));
     }
 }
