@@ -24,46 +24,6 @@ import java.io.Serializable;
 public class Result implements Serializable {
 
     /**
-     * 成功码.
-     */
-    public static final Long SUCCESS_CODE = ResultCode.NORMAL.getCode();
-
-    /**
-     * 成功信息.
-     */
-    public static final String SUCCESS_MESSAGE = ResultCode.NORMAL.getMessage();
-
-    /**
-     * 错误码.
-     */
-    public static final Long ERROR_CODE = ResultCode.SYSTEM_ERROR.getCode();
-
-    /**
-     * 错误信息.
-     */
-    public static final String ERROR_MESSAGE = ResultCode.SYSTEM_ERROR.getMessage();
-
-    /**
-     * 错误码：参数非法
-     */
-    public static final Long ILLEGAL_ARGUMENT_CODE_ = ResultCode.PARAMS_ERROR.getCode();
-
-    /**
-     * 错误信息：参数非法
-     */
-    public static final String ILLEGAL_ARGUMENT_MESSAGE = ResultCode.PARAMS_ERROR.getMessage();
-
-    /**
-     * 错误码：认证失败
-     */
-    public static final Long AUTH_FAIL_CODE = ResultCode.AUTH_FAIL.getCode();
-
-    /**
-     * 错误信息：认证失败
-     */
-    public static final String AUTH_FAIL_MESSAGE = ResultCode.AUTH_FAIL.getMessage();
-
-    /**
      * 编号.
      */
     private Long code;
@@ -118,6 +78,6 @@ public class Result implements Serializable {
      */
     @JsonIgnore
     public boolean result() {
-        return Result.SUCCESS_CODE == code;
+        return ResultCode.NORMAL.getCode().equals(code);
     }
 }
