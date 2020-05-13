@@ -18,9 +18,7 @@ import java.io.Serializable;
  * @Description: 返回结果构造类
  */
 @Data
-@Builder
 @ToString
-@AllArgsConstructor
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Result implements Serializable {
@@ -80,46 +78,39 @@ public class Result implements Serializable {
      */
     private Object result;
 
-    public Result(Long code, String message) {
-        this(code, message, null);
+    public Result(ResultCode resultCode,Object result){
+        this.code = resultCode.getCode();
+        this.message = resultCode.getMessage();
+        this.result = result;
     }
 
     public static Result success(){
-        return success(SUCCESS_MESSAGE);
+        return success(null);
     }
-    public static Result success(String message) {
-        return new Result(SUCCESS_CODE, message, null);
+    public static Result success(Object result) {
+        return new Result(ResultCode.NORMAL, result);
     }
     public static Result error(){
-        return error(ERROR_MESSAGE);
+        return error(null);
     }
-    public static Result error(String message) {
-        return new Result(ERROR_CODE, message, null);
-    }
-
-    public static Result error(ResultCode resultCode){
-        return new Result(resultCode.getCode(),resultCode.getMessage(),null);
+    public static Result error(Object result) {
+        return new Result(ResultCode.SYSTEM_ERROR, result);
     }
 
-
-
-    public static Result permissionsNotEnough(String message) {
-        return error(ResultCode.PERMISSIONS_NOT_ENOUGH).setResult(message);
+    public static Result authFail(Object result){
+        return new Result(ResultCode.AUTH_FAIL,result);
     }
 
-    public static Result authFail(String message){
-        return new Result(AUTH_FAIL_CODE, message, null);
+    public static Result permissionsNotEnough(Object result) {
+        return new Result(ResultCode.PERMISSIONS_NOT_ENOUGH,result);
     }
 
-    public static Result authFail(){
-        return authFail( AUTH_FAIL_MESSAGE);
+    public static Result paramsError(Object result) {
+        return new Result(ResultCode.PARAMS_ERROR, result);
     }
-
-
-    public static Result paramsError(String message) {
-        return new Result(ILLEGAL_ARGUMENT_CODE_, message, null);
+    public static Result unKnowError(Object result){
+        return new Result(ResultCode.SYSTEM_UN_KNOW_ERROR,result);
     }
-
     /**
      * 判断是否成功： 依据 Wrapper.SUCCESS_CODE == this.code
      *

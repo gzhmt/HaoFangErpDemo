@@ -6,6 +6,7 @@ import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.RoleVo;
 import com.jdragon.haoerpdemo.haofangerp.account.service.RoleService;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.ValidationUtils;
 import io.swagger.annotations.Api;
@@ -47,22 +48,21 @@ public class RoleController {
     @ApiOperation("分页获取角色列表")
     public Result listRoles(@ApiParam(name = "pageNo",value = "页码")@PathVariable("pageNo")int pageNo,
                             @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize){
-        return Result.success().setResult(roleService.listRoles(new Page<>(pageNo,pageSize)));
+        return Result.success(roleService.listRoles(new Page<>(pageNo,pageSize)));
     }
 
     /**
      * 添加角色
      * @param roleVo 角色vo类
-     * @param bindingResult 校验参数接口
      * @return
      */
     @PostMapping("/add")
     @ApiOperation("添加角色")
     public Result addRole(@ApiParam(name = "roleVo",value = "角色vo类")@RequestBody @Valid RoleVo roleVo){
         try{
-            return Result.success().setResult(roleService.addRole(roleVo));
-        }catch (Exception e){
-            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
+            return Result.success(roleService.addRole(roleVo));
+        }catch (HFException e){
+            return Result.error(e.getMessage());
         }
     }
 
@@ -75,9 +75,9 @@ public class RoleController {
     @ApiOperation("根据角色id删除角色")
     public Result deleteRole(@ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId){
         try{
-            return Result.success().setResult(roleService.deleteRole(roleId));
-        }catch (Exception e){
-            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
+            return Result.success(roleService.deleteRole(roleId));
+        }catch (HFException e){
+            return Result.error(e.getMessage());
         }
     }
 
@@ -92,7 +92,7 @@ public class RoleController {
     @ApiOperation("根据员工id分页获取已赋予角色列表")
     public Result getAssignedRolesByEmployeeId(@ApiParam(name = "pageNo",value = "页数")@PathVariable("pageNo")int pageNo, @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize,
                            @ApiParam(name = "employeeId",value = "员工id")@RequestParam("employeeId")int employeeId){
-        return Result.success(Result.SUCCESS_MESSAGE).setResult(roleService.getAssignedRolesByEmployeeId(pageNo, pageSize, employeeId));
+        return Result.success(roleService.getAssignedRolesByEmployeeId(pageNo, pageSize, employeeId));
     }
 
 
@@ -108,7 +108,7 @@ public class RoleController {
     public Result getUnAssignedRolesByEmployeeId(@ApiParam(name = "pageNo",value = "页数")@PathVariable("pageNo")int pageNo,
                                                  @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize,
                             @ApiParam(name = "employeeId",value = "员工id")@RequestParam("employeeId")int employeeId){
-        return Result.success(Result.SUCCESS_MESSAGE).setResult(roleService.getUnAssignedRolesByEmployeeId(pageNo, pageSize, employeeId));
+        return Result.success(roleService.getUnAssignedRolesByEmployeeId(pageNo, pageSize, employeeId));
     }
 
     /**
@@ -122,9 +122,9 @@ public class RoleController {
     public Result addRoleOfEmployee(@ApiParam(name = "employeeId",value = "员工id")@RequestParam("employeeId")int employeeId,
                                        @ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId){
         try{
-            return Result.success().setResult(roleService.addRoleOfEmployee(employeeId, roleId));
+            return Result.success(roleService.addRoleOfEmployee(employeeId, roleId));
         }catch (Exception e){
-            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
+            return Result.error(e.getMessage());
         }
     }
 
@@ -139,9 +139,9 @@ public class RoleController {
     public Result deleteRoleOfEmployee(@ApiParam(name = "employeeId",value = "员工id")@RequestParam("employeeId")int employeeId,
                                     @ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId){
         try{
-            return Result.success().setResult(roleService.deleteRoleOfEmployee(employeeId, roleId));
+            return Result.success(roleService.deleteRoleOfEmployee(employeeId, roleId));
         }catch (Exception e){
-            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
+            return Result.error(e.getMessage());
         }
     }
 }

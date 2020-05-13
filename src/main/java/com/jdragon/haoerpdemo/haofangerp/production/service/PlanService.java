@@ -24,13 +24,13 @@ public interface PlanService extends IService<Plan> {
 
     Plan save(PlanVo planVo) throws HFException;
 
-    boolean delete(String productionNo) throws Exception;
+    boolean delete(String productionNo) throws HFException;
 
-    Plan getByProductionNo(String productionNo) throws Exception;
+    Plan getByProductionNo(String productionNo) throws HFException;
 
-    Plan copy(String productionNo) throws Exception;
+    Plan copy(String productionNo) throws HFException;
 
-    Plan update(String productionNo, PlanVo planVo) throws Exception;
+    Plan update(String productionNo, PlanVo planVo) throws HFException;
 
     List<Map<String, String>> copyPlans(String[] productionNoList);
 

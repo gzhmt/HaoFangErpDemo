@@ -44,10 +44,9 @@ public class EmployeeController {
     @ApiOperation("注册")
     public Result register(@RequestBody EmployeeVo employeeVo) {
         try {
-            return Result.success()
-                    .setResult(employeeService.register(employeeVo));
+            return Result.success(employeeService.register(employeeVo));
         }catch (Exception e){
-            return Result.error().setResult(e.getMessage());
+            return Result.error(e.getMessage());
         }
     }
 
@@ -62,7 +61,7 @@ public class EmployeeController {
     public Result listEmployees(@ApiParam(name = "pageNo",value = "页码")@PathVariable("pageNo")int pageNo,
                             @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize,
                             @ApiParam(name = "keyWord",value = "关键词")@RequestParam(value = "keyWord",required = false)String keyWord){
-        return Result.success().setResult(employeeService.listEmployees(pageNo, pageSize, keyWord));
+        return Result.success(employeeService.listEmployees(pageNo, pageSize, keyWord));
     }
 
 
@@ -78,9 +77,9 @@ public class EmployeeController {
             String photoUrl = employeeService.uploadAvatar(avatarFile, request);
             Map<String, String> map = new HashMap<>();
             map.put("photoUrl", photoUrl);
-            return Result.success().setResult(map);
+            return Result.success(map);
         } catch (HFException e) {
-            return Result.error().setResult(e.getMessage());
+            return Result.error(e.getMessage());
         }
     }
 
@@ -90,24 +89,20 @@ public class EmployeeController {
      */
     @GetMapping("/getLoginEmployeeInfo")
     public Result getLoginEmployeeInfo(){
-        try{
-            return Result.success().setResult(employeeService.getLoginEmployeeInfo());
-        }catch (Exception e){
-            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
-        }
+        return Result.success(employeeService.getLoginEmployeeInfo());
     }
 
     /**
      * 修改员工个人信息
-     * @param latestEmployeeVo
+     * @param modifyEmployeeVo
      * @return
      */
     @PutMapping("/updateEmployeeInfo")
     public Result updateEmployeeInfo(@ApiParam(name = "latestEmployeeVo",value = "员工修改后的个人信息")@RequestBody @Valid ModifyEmployeeVo modifyEmployeeVo){
         try{
-            return Result.success().setResult(employeeService.updateEmployeeInfo(modifyEmployeeVo));
-        }catch (Exception e){
-            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
+            return Result.success(employeeService.updateEmployeeInfo(modifyEmployeeVo));
+        }catch (HFException e){
+            return Result.error(e.getMessage());
         }
     }
 
@@ -120,11 +115,11 @@ public class EmployeeController {
     public Result resetEmployeePassword(@RequestParam("password") String password){
         try{
             if (!password.matches(Constants.PASSWORD_REGEX)) {
-                throw new Exception("密码必须为8～16位，且同时包含至少一个字母，一个数字，一个特殊字符(@$!%*#?&_.)");
+                throw new HFException("密码必须为8～16位，且同时包含至少一个字母，一个数字，一个特殊字符(@$!%*#?&_.)");
             }
-            return Result.success().setResult(employeeService.resetEmployeePassword(password));
-        }catch (Exception e){
-            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
+            return Result.success(employeeService.resetEmployeePassword(password));
+        }catch (HFException e){
+            return Result.error(e.getMessage());
         }
     }
 

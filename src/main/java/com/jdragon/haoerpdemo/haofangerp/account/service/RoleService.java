@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageInfo;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.vo.RoleVo;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 
 import java.util.List;
@@ -38,14 +39,14 @@ public interface RoleService {
      * @param roleVo 角色vo类
      * @return
      */
-    Role addRole(RoleVo roleVo) throws Exception;
+    Role addRole(RoleVo roleVo) throws HFException;
 
     /**
      * 根据角色id删除角色
      * @param roleId 角色id
      * @return
      */
-    boolean deleteRole(int roleId) throws Exception;
+    boolean deleteRole(int roleId) throws HFException;
 
     /**
      * 根据员工id分页获取已赋予角色列表

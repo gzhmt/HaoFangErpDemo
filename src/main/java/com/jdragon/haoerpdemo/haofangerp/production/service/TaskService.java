@@ -3,6 +3,7 @@ package com.jdragon.haoerpdemo.haofangerp.production.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskVo;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task;
@@ -26,7 +27,7 @@ public interface TaskService extends IService<Task> {
      * @Param [page]
      * @return com.baomidou.mybatisplus.core.metadata.IPage<com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task>
      **/
-    IPage<Task> list(Page<Task> page,String planNo) throws Exception;
+    IPage<Task> list(Page<Task> page,String planNo);
     /**
      * @Author kimi
      * @Description:添加任务
@@ -34,7 +35,7 @@ public interface TaskService extends IService<Task> {
      * @Param [taskInsertVo]
      * @return com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task
      **/
-    Task save(TaskInsertVo taskInsertVo) throws Exception;
+    Task save(TaskInsertVo taskInsertVo) throws HFException;
     /**
      * @Author kimi
      * @Description:删除任务
@@ -42,7 +43,7 @@ public interface TaskService extends IService<Task> {
      * @Param [taskNo]
      * @return boolean
      **/
-    boolean delete(String[] taskNo) throws Exception;
+    boolean delete(String[] taskNo) throws HFException;
     /**
      * @Author kimi
      * @Description:更新用户
@@ -50,7 +51,7 @@ public interface TaskService extends IService<Task> {
      * @Param [taskUpdateVo]
      * @return boolean
      **/
-    boolean update(TaskUpdateVo taskUpdateVo) throws Exception;
+    boolean update(TaskUpdateVo taskUpdateVo) throws HFException;
     /**
      * @Author kimi
      * @Description:查询任务详情页
@@ -58,7 +59,7 @@ public interface TaskService extends IService<Task> {
      * @Param [taskNo]
      * @return com.jdragon.haoerpdemo.haofangerp.production.domain.vo.task.BaseTaskVo
      **/
-    TaskDetailVo queryTaskDetail(String taskNo) throws Exception;
+    TaskDetailVo queryTaskDetail(String taskNo) throws HFException;
     /**
      * @Author kimi
      * @Description:根据任务编号查询任务
@@ -66,5 +67,5 @@ public interface TaskService extends IService<Task> {
      * @Param [taskNo]
      * @return com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task
      **/
-    Task getByTaskNo(String taskNo) throws Exception;
+    Task getByTaskNo(String taskNo) throws HFException;
 }

@@ -44,7 +44,7 @@ public interface EmployeeService extends IService<Employee> {
      * @return member
      * @throws Exception
      */
-    Employee register(EmployeeVo employeeVo) throws Exception;
+    Employee register(EmployeeVo employeeVo) throws HFException;
 
     /**
      * 分页查询员工列表
@@ -69,7 +69,7 @@ public interface EmployeeService extends IService<Employee> {
      * @param modifyEmployeeVo
      * @return
      */
-    boolean updateEmployeeInfo(ModifyEmployeeVo modifyEmployeeVo) throws Exception;
+    boolean updateEmployeeInfo(ModifyEmployeeVo modifyEmployeeVo) throws HFException;
 
     /**
      * 回显当前登录员工个人信息
@@ -83,6 +83,6 @@ public interface EmployeeService extends IService<Employee> {
      * @return
      * @throws Exception
      */
-    boolean resetEmployeePassword(String password) throws Exception;
+    boolean resetEmployeePassword(String password) throws HFException;
 }
 

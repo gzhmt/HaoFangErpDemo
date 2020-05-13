@@ -56,16 +56,13 @@ public class  PlanExamineController {
             responseVo.setData(plans);
             if(plans.isEmpty()){
                 responseVo.setTotal(0);
-                return Result.error().setResult(responseVo);
+                return Result.error(responseVo);
             }else{
                 responseVo.setTotal(iPage.getTotal());
-                return Result.success().setResult(responseVo);
+                return Result.success(responseVo);
             }
-        }catch(PaggingParamsException e){
-            return Result.error().setResult(e.getMessage());
-        }
-        catch(Exception e){
-            return Result.error().setResult(e.getMessage());
+        } catch(Exception e){
+            return Result.error(e.getMessage());
         }
     }
 

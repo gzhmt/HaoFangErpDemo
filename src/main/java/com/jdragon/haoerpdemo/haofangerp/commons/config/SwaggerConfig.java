@@ -27,7 +27,6 @@ import java.util.List;
  * @Description: swagger2的api文档配置
  */
 @Configuration
-@PropertySource("classpath:application.yml")
 public class SwaggerConfig implements WebMvcConfigurer {
 
     @Bean
@@ -61,13 +60,6 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .build();
     }
 
-    @Value("${project.windowsPath}")
-    String windowsPath;
-    @Value("${project.linuxPath}")
-    String linuxPath;
-    @Value("${project.avatarUrl}")
-    String avatarUrl;
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
@@ -75,11 +67,5 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
-        if (SystemUtils.isWindows()) {
-            registry.addResourceHandler(avatarUrl + "**").addResourceLocations("file:" + windowsPath + avatarUrl);
-        } else {
-            registry.addResourceHandler(avatarUrl + "**").addResourceLocations("file:" + linuxPath + avatarUrl);
-        }
-
     }
 }

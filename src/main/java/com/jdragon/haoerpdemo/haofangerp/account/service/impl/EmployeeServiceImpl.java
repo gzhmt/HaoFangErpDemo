@@ -16,6 +16,7 @@ import com.jdragon.haoerpdemo.haofangerp.account.mappers.EmployeeMapper;
 import com.jdragon.haoerpdemo.haofangerp.account.service.EmployeeService;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.Constants;
 import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
+import com.jdragon.haoerpdemo.haofangerp.commons.property.PathProperty;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.Bean2Utils;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.FileUtils;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.SystemUtils;
@@ -51,6 +52,9 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     BCryptPasswordEncoderUtil bCryptPasswordEncoderUtil;
 
     @Autowired
+    PathProperty pathProperty;
+
+    @Autowired
     EmployeeMapper employeeMapper;
 
 //    @Cacheable
@@ -81,21 +85,21 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
 //    @Cacheable(key = "#employeeVo.employeeNo")
     @Override
-    public Employee register(EmployeeVo employeeVo) throws Exception {
+    public Employee register(EmployeeVo employeeVo) throws HFException {
         if(employeeVo !=null) {
             Employee employee = this.getEmployeeByEmployeeNo(employeeVo.getEmployeeNo());
             if(employee != null) {
-                throw new Exception("这个用户已经存在，不能重复。");
+                throw new HFException("这个用户已经存在，不能重复。");
             }
             employee = (Employee) Bean2Utils.copyProperties(employeeVo, Employee.class);
             employee.setPassword(bCryptPasswordEncoderUtil.encode(employeeVo.getPassword()));
             if(employee.insert()){
                 return employee;
             }else{
-                throw new Exception("注册失败");
+                throw new HFException("注册失败");
             }
         }else{
-            throw new Exception("错误消息：用户对象为空！");
+            throw new HFException("错误消息：用户对象为空！");
         }
     }
 
@@ -110,17 +114,15 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         return pageInfo;
     }
 
-    @Value("${project.windowsPath}")
-    String windowsPath;
-    @Value("${project.linuxPath}")
-    String linuxPath;
-    @Value("${project.avatarUrl}")
-    String avatarUrl;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public String uploadAvatar(MultipartFile avatarFile, HttpServletRequest request) throws HFException {
         //根据系统获取基本路径，后拼接图片存放实际路径
+        String linuxPath = pathProperty.getLinuxPath();
+        String windowsPath = pathProperty.getWindowsPath();
+        String avatarUrl = pathProperty.getAvatarUrl();
+
         String basePath = SystemUtils.isLinux()?linuxPath:windowsPath;
         String avatarDir = basePath + avatarUrl;
 
@@ -158,7 +160,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     }
 
     @Override
-    public boolean updateEmployeeInfo(ModifyEmployeeVo modifyEmployeeVo) throws Exception {
+    public boolean updateEmployeeInfo(ModifyEmployeeVo modifyEmployeeVo) throws HFException {
         String employeeNo = SecurityContextHolderHelper.getEmployeeNo();
         LambdaQueryWrapper<Employee> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Employee::getEmployeeNo, employeeNo);
@@ -166,7 +168,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         if(baseMapper.update(employee,lambdaQueryWrapper) > 0){
             return true;
         } else {
-            throw new Exception("修改个人信息失败");
+            throw new HFException("修改个人信息失败");
         }
     }
 
@@ -178,7 +180,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     }
 
     @Override
-    public boolean resetEmployeePassword(String password) throws Exception {
+    public boolean resetEmployeePassword(String password) throws HFException {
         String employeeNo = SecurityContextHolderHelper.getEmployeeNo();
         LambdaQueryWrapper<Employee> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Employee::getEmployeeNo, employeeNo);
@@ -187,7 +189,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         if(baseMapper.update(employee,lambdaQueryWrapper) > 0){
             return true;
         } else {
-            throw new Exception("修改密码失败");
+            throw new HFException("修改密码失败");
         }
     }
 }

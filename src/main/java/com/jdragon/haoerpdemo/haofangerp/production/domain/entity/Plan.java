@@ -33,40 +33,86 @@ import java.util.Date;
 @AllArgsConstructor
 @TableName("production_plan")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Plan extends Model<Plan>{
+public class Plan extends Model<Plan> {
+
     @TableId(type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 创建人工号
+     */
     private String createEmployeeNo;
 
+    /**
+     * 负责人工号
+     */
     private String principalEmployeeNo;
 
+    /**
+     * 审批人工号
+     */
     private String ApprovedEmployeeNo;
 
+    /**
+     * 生产单号
+     */
     private String productionNo;
 
+    /**
+     * 状态
+     */
     private PlanStateEnum state;
 
+    /**
+     * 状况
+     */
     private PlanStatusEnum status;
+
+    /**
+     * 创建日期
+     */
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
 
+    /**
+     * 审核状态
+     */
     private PlanAuditStatusEnum auditStatus;
 
+    /**
+     * 紧急程度
+     */
     private EmergencyLevelEnum emergencyLevel;
+
+    /**
+     * 截止日期
+     */
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date closingDate;
 
+    /**
+     * 来源
+     */
     private String source;
 
+    /**
+     * 关联订单
+     */
     private String linkedOrder;
 
+    /**
+     * 备注
+     */
     private String remarks;
 
-    @TableLogic(value = "0",delval = "1")
+    /**
+     * 删除标记
+     */
+    @TableLogic(value = "0", delval = "1")
     private boolean deleted;
+
     @Override
-    protected Serializable pkVal(){
+    protected Serializable pkVal() {
         return this.id;
     }
 }

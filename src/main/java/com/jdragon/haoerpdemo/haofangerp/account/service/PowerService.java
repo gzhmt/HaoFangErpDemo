@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.pagehelper.PageInfo;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Power;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Role;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 
 import java.util.List;
@@ -50,7 +51,7 @@ public interface PowerService extends IService<Power> {
      * @param powerId 权限id
      * @return
      */
-    boolean addPowerOfRole(int roleId, int powerId) throws Exception;
+    boolean addPowerOfRole(int roleId, int powerId) throws HFException;
 
     /**
      * 删除角色权限
@@ -58,5 +59,5 @@ public interface PowerService extends IService<Power> {
      * @param powerId 权限id
      * @return
      */
-    boolean deletePowerOfRole(int roleId, int powerId) throws Exception;
+    boolean deletePowerOfRole(int roleId, int powerId) throws HFException;
 }

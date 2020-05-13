@@ -3,6 +3,7 @@ package com.jdragon.haoerpdemo.haofangerp.production.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Plan;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.vo.TaskVo;
@@ -40,11 +41,11 @@ public class TaskController {
     @ApiOperation("根据任务单号获取生产任务详情")
     public Result byId(@ApiParam("计划单号")@PathVariable String taskNo){
         try {
-            return Result.success().setResult(taskService.queryTaskDetail(taskNo));
+            return Result.success(taskService.queryTaskDetail(taskNo));
         } catch (UnknownError e){
-            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
-        } catch (Exception e) {
-            return Result.error().setResult(e.getMessage());
+            return Result.unKnowError(e.getMessage());
+        } catch (HFException e) {
+            return Result.error(e.getMessage());
         }
     }
 
@@ -53,24 +54,18 @@ public class TaskController {
     public Result getList(@ApiParam(value = "页码", defaultValue="1")@PathVariable  Integer page,
                           @ApiParam(value = "页面大小", defaultValue="20")@PathVariable  Integer size,
                           @ApiParam(value = "生产计划单号", defaultValue="SC-20200323-0001") @RequestParam String planNo){
-        try {
-            return Result.success().setResult(taskService.list(new Page<>(page,size),planNo));
-        } catch (UnknownError e){
-            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
-        } catch (Exception e){
-            return Result.error().setResult(e.getMessage());
-        }
+        return Result.success(taskService.list(new Page<>(page,size),planNo));
     }
 
     @PostMapping("/create")
     @ApiOperation("创建生产任务")
     public Result create( @Valid @RequestBody TaskInsertVo taskInsertVo){
         try{
-            return Result.success().setResult(taskService.save(taskInsertVo));
+            return Result.success(taskService.save(taskInsertVo));
         } catch (UnknownError e){
-            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
+            return Result.unKnowError(e.getMessage());
         }catch (Exception e){
-            return Result.error().setResult(e.getMessage());
+            return Result.error(e.getMessage());
         }
     }
 
@@ -88,11 +83,11 @@ public class TaskController {
     @ApiOperation("根据任意个生产单号删除生产任务")
     public Result delete(@ApiParam(value = "生产单号")@RequestBody String[] taskNo){
         try {
-            return Result.success().setResult(taskService.delete(taskNo));
+            return Result.success(taskService.delete(taskNo));
         } catch (UnknownError e){
-            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
+            return Result.unKnowError(e.getMessage());
         } catch (Exception e) {
-            return Result.error().setResult(e.getMessage());
+            return Result.error(e.getMessage());
         }
     }
 

@@ -47,15 +47,15 @@ public class TaskInfoController {
             //responseVo.setTotal(total);
             responseVo.setData(taskVoList);
             if(taskVoList.isEmpty()) {//此时responseVo.total默认为0
-                return Result.error().setResult(responseVo);
+                return Result.error(responseVo);
             }else{
                 responseVo.setTotal(iPage.getTotal());
-                return Result.success().setResult(responseVo);
+                return Result.success(responseVo);
             }
         }catch(PaggingParamsException e){
-            return Result.error().setResult(e.getMessage());
+            return Result.error(e.getMessage());
         }catch(Exception e){
-            return Result.error().setResult(e.getMessage());
+            return Result.error(e.getMessage());
         }
     }
 

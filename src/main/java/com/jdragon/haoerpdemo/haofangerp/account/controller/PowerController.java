@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.Power;
 import com.jdragon.haoerpdemo.haofangerp.account.service.PowerService;
 import com.jdragon.haoerpdemo.haofangerp.commons.constant.ResultCode;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,7 +36,7 @@ public class PowerController {
     @ApiOperation("获取权限列表")
     public Result listPowers(@ApiParam(name = "pageNo",value = "页码")@PathVariable("pageNo")int pageNo,
                              @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize){
-        return Result.success(Result.SUCCESS_MESSAGE).setResult(powerService.listPowers(new Page<>(pageNo,pageSize)));
+        return Result.success(powerService.listPowers(new Page<>(pageNo,pageSize)));
     }
 
     /**
@@ -49,7 +50,7 @@ public class PowerController {
     @ApiOperation("根据角色id分页获取已赋予角色列表")
     public Result getAssignedPowersByRoleId(@ApiParam(name = "pageNo",value = "页数")@PathVariable("pageNo")int pageNo, @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize,
                                                @ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId){
-        return Result.success(Result.SUCCESS_MESSAGE).setResult(powerService.getAssignedPowersByRoleId(pageNo, pageSize, roleId));
+        return Result.success(powerService.getAssignedPowersByRoleId(pageNo, pageSize, roleId));
     }
 
     /**
@@ -63,7 +64,7 @@ public class PowerController {
     @ApiOperation("根据角色id分页获取未赋予角色列表")
     public Result getUnAssignedPowersByEmployeeId(@ApiParam(name = "pageNo",value = "页数")@PathVariable("pageNo")int pageNo, @ApiParam(name = "pageSize",value = "每页大小")@PathVariable("pageSize")int pageSize,
                                                  @ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId){
-        return Result.success(Result.SUCCESS_MESSAGE).setResult(powerService.getUnAssignedPowersByRoleId(pageNo, pageSize, roleId));
+        return Result.success(powerService.getUnAssignedPowersByRoleId(pageNo, pageSize, roleId));
     }
 
     /**
@@ -77,9 +78,9 @@ public class PowerController {
     public Result addPowerOfRole(@ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId,
                                     @ApiParam(name = "powerId",value = "权限id")@RequestParam("powerId")int powerId){
         try{
-            return Result.success().setResult(powerService.addPowerOfRole(roleId, powerId));
-        }catch (Exception e){
-            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
+            return Result.success(powerService.addPowerOfRole(roleId, powerId));
+        }catch (HFException e){
+            return Result.error(e.getMessage());
         }
     }
 
@@ -94,9 +95,9 @@ public class PowerController {
     public Result deletePowerOfRole(@ApiParam(name = "roleId",value = "角色id")@RequestParam("roleId")int roleId,
                                  @ApiParam(name = "powerId",value = "权限id")@RequestParam("powerId")int powerId){
         try{
-            return Result.success().setResult(powerService.deletePowerOfRole(roleId, powerId));
-        }catch (Exception e){
-            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
+            return Result.success(powerService.deletePowerOfRole(roleId, powerId));
+        }catch (HFException e){
+            return Result.error(e.getMessage());
         }
     }
 

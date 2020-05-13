@@ -12,6 +12,7 @@ import com.jdragon.haoerpdemo.haofangerp.account.mappers.EmployeeRoleMapper;
 import com.jdragon.haoerpdemo.haofangerp.account.mappers.RoleMapper;
 import com.jdragon.haoerpdemo.haofangerp.account.mappers.RolePowerMapper;
 import com.jdragon.haoerpdemo.haofangerp.account.service.RoleService;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import com.jdragon.haoerpdemo.haofangerp.production.domain.entity.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,13 +51,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public Role addRole(RoleVo roleVo) throws Exception{
+    public Role addRole(RoleVo roleVo) throws HFException {
         String prefix = "ROLE_";
         String roleName = prefix + roleVo.getRoleName().toUpperCase();
         LambdaQueryWrapper<Role> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Role::getRoleName, roleName);
         if(Optional.ofNullable(this.getOne(lambdaQueryWrapper)).isPresent()) {
-            throw new Exception("该角色已存在");
+            throw new HFException("该角色已存在");
         }else {
             Role role = new Role();
             role.setRoleName(roleName);
@@ -64,22 +65,22 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
             if(role.insert()){
                 return role;
             }else {
-                throw new Exception("添加角色失败");
+                throw new HFException("添加角色失败");
             }
         }
     }
 
     @Override
-    public boolean deleteRole(int roleId) throws Exception {
+    public boolean deleteRole(int roleId) throws HFException {
         if(roleMapper.getEmployeeRoleCountByRoleId(roleId) == 0){
             if(roleMapper.deleteById(roleId) > 0){
                 rolePowerMapper.deleteByRoleId(roleId);
                 return true;
             }else {
-                throw new Exception("无该角色,删除失败");
+                throw new HFException("无该角色,删除失败");
             }
         }else {
-            throw new Exception("该角色被员工依赖,无法删除");
+            throw new HFException("该角色被员工依赖,无法删除");
         }
     }
 

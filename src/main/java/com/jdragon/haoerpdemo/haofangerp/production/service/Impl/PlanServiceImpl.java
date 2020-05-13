@@ -90,10 +90,10 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
     }
 
     @Override
-    public synchronized Plan copy(String productionNo) throws Exception {
+    public synchronized Plan copy(String productionNo) throws HFException {
         Plan plan = baseMapper.selectByProductionNo(productionNo);
         if (!Optional.ofNullable(plan).isPresent()) {
-            throw new Exception("无该计划，无法复制");
+            throw new HFException("无该计划，无法复制");
         }
         if (planInit(plan).insert()) {
             return plan;
@@ -103,9 +103,9 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
     }
 
     @Override
-    public boolean delete(String productionNo) throws Exception {
+    public boolean delete(String productionNo) throws HFException {
         if (!isFounder(productionNo)) {
-            throw new Exception("不是你管理的生产计划不能删除");
+            throw new HFException("不是你管理的生产计划不能删除");
         }
         Plan plan = baseMapper.selectByProductionNo(productionNo);
         if(Optional.ofNullable(plan).isPresent()){
@@ -115,20 +115,20 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
                 throw new UnknownError("删除失败");
             }
         }else{
-            throw new Exception("无该计划，无法删除");
+            throw new HFException("无该计划，无法删除");
         }
     }
     @Override
-    public Plan update(String productionNo,PlanVo planVo) throws Exception {
+    public Plan update(String productionNo,PlanVo planVo) throws HFException {
         if(!isFounder(productionNo)){
-            throw new Exception("不是你管理的生产计划不能更改");
+            throw new HFException("不是你管理的生产计划不能更改");
         }
         Plan plan = baseMapper.selectByProductionNo(productionNo);
         if(plan==null){
-            throw new Exception("没有这个计划");
+            throw new HFException("没有这个计划");
         }
         if(plan.getStatus().equals(PlanStateEnum.生产中)){
-            throw new Exception("正在生产，无法更改，请等待生产完毕");
+            throw new HFException("正在生产，无法更改，请等待生产完毕");
         }
         BeanUtils.copyProperties(planVo,plan);
         if(plan.updateById()){
@@ -197,14 +197,14 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
 
 
     @Override
-    public Plan getByProductionNo(String productionNo) throws Exception {
+    public Plan getByProductionNo(String productionNo) throws HFException {
         LambdaQueryWrapper<Plan> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
         planLambdaQueryWrapper.eq(Plan::getProductionNo,productionNo).eq(Plan::isDeleted,false);
         Plan plan = this.getOne(planLambdaQueryWrapper);
         if(Optional.ofNullable(plan).isPresent()){
             return plan;
         }else{
-            throw new Exception("没有这个生产单号的计划");
+            throw new HFException("没有这个生产单号的计划");
         }
     }
 
@@ -236,7 +236,7 @@ public class PlanServiceImpl extends ServiceImpl<PlanMapper,Plan> implements Pla
      * @return: boolean
      * @Description: 根据计划单号判断这个计划是否是你创建，或是你负责的
      **/
-    private boolean isFounder(String productionNo) throws Exception {
+    private boolean isFounder(String productionNo) throws HFException {
         Optional<Plan> plan = Optional.ofNullable(this.getByProductionNo(productionNo));
         boolean isPrincipal = SecurityContextHolderHelper.isAuthorities(
                 plan.orElse(new Plan()).getPrincipalEmployeeNo());

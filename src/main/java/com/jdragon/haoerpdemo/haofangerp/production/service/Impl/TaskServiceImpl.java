@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import com.jdragon.haoerpdemo.haofangerp.production.constant.PlanAuditStatusEnum;
 import com.jdragon.haoerpdemo.haofangerp.production.constant.TaskStateEnum;
 import com.jdragon.haoerpdemo.haofangerp.commons.tools.AutoGenerateUtil;
@@ -51,7 +52,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
    private TaskProductMapper taskProductMapper;
 
     @Override
-    public TaskDetailVo queryTaskDetail(String taskNo) throws Exception{
+    public TaskDetailVo queryTaskDetail(String taskNo) throws HFException {
         // 通过任务编号查询任务详情页
         if (Optional.ofNullable(taskNo).isPresent()) {
             LambdaQueryWrapper<Task> planLambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -69,22 +70,22 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
                     throw new UnknownError("材料或原料获取失败");
                 }
             } else {
-                throw new Exception("该任务编号不存在");
+                throw new HFException("该任务编号不存在");
             }
         } else {
-            throw new Exception("任务编号不能为空");
+            throw new HFException("任务编号不能为空");
         }
     }
 
     @Override
-    public IPage<Task> list(Page<Task> page,String planNo) throws Exception {
+    public IPage<Task> list(Page<Task> page,String planNo){
         return baseMapper.selectPage(page,new LambdaQueryWrapper<Task>().eq(Task::getProductionPlanNo,planNo));
     }
 
     @Transactional
 //    @CachePut(key = "#result.taskNo")
     @Override
-    public Task save(TaskInsertVo taskInsertVo) throws Exception{
+    public Task save(TaskInsertVo taskInsertVo) throws HFException{
         synchronized (this) {
             String productionPlanNo = taskInsertVo.getProductionPlanNo();
             // 如果生产计划单号不存在，则抛出异常
@@ -92,7 +93,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
             // 判断生产计划是否通过审核
             PlanAuditStatusEnum auditStatus= plan.getAuditStatus();
             if ( auditStatus != PlanAuditStatusEnum.审核通过 ) {
-                throw new Exception("该生产单号计划未通过审核");
+                throw new HFException("该生产单号计划未通过审核");
             }
             // 查询原料和成品是否存在，不存在则抛出异常
             queryGoodsExist(taskInsertVo);
@@ -138,7 +139,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
      * @Param []
      * @return java.lang.String
      **/
-    public String createTaskNo() throws  Exception{
+    public String createTaskNo(){
         LambdaQueryWrapper<Task> taskLambdaQueryWrapper = new LambdaQueryWrapper<>();
         taskLambdaQueryWrapper.orderByDesc(Task::getId).last("limit 1");
         Task lastTask = baseMapper.selectOne(taskLambdaQueryWrapper);
@@ -156,7 +157,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
      * @Param [baseTaskVo]
      * @return boolean
      **/
-    public boolean queryGoodsExist(BaseTaskVo baseTaskVo) throws Exception{
+    public boolean queryGoodsExist(BaseTaskVo baseTaskVo) throws HFException{
         // 验证货品是否存在
         // 标识哪些货品不存在
         int flag = 0;
@@ -185,7 +186,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
         }
         // 货品不存在则抛出异常
         if ( flag > 0 ) {
-            throw new Exception(stringBuffer.toString());
+            throw new HFException(stringBuffer.toString());
         } else {
             return true;
         }
@@ -193,9 +194,9 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
 
 //    @CacheEvict
     @Override
-    public boolean delete(String[] taskNos) throws Exception{
+    public boolean delete(String[] taskNos) throws HFException{
         if (!Optional.ofNullable(taskNos).isPresent() || taskNos.length == 0) {
-            throw new Exception("任务编号不为空");
+            throw new HFException("任务编号不为空");
         }
         // 查询任务是否存在否则抛出异常
         for (int i = 0; i < taskNos.length; i++) {
@@ -219,7 +220,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
 
 //    @CachePut(key = "#taskVo")
     @Override
-    public boolean update(TaskUpdateVo taskUpdateVo) throws Exception {
+    public boolean update(TaskUpdateVo taskUpdateVo) throws HFException {
         // 查询任务编号是否存在，不存在则报错
         getByTaskNo(taskUpdateVo.getTaskNo());
         // 查询原料和成品是否存在，不存在则抛出异常
@@ -251,12 +252,12 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
                 TaskMaterial taskMaterial = (TaskMaterial) Bean2Utils.copyProperties(taskUpdateVo.getTaskMaterialVos().get(i), TaskMaterial.class);
                 taskMaterial.setTaskNo(taskNo);
                 if (!Optional.ofNullable(taskMaterial).isPresent() || !taskMaterial.insert()) {
-                    throw new Exception(taskUpdateVo.getTaskProductVos().get(i).getProductNo()+"关系创建失败");
+                    throw new HFException(taskUpdateVo.getTaskProductVos().get(i).getProductNo()+"关系创建失败");
                 }
             }
             return true;
         } else {
-            throw new Exception("修改任务失败");
+            throw new HFException("修改任务失败");
         }
     }
 
@@ -294,9 +295,9 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
 //        throw new Exception("修改任务失败:["+taskUpdateVo.getTaskProductVos().get(i).getProductNo()+"]为空");
 //    }
     @Override
-    public Task getByTaskNo(String taskNo) throws Exception{
+    public Task getByTaskNo(String taskNo) throws HFException{
         if (!Optional.ofNullable(taskNo).isPresent()) {
-            throw new Exception("任务编号不能为空");
+            throw new HFException("任务编号不能为空");
         }
         // 构造queryWrapper
         LambdaQueryWrapper<Task> taskLambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -306,7 +307,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper,Task> implements Tas
         if (Optional.ofNullable(task).isPresent()) {
             return task;
         } else {
-            throw new Exception("任务编号["+taskNo+"]不存在");
+            throw new HFException("任务编号["+taskNo+"]不存在");
         }
     }
 }

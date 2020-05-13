@@ -33,9 +33,9 @@ public class PlanController {
     @ApiOperation("根据计划单号获取计划")
     public Result byId(@ApiParam(name = "productionNo",value = "计划单号")@PathVariable String productionNo){
         try {
-            return Result.success().setResult(planService.getByProductionNo(productionNo));
+            return Result.success(planService.getByProductionNo(productionNo));
         }catch (Exception e){
-            return Result.error().setResult(e.getMessage());
+            return Result.error(e.getMessage());
         }
     }
 
@@ -45,7 +45,7 @@ public class PlanController {
                        @ApiParam(name = "pageSize", value = "页大小")@PathVariable int pageSize,
                        @ApiParam(name = "state", value = "状态") @RequestParam(required = false) String state){
         IPage<Plan> planList = planService.list(new Page<>(page,pageSize),state);
-        return Result.success().setResult(planList);
+        return Result.success(planList);
     }
 
     @PostMapping("/create")
@@ -53,23 +53,23 @@ public class PlanController {
     public Result create(@ApiParam(name = "planVo",value = "计划具体参数")@RequestBody @Valid PlanVo planVo) {
         try{
             Plan plan = planService.save(planVo);
-            return Result.success().setResult(plan);
+            return Result.success(plan);
         }catch (UnknownError e){
-            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
+            return Result.unKnowError(e.getMessage());
         } catch (HFException e) {
-            return Result.error().setResult(e.getMessage());
+            return Result.error(e.getMessage());
         }
     }
 
     @PostMapping("/copy")
     @ApiOperation("复制生产计划")
     public Result update(@ApiParam(name = "productionNoList",value = "计划单号")@RequestBody String[] productionNoList){
-        return Result.success().setResult(planService.copyPlans(productionNoList));
+        return Result.success(planService.copyPlans(productionNoList));
     }
     @DeleteMapping("/delete")
     @ApiOperation("删除生产计划")
     public Result delete(@ApiParam(name = "productionNoList",value = "计划生产单号") @RequestBody String[] productionNoList){
-        return Result.success().setResult(planService.deletePlans(productionNoList));
+        return Result.success(planService.deletePlans(productionNoList));
     }
 
     @PutMapping("/update")
@@ -77,11 +77,11 @@ public class PlanController {
     public Result update(@ApiParam(name = "productionNo",value = "计划生产单号")@RequestParam String productionNo,
                          @ApiParam(name = "planVo",value = "计划具体参数")@RequestBody @Valid PlanVo planVo){
         try {
-            return Result.success().setResult(planService.update(productionNo,planVo));
+            return Result.success(planService.update(productionNo,planVo));
         }catch (UnknownError e){
-            return Result.error(ResultCode.SYSTEM_UN_KNOW_ERROR).setResult(e.getMessage());
+            return Result.unKnowError(e.getMessage());
         }catch (Exception e) {
-            return Result.error().setResult(e.getMessage());
+            return Result.error(e.getMessage());
         }
     }
 

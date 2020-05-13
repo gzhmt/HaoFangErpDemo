@@ -114,10 +114,10 @@ public class PlanExamineServiceImpl extends ServiceImpl<PlanExamineMapper,Plan> 
                 //------------------------------------------------------------
                 return Result.success();//审核成功
             }else{
-                return Result.error().setResult("审批失败,没有此生产单号或该生产单号已作废");
+                return Result.error("审批失败,没有此生产单号或该生产单号已作废");
             }
         }
-        return Result.error().setResult("审批码不正确");
+        return Result.error("审批码不正确");
     }
 
 }

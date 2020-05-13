@@ -11,6 +11,7 @@ import com.jdragon.haoerpdemo.haofangerp.account.domain.entity.RolePower;
 import com.jdragon.haoerpdemo.haofangerp.account.mappers.PowerMapper;
 import com.jdragon.haoerpdemo.haofangerp.account.mappers.RolePowerMapper;
 import com.jdragon.haoerpdemo.haofangerp.account.service.PowerService;
+import com.jdragon.haoerpdemo.haofangerp.commons.exceptions.HFException;
 import com.jdragon.haoerpdemo.haofangerp.commons.response.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -69,7 +70,7 @@ public class PowerServiceImpl extends ServiceImpl<PowerMapper, Power> implements
     }
 
     @Override
-    public boolean addPowerOfRole(int roleId, int powerId) throws Exception{
+    public boolean addPowerOfRole(int roleId, int powerId) throws HFException {
         if(powerMapper.getCountByRoleIdAndApiUrl(roleId, "/**") == 0){
             if(!Optional.ofNullable(rolePowerMapper.getRolePower(roleId, powerId)).isPresent()){
                 if(powerMapper.selectById(powerId).getApiUrl().equals("/**")) {
@@ -81,22 +82,22 @@ public class PowerServiceImpl extends ServiceImpl<PowerMapper, Power> implements
                 if(rolePowerMapper.insert(rolePower) > 0){
                     return true;
                 }else {
-                    throw new Exception("添加角色权限失败");
+                    throw new HFException("添加角色权限失败");
                 }
             }else {
-                throw new Exception("该角色权限已存在");
+                throw new HFException("该角色权限已存在");
             }
         }else {
-            throw new Exception("该角色已拥有全部权限,不需要再添加");
+            throw new HFException("该角色已拥有全部权限,不需要再添加");
         }
     }
 
     @Override
-    public boolean deletePowerOfRole(int roleId, int powerId) throws Exception {
+    public boolean deletePowerOfRole(int roleId, int powerId) throws HFException {
         if (rolePowerMapper.deleteRolePower(roleId, powerId) > 0) {
             return true;
         } else {
-            throw new Exception("无该角色权限关系,无法删除");
+            throw new HFException("无该角色权限关系,无法删除");
         }
     }
 }
