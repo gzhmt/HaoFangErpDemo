@@ -131,7 +131,12 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
             throw new HFException("上传的头像不合法,请上传jpg，png或者jpeg格式的文件");
         }
         //上传图片如果出错，就中断程序，防止旧头像在上传新头像失败时被误删
-        String photoUrl = FileUtils.uploadFileReturnUrl(request,basePath,avatarFile,avatarUrl);
+        String photoUrl;
+        try {
+            photoUrl = FileUtils.uploadFileReturnUrl(request,basePath,avatarFile,avatarUrl);
+        } catch (IOException e) {
+            throw new HFException("io错误");
+        }
 
         String employeeNo = SecurityContextHolderHelper.getEmployeeNo();
         Employee employee = getEmployeeByEmployeeNo(employeeNo);

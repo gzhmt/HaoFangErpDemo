@@ -20,7 +20,7 @@ public class FileUtils {
      * 图片上传 返回访问地址
      * @return imgUrl
      */
-    public static String uploadFileReturnUrl(HttpServletRequest request, String filePath, MultipartFile file , String prefixUrl) {
+    public static String uploadFileReturnUrl(HttpServletRequest request, String filePath, MultipartFile file , String prefixUrl) throws IOException {
 
         // 获取完整的文件名
         String trueFileName = file.getOriginalFilename();
@@ -39,13 +39,9 @@ public class FileUtils {
             targetParentFile.getParentFile().mkdirs();
         }
 
-        //保存文件
-        try {
-            File targetFile = new File(targetParentPath, fileName);
-            file.transferTo(targetFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        File targetFile = new File(targetParentPath, fileName);
+        file.transferTo(targetFile);
 
         return itemPath + prefixUrl +fileName;
     }

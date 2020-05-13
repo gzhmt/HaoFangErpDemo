@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,7 +80,7 @@ public class EmployeeController {
             map.put("photoUrl", photoUrl);
             return Result.success().setResult(map);
         } catch (HFException e) {
-            return Result.error(ResultCode.SYSTEM_ERROR).setResult(e.getMessage());
+            return Result.error().setResult(e.getMessage());
         }
     }
 
