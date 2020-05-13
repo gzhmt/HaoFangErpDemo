@@ -36,7 +36,7 @@ public class FileUtils {
         File targetParentFile = new File(targetParentPath);
 
         if (!targetParentFile.exists()) {
-            targetParentFile.getParentFile().mkdirs();
+            targetParentFile.mkdirs();
         }
 
 
